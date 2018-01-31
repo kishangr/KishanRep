@@ -1,0 +1,199 @@
+<apex:page sidebar="false" tabStyle="Z_Quote_Config__tab" controller="zqu.FieldSetConfigController" title="{!$Label.zqu__config_view_settings}" action="{!initFieldSets}">
+  <style>
+    .tertiaryPalette {
+      background-color: #DADFEB !important;
+    }
+  </style>
+
+  <c:HelpComponent cid="COM-0013" rightAlign="true" />
+  
+  <c:PageTitle title="{!$Label.zqu__config_view_settings}"
+        subTitle="{!$Label.zqu__config_view_settings_subtitle}" />
+        
+  <apex:outputPanel id="msg">
+    <c:Notification />
+  </apex:outputPanel>
+  
+  <c:StatusModal />
+  
+  <apex:form >
+    <apex:pageBlock >
+    
+      <apex:pageBlockButtons location="top">
+        <apex:actionStatus startText="" stopText="" id="saveSettings" onstart="javascript:displayStatusModal();" onstop="javascript:closeStatusModal();">
+          <apex:facet name="start">
+            <apex:outputPanel >
+              <apex:commandButton value="{!$Label.zqu__button_save}" style="margin-left:10%" disabled="true"/>
+              <apex:commandButton value="{!$Label.zqu__button_restore_defaults}" disabled="true"/> 
+              <apex:commandButton value="{!$Label.zqu__button_back_settings}" disabled="true"/>
+            </apex:outputPanel>
+          </apex:facet>          
+          <apex:facet name="stop">
+            <apex:outputPanel >
+              <apex:commandButton value="{!$Label.zqu__button_save}" action="{!save}" style="margin-left:10%" reRender="fieldSetConfigSection, msg" status="saveSettings" />
+              <apex:commandButton value="{!$Label.zqu__button_restore_defaults}" action="{!restoreToDefaults}" reRender="fieldSetConfigSection, msg" status="saveSettings"/> 
+              <apex:commandButton value="{!$Label.zqu__button_back_settings}" action="{!backToConfigSettings}"/>  
+            </apex:outputPanel>
+          </apex:facet>              
+        </apex:actionStatus>
+      </apex:pageBlockButtons>
+    
+      <apex:pageBlockSection collapsible="false" title="{!$Label.zqu__config_view_settings_view_set_filter_criteria}" columns="1">
+        <apex:pageblockSectionItem >
+          <apex:outputLabel >{!$ObjectType.zqu__Field_Set_Config__c.fields.zqu__ObjectName__c.Label}</apex:outputLabel>
+          <apex:actionRegion >
+            <apex:selectList value="{!objectName}" size="1">
+              <apex:selectOptions value="{!objectNameOptions}"/>
+              <apex:actionSupport event="onchange" action="{!onChangeObjectName}" reRender="recordTypeList, viewTypeList, fieldSetConfigSection" status="fieldSetConfigSectionStatus" />
+            </apex:selectList>
+          </apex:actionRegion>
+        </apex:pageblockSectionItem>
+        
+        <apex:pageblockSectionItem >
+          <apex:outputLabel >{!$ObjectType.zqu__Field_Set_Config__c.fields.zqu__ViewType__c.Label}</apex:outputLabel>
+          <apex:actionRegion >
+            <apex:selectList id="viewTypeList" value="{!viewType}" size="1">
+              <apex:selectOptions value="{!viewTypeOptions}"/>
+              <apex:actionSupport event="onchange" action="{!onChangeViewType}" reRender="fieldSetConfigSection" status="fieldSetConfigSectionStatus" />
+            </apex:selectList>
+          </apex:actionRegion>
+        </apex:pageblockSectionItem>
+        
+        <apex:pageblockSectionItem >
+          <apex:outputLabel >{!$ObjectType.zqu__Field_Set_Config__c.fields.zqu__RecordType__c.Label}</apex:outputLabel>
+          <apex:actionRegion >
+            <apex:selectList id="recordTypeList" value="{!recordType}" size="1">
+              <apex:selectOptions value="{!recordTypeOptions}"/>
+              <apex:actionSupport event="onchange" action="{!onChangeRecordType}" reRender="fieldSetConfigSection" status="fieldSetConfigSectionStatus" />
+            </apex:selectList>
+          </apex:actionRegion>
+        </apex:pageblockSectionItem>
+      </apex:pageBlockSection>
+      
+      <apex:actionStatus id="fieldSetConfigSectionStatus" onstart="javascript:displayStatusModal();" onstop="javascript:closeStatusModal();">
+        <apex:facet name="stop">
+        <apex:outputPanel id="fieldSetConfigSection">
+          <apex:pageBlockSection collapsible="false" title="{!$Label.zqu__config_view_settings_field_set_configuration}" columns="1" rendered="{!NOT(isFieldSetSingleSelect)}">
+            <apex:outputPanel rendered="{!isModified}" style="color: #7AC141;">{!$Label.zqu__config_view_settings_field_set_configuration_modified}</apex:outputPanel>
+            <apex:outputPanel >{!$Label.zqu__field_set_tip}</apex:outputPanel>          
+            <apex:outputPanel >{!$Label.zqu__field_set_tip2}</apex:outputPanel>          
+          </apex:pageBlockSection>
+          <apex:pageBlockSection title="" columns="2" showHeader="false" rendered="{!NOT(isFieldSetSingleSelect)}">
+            <apex:pageblockSectionItem >
+              <apex:outputLabel style="display:block; margin-top:100px;">{!$Label.zqu__config_view_settings_field_sets}</apex:outputLabel>
+              <apex:outputPanel id="fieldSetPicklist">
+                <c:MultiselectPicklist leftLabel="{!$Label.zqu__config_view_settings_available_field_sets}"
+                    leftOption="{!availableFieldSets}"
+                    rightLabel="{!$Label.zqu__config_view_settings_selected_field_sets}"
+                    rightOption="{!selectedFieldSets}"
+                    size="18"
+                    width="350px"
+                    rightListItemOnClick="showSectionConfigInfo(this.value)"
+                    />
+                <apex:actionFunction name="showSectionConfigInfo" action="{!showSectionConfigInfo}" reRender="sectionConfig" status="refreshStatus">
+                  <apex:param name="selectedItemId" value="" assignTo="{!selectedFieldSetId}"/>
+                </apex:actionFunction>
+              </apex:outputPanel>
+            </apex:pageblockSectionItem>
+    
+            <apex:outputPanel id="sectionConfig" layout="block" style="padding: 115px 0px 0px 20px;">
+              <apex:actionStatus id="refreshStatus">
+                <apex:facet name="start">
+                  <apex:outputLabel styleClass="labelCol" style="display:block; margin-top:10px; margin-left:-10px;" >{!$Label.zqu__action_status_refreshing}</apex:outputLabel>
+                </apex:facet>
+                
+                <apex:facet name="stop">
+                  <apex:outputPanel rendered="{!showSectionConfig}">
+                  <apex:outputPanel layout="block">
+                    <apex:outputLabel styleClass="labelCol" >{!$Label.zqu__config_view_settings_section_collapsible}</apex:outputLabel>
+                    <apex:actionRegion >                       
+                      <apex:inputCheckbox value="{!isCollapsible}" onchange="disableCheckboxes();onChangeCollapsible(checked);" id="collapsibleCheckbox" >
+                        <apex:actionFunction name="onChangeCollapsible" action="{!onChangeCollapsible}" reRender="dumy" status="saveSettings" oncomplete="enableCheckboxes();">
+                          <apex:param name="collapsible" value="" assignTo="{!isCollapsible}"/>
+                        </apex:actionFunction>
+                      </apex:inputCheckbox>
+                    </apex:actionRegion>
+                  </apex:outputPanel>  
+                  
+                  <apex:outputPanel layout="block">
+                    <apex:outputLabel styleClass="labelCol">{!$Label.zqu__config_view_settings_section_is_single_column}</apex:outputLabel>
+                    <apex:actionRegion >
+                      <apex:inputCheckbox value="{!isSingleColumn}" onchange="disableCheckboxes();onChangeSingleColumn(checked);" id="singleColumnCheckbox" >          
+                        <apex:actionFunction name="onChangeSingleColumn" action="{!onChangeSingleColumn}" reRender="dumy" status="saveSettings" oncomplete="enableCheckboxes();">
+                          <apex:param name="singleColumn" value="" assignTo="{!isSingleColumn}"/>
+                        </apex:actionFunction>                
+                      </apex:inputCheckbox>
+                    </apex:actionRegion>
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel layout="block">
+                    <apex:outputLabel styleClass="labelCol">{!$Label.zqu__config_view_settings_show_section_header}</apex:outputLabel>
+                    <apex:actionRegion >
+                      <apex:inputCheckbox value="{!showHeader}" onchange="disableCheckboxes();onChangeShowHeader(checked);" id="showHeaderCheckbox" >          
+                        <apex:actionFunction name="onChangeShowHeader" action="{!onChangeShowHeader}" reRender="dumy" status="saveSettings" oncomplete="enableCheckboxes();">
+                          <apex:param name="showHeader" value="" assignTo="{!showHeader}"/>
+                        </apex:actionFunction>                
+                      </apex:inputCheckbox>
+                    </apex:actionRegion>
+                  </apex:outputPanel>
+                  
+                  <!-- Do NOT change the position of following js methods, they must be rendered within the same outputPanel with inputCheckbox  -->
+                  <script>
+                    
+                    // Disable collapsible/single column/show header checkboxes when clicking any of them
+                    function disableCheckboxes() {
+                      var collapsibleCheckbox = document.getElementById('{!$Component.collapsibleCheckbox}');
+                      collapsibleCheckbox.disabled = true;
+                    
+                      var singleColumnCheckbox = document.getElementById('{!$Component.singleColumnCheckbox}');
+                      singleColumnCheckbox.disabled = true;
+                      
+                      var showHeaderCheckbox = document.getElementById('{!$Component.showHeaderCheckbox}');
+                      showHeaderCheckbox.disabled = true;
+                    }
+                    
+                    // Eanble collapsible/single column/show header checkboxes after action function completed
+                    function enableCheckboxes() {
+                      var collapsibleCheckbox = document.getElementById('{!$Component.collapsibleCheckbox}');
+                      collapsibleCheckbox.disabled = false;
+                    
+                      var singleColumnCheckbox = document.getElementById('{!$Component.singleColumnCheckbox}');
+                      singleColumnCheckbox.disabled = false;
+                      
+                      var showHeaderCheckbox = document.getElementById('{!$Component.showHeaderCheckbox}');
+                      showHeaderCheckbox.disabled = false;
+                    }
+                  </script>
+                  
+                  </apex:outputPanel>   
+                </apex:facet>
+              </apex:actionStatus>
+            </apex:outputPanel>
+            
+          </apex:pageBlockSection>
+          
+          <apex:pageBlockSection collapsible="false" title="{!$Label.zqu__config_view_settings_field_set_configuration}" columns="1" rendered="{!isFieldSetSingleSelect}">
+            <apex:outputPanel >{!$Label.zqu__field_set_tip2}</apex:outputPanel>          
+          </apex:pageBlockSection>
+          <apex:pageBlockSection title="" columns="2" showHeader="false" rendered="{!isFieldSetSingleSelect}">
+          
+            <apex:pageblockSectionItem >
+              <apex:outputLabel >{!$Label.zqu__config_view_settings_field_sets}</apex:outputLabel>
+              <apex:actionRegion >
+                <apex:selectList id="fieldSetSingleSelectList" value="{!selectedFieldSetName}" size="1">
+                  <apex:selectOptions value="{!fieldSetOptions}"/>
+                </apex:selectList>
+              </apex:actionRegion>
+            </apex:pageblockSectionItem> 
+          </apex:pageBlockSection>
+          
+        </apex:outputPanel>
+        </apex:facet>
+      </apex:actionStatus>
+    </apex:pageBlock>
+
+  </apex:form>
+  
+  
+  
+</apex:page>

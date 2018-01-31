@@ -1,0 +1,111 @@
+<apex:page standardController="zqu__ProductOption__c"
+           extensions="zqu.CloneBundleRelationshipController"
+           tabStyle="Product2"
+           title="{!$Label.zqu__clone_bundle_title_clone_addons}"
+           sidebar="true" >
+    <apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}" />
+    <c:PageTitle title="{!$Label.zqu__clone_bundle_title_copy_relationships}" subTitle="{!SUBSTITUTE($Label.zqu__clone_bundle_title_copy_relationships_subtitle_1, '{0}', productOption.RootProduct__r.Name)}" 
+    rendered="{!noItemsToCopy == false}"/>
+
+    <c:PageTitle title="{!$Label.zqu__clone_bundle_title_copy_relationships}" subTitle="{!SUBSTITUTE($Label.zqu__clone_bundle_title_copy_relationships_subtitle_2, '{0}', productOption.ChildProduct__r.Name)}" rendered="{!noItemsToCopy == true}"/>
+    <apex:messages id="messagebar" rendered="true" />
+    <apex:form >
+        <apex:pageBlock title="{!$Label.zqu__clone_bundle_title_choose_pogs}"
+                        rendered="{!productOptionGroups.size > 0}">
+            <apex:pageBlockSection >
+                 <apex:dataTable value="{!productOptionGroups}" var="pog" styleClass="list">
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.zqu__button_select}</apex:facet>
+                        <input type="checkbox" value="{!pog.Id}" name="SelectedPOG" />
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.zqu__ProductOptionGroup__c.Label}</apex:facet>
+                        <apex:outputLink value="/{!pog.Id}" >{!pog.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.zqu__ProductOptionGroup__c.Fields.zqu__RootProduct__c.Label}</apex:facet>
+                        <apex:outputLink value="/{!pog.zqu__RootProduct__c}" >{!pog.RootProduct__r.name}</apex:outputLink>
+                    </apex:column>
+
+                </apex:dataTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:pageBlock title="{!$Label.zqu__clone_bundle_title_choose_pos}"
+                        rendered="{!productOptions.size > 0}">
+            <apex:pageBlockSection >
+                 <apex:dataTable value="{!productOptions}" var="po" styleClass="list">
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.zqu__button_select}</apex:facet>
+                        <input type="checkbox" value="{!po.Id}" name="SelectedPO" />
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.zqu__ProductOption__c.Label}</apex:facet>
+                        <apex:outputLink value="/{!po.Id}" >{!po.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$ObjectType.zqu__ProductOption__c.Fields.zqu__RootProduct__c.Label}</apex:facet>
+                        <apex:outputLink value="/{!po.zqu__RootProduct__c}" >{!po.RootProduct__r.name}</apex:outputLink>
+                    </apex:column>
+
+                </apex:dataTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+
+    <input id='backURL' type="hidden" value="{!backURL}" />
+
+
+    <input id="childProduct" type="hidden" value="{!productOption.ChildProduct__r.Name}"></input>
+    <input id="rootProduct" type="hidden" value="{!productOption.RootProduct__r.Name}"></input>
+
+    <apex:outputPanel rendered="{!noItemsToCopy == false}" >
+        <button id="copyBtn" onClick="javascript:copyRelationShip();" >{!$Label.BUTTON_COPY}</button>
+        <button id="cancelBtn" onClick="javascript:history.back();" >{!$Label.BUTTON_CANCEL}</button>    
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!noItemsToCopy == true}" >
+        <button id="cancelBtn" onClick="javascript:history.back();" >{!$Label.BUTTON_BACK}</button>    
+    </apex:outputPanel>
+    <script type="text/javascript">
+
+        function copyRelationShip() {
+
+            var params = {
+                'targetRootProductId' : '{!productOption.zqu__ParentProduct__c}',
+                //'ParentProductOptionId' : '{!productOption.Id}',
+                'productOptionGroupIds':$("input[name='SelectedPOG']:checked").map(function(){return $(this).val()}).toArray().join(','),
+                'productOptionIds': $("input[name='SelectedPO']:checked").map(function(){return $(this).val()}).toArray().join(',')
+            };
+
+            if(!params.productOptionGroupIds && !params.productOptionIds) {
+                alert('{!$Label.zqu__clone_bundle_error_select_one_or_more}');
+                return;
+            }
+
+            $("#copyBtn").attr("disabled","disabled");
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.CloneBundleRelationshipController.copyRelationship}',
+                params,
+                callback
+            );
+
+            function callback(result, event) {
+                if(event.statusCode === 200 ) {
+                    alert('{!$Label.zqu__clone_bundle_error_copy_successful}'.replace('{0}', $('#childProduct').val()).replace('{1}', $('#rootProduct').val()));
+                    window.location.href=$("#backURL").val();
+                } else {
+                    alert('{!$Label.zqu__clone_bundle_error_copy_failed}');
+                    $("#copyBtn").removeAttr("disabled");
+                }
+            }
+        }
+    </script>
+    <style>
+    button:disabled{
+        color:gray;
+    }
+    </style>
+</apex:page>

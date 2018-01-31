@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Currency__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The code corresponding to the currency for the tier&apos;s price.</description>
+        <externalId>false</externalId>
+        <label>Currency</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>CAD</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>EUR</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>GBP</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>JPY</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>USD</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Deleted</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>EndingUnit__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The end number of a range of units for the tier.</description>
+        <externalId>false</externalId>
+        <label>Ending Unit</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>IsOveragePrice__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Indicates if the price is an overage price, which is the price when usage surpasses the last defined tier.</description>
+        <externalId>false</externalId>
+        <label>Is Overage Price</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>PriceFormat__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Indicates if pricing is a flat fee or is per unit. This field is for tiered and volume pricing models only.</description>
+        <externalId>false</externalId>
+        <label>Price Format</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Flat Fee</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Per Unit</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The price of the tier if the charge is a flat fee, or the price of each unit in the tier if the charge model is tiered pricing.</description>
+        <externalId>false</externalId>
+        <label>Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>7</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>ProductRatePlanChargeOption__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The product rate plan charge to be overrided.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The parent ProductRatePlanChargeOption</inlineHelpText>
+        <label>Product Rate Plan Charge Option</label>
+        <referenceTo>ProductRatePlanChargeOption__c</referenceTo>
+        <relationshipLabel>Product Rate Plan Charge Tier Option</relationshipLabel>
+        <relationshipName>Product_Rate_Plan_Charge_Tier_Option</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>StartingUnit__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The starting number of a range of units for the tier.</description>
+        <externalId>false</externalId>
+        <label>Starting Unit</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>7</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Tier__c</fullName>
+        <deprecated>false</deprecated>
+        <description>A unique number that identifies the tier that the price applies to.</description>
+        <externalId>false</externalId>
+        <label>Tier</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>Product Rate Plan Charge Tier Option</label>
+    <nameField>
+        <label>Tier Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Product Rate Plan Charge Tier Option</pluralLabel>
+    <recordTypes>
+        <fullName>Default</fullName>
+        <active>true</active>
+        <label>Default</label>
+        <picklistValues>
+            <picklist>Currency__c</picklist>
+            <values>
+                <fullName>CAD</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>EUR</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>GBP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>JPY</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>USD</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>PriceFormat__c</picklist>
+            <values>
+                <fullName>Flat Fee</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Per Unit</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Snapshot</fullName>
+        <active>true</active>
+        <label>Snapshot</label>
+        <picklistValues>
+            <picklist>Currency__c</picklist>
+            <values>
+                <fullName>CAD</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>EUR</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>GBP</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>JPY</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>USD</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>PriceFormat__c</picklist>
+            <values>
+                <fullName>Flat Fee</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Per Unit</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Ending_Unit_Larger_Than_Starting_Unit</fullName>
+        <active>true</active>
+        <description>Ending Unit should be larger than Starting Unit</description>
+        <errorConditionFormula>AND(
+   NOT(ISNULL( EndingUnit__c )),
+   NOT(ISNULL( StartingUnit__c)),
+   EndingUnit__c  &lt;  StartingUnit__c)</errorConditionFormula>
+        <errorDisplayField>EndingUnit__c</errorDisplayField>
+        <errorMessage>Ending Unit should be larger than Starting Unit</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Ending_Unit_Rule</fullName>
+        <active>true</active>
+        <description>Starting Unit should not be less than 0</description>
+        <errorConditionFormula>AND(
+   NOT(ISNULL( EndingUnit__c )),
+   EndingUnit__c  &lt;  0)</errorConditionFormula>
+        <errorDisplayField>EndingUnit__c</errorDisplayField>
+        <errorMessage>Ending Unit should not be less than 0</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Starting_Unit_Rule</fullName>
+        <active>true</active>
+        <description>Starting Unit should not be less than 0</description>
+        <errorConditionFormula>AND(
+   NOT(ISNULL( StartingUnit__c )),
+   StartingUnit__c  &lt;  0)</errorConditionFormula>
+        <errorDisplayField>StartingUnit__c</errorDisplayField>
+        <errorMessage>Starting Unit should not be less than 0</errorMessage>
+    </validationRules>
+</CustomObject>

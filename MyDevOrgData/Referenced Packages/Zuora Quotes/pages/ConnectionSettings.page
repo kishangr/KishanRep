@@ -1,0 +1,103 @@
+<apex:page controller="zqu.ConnectionSettingsController" action="{!loadConnectionSettings}"
+	sidebar="false" tabStyle="Z_Quote_Config__tab" title="{!$Label.zqu__config_connection_title}"
+	id="thepage">
+	<style>
+body .bPageBlock .pbBody .labelCol {
+	color: #4A4A56;
+	padding-top: 10px !important;
+}
+body .bPageBlock .pbBody .dataCol {
+  padding-top: 10px !important;
+}
+</style>
+  <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/XmlSerializerForIE-compressed.js')}"/>
+  
+  <c:HelpComponent cid="COM-0010" rightAlign="true" />
+  
+	<c:PageTitle title="{!$Label.zqu__config_connection_title}"
+		subTitle="{!$Label.zqu__config_connection_subtitle}" />
+		
+  <apex:outputPanel id="msg">
+	  <c:Notification />
+	</apex:outputPanel>
+
+	<apex:form id="theform">
+		<apex:pageBlock id="zclp">
+			<apex:pageBlockButtons >
+				<apex:commandButton value="{!$Label.zqu__button_edit_settings}"
+					rendered="{!NOT(isEditMode)}" action="{!edit}"
+					style="margin-left:10%" reRender="zclp, msg" />
+				<apex:commandButton value="{!$Label.zqu__button_back_settings}"
+					rendered="{!NOT(isEditMode)}" action="{!back}"
+					reRender="zclp, msg" />
+				<apex:commandButton value="{!$Label.zqu__button_save}"
+					rendered="{!isEditMode}" action="{!saveConnectionSettings}" style="margin-left:10%"
+					reRender="zclp, msg" />
+				<apex:commandButton value="{!$Label.zqu__button_cancel}"
+					rendered="{!isEditMode}" immediate="true" action="{!loadConnectionSettings}"
+					reRender="zclp, msg" />
+			</apex:pageBlockButtons>
+
+			<apex:pageBlockSection columns="1" collapsible="false" rendered="{!NOT(isEditMode)}">
+				<apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIURL__c.inlineHelpText}">
+					<apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIURL__c.Label}"/>
+					<apex:outputText value="{!currentConnectionConfiguration.apiEndpointUrl}"/>
+				</apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIUsername__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIUsername__c.Label}"/>
+                    <apex:outputText value="{!currentConnectionConfiguration.apiUsername}"/>
+                </apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection columns="1" collapsible="false" rendered="{!isEditMode}"
+				id="edit_connection">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIURL__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIURL__c.Label}"/>
+					<apex:outputPanel >
+						<div class="requiredInput">
+							<div class="requiredBlock"/>
+                            <apex:inputText value="{!currentConnectionConfiguration.apiEndpointUrl}" style="width:70%" required="true"/>
+						</div>
+					</apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIUsername__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIUsername__c.Label}"/>
+                    <apex:outputPanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"/>
+                            <apex:inputText value="{!currentConnectionConfiguration.apiUsername}" required="true"/>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__APIPassword__c.inlineHelpText}">
+					<apex:outputLabel value="{!$Label.zqu__config_api_password}"></apex:outputLabel>
+					<apex:outputPanel >
+						<div class="requiredInput">
+							<div class="requiredBlock"></div>
+							<apex:inputSecret value="{!currentConnectionConfiguration.maskedPassword}"
+								required="true" redisplay="true" />
+						</div>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+				<apex:outputPanel >
+          <apex:actionStatus id="connectStatus">
+            <apex:facet name="stop">
+              <apex:commandButton value="{!$Label.zqu__config_button_test_connection}"
+              rendered="{!isEditMode}" action="{!testConnection}"
+              style="margin-left:20%" reRender="edit_connection, msg" status="connectStatus"/>
+            </apex:facet>
+            <apex:facet name="start">
+              <apex:commandButton value="Testing Connection" rendered="{!isEditMode}" disabled="true" style="margin-left:20%"/>
+            </apex:facet>
+          </apex:actionStatus>
+				</apex:outputPanel>
+        <apex:pageBlockSectionItem rendered="{!connectionResults!=null}">
+          <apex:pageBlockTable var="con" value="{!connectionResults}">
+            <apex:column headerValue="Zuora Entities in Salesforce" value="{!con.entity.Name}" rendered="{!isMultiEntityEnabled}"/>
+            <apex:column headerValue="Connection Status" value="{!con.message}"/>
+          </apex:pageBlockTable>
+        </apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

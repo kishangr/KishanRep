@@ -1,0 +1,12 @@
+<apex:page standardController="zqu__ProductOptionGroup__c"
+           extensions="zqu.CreateProductOptionGroupController"
+           tabStyle="Product2" 
+           title="{!$Label.zqu__config_product_option_group_new}" 
+           sidebar="true">
+  <c:PageTitle title="{!$Label.zqu__config_product_option_group_new}" subTitle="{!$Label.zqu__config_product_option_group_subtitle}" />
+  <apex:form target="_top" >
+     <c:PropertyComponent options="{!pcOptions}" >
+     </c:PropertyComponent>
+  </apex:form>
+
+</apex:page>

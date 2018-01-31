@@ -1,0 +1,104 @@
+<apex:page id="CatalogStatus" standardController="Product2" extensions="zqu.SingleProductController" sideBar="false">
+    <c:BundleTree />
+    <script>
+        var packageNS = '{!JSENCODE(packageNameSpace)}';
+        var JsRemote = {};
+        JsRemote.getSingleBundleJSON = '{!$RemoteAction.SingleProductController.getSingleBundleJSON}';
+        JsRemote.validateProduct = '{!$RemoteAction.SingleProductController.validate}';
+        var productBundleApp = angular.module('sfdc.product.bundle', ['sfdcAngularRemoting','sfdc.bundle.tree']);
+        productBundleApp.controller('controller.product.bundle', ['$scope', 'sfdcRemoting',function ($scope, sfdcRemoting) {
+            $scope.selectedBundle = {};
+            $scope.selectedBundle.Id = '{!productId}';
+            $scope.$watch('selectedBundle.Id', function(value) {
+                if (angular.isDefined(value)) {
+                    $scope.fetchPromise = sfdcRemoting.fetch($scope, JsRemote.getSingleBundleJSON, value);
+                    $scope.fetchPromise.then(function (result) {
+                        console.log(result);
+                        $scope.selectedBundle.data = angular.copy(JSON.parse(result));
+                    });
+
+
+                }
+            });
+        }]);
+        productBundleApp.directive('sfdcValidateBundle', ['sfdcRemoting', function(sfdcRemoting) {
+            return {
+                restrict: 'AE',
+                scope: {
+                    bundle: '='
+                },
+                templateUrl: 'ng-validate/sfdc/validate.html',
+                link: function(scope, element, attrs) {
+                    scope.validated = {};
+                    scope.formatError = function(error) {
+                        if (error == 'Validation successful') {
+                            return 'zlabel-success';
+                        }
+                        else {
+                            return 'zlabel-danger';
+                        }
+                    };
+                    scope.$watch('bundle.Id', function(newValue) {
+                        if (!angular.isDefined(newValue) || newValue == '') return;
+                        scope.validatePromise = sfdcRemoting.fetch(scope, JsRemote.validateProduct, newValue);
+                        scope.validatePromise.then(function (result) {
+                            scope.validated.data = JSON.parse(result);
+                        });
+                    });
+                }
+            }
+        }]);
+    </script>
+    <script type="text/ng-template" id="ng-validate/sfdc/validate.html">
+        <div class="container-fluid" >
+            <div cg-busy="{promise:validatePromise,message:'Loading Your Data',templateUrl:'ng-sync/sfdc/loading_spin.html'}">
+                <div class="panel-body no-padding">
+                    <table class="table table-hover table-striped table-condensed">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">#</th>
+                            <th class="col-md-1">Id</th>
+                            <th class="col-md-2">Type</th>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-4">Error</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in validated.data track by $index">
+                            <td class="col-md-1">{{$index}}</td>
+                            <td class="col-md-1"><a href="/{{item.sfdcId}}" target="_self">{{item.sfdcId}}</a></td>
+                            <td class="col-md-2">{{item.type}}</td>
+                            <td class="col-md-2">{{item.name}}</td>
+                            <td class="col-md-4"><span class="label " ng-class="formatError(item.error)">{{item.error}}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </script>
+<body xmlns:ng="http://angularjs.org" ng-app="sfdc.product.bundle" ng-controller="controller.product.bundle" ng-cloak="ngCloak">
+    <div class="bootstrap-force">
+        <div class="container-fluid" >
+            <div class="panel-body no-padding">
+                <sfdc-bundle-tree bundle="selectedBundle" graph-promise="fetchPromise"></sfdc-bundle-tree>
+                <hr/>
+                <sfdc-validate-bundle bundle="selectedBundle"></sfdc-validate-bundle>
+        </div>
+    </div>
+
+    </div> <!-- bootstrap-force-->
+    </body>
+
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/bootstrap-force-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/bootstrap.3.1.1min-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/angular-busy-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/catalog-min.css')}" />
+
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular.1.3.15.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/ui-bootstrap-tpls-0.13.1-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-animate.1.3.15-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-busy-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/d3.v3.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/sfdc-angular-compressed.js')}" />
+</apex:page>

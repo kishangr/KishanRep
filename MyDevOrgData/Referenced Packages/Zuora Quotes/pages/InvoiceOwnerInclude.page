@@ -1,0 +1,28 @@
+<apex:page standardController="zqu__Quote__c" title="{!$Label.zqu__invoice_owner_change_invoice_owner}"
+  extensions="zqu.InvoiceOwnerIncludeController" sidebar="true"
+  showHeader="true">
+  <apex:form >
+    <apex:sectionHeader title="{!$Label.zqu__invoice_owner_change_invoice_owner}"
+      subtitle="{!zqu__Quote__c.Name}" />
+    <apex:outputPanel id="errorPanel">
+      <c:Notification failureTitle="{!$Label.zqu__error_page_load}"/>
+    </apex:outputPanel>
+    <apex:pageBlock rendered="{!invoiceOwner.isInvoiceOwnerEnabled}">
+      <apex:pageBlockSection >
+        <apex:pageblockSectionItem >
+          <apex:outputPanel >
+            <apex:outputLabel >{!$Label.zqu__invoice_owner}</apex:outputLabel>
+          </apex:outputPanel>
+          <apex:outputPanel >
+            <c:LookupComponent options="{!invoiceOwnerLookupOptions}"></c:LookupComponent>
+          </apex:outputPanel>
+        </apex:pageblockSectionItem>
+      </apex:pageBlockSection>
+      <apex:pageBlockButtons >
+        <apex:commandButton value="{!$Label.zqu__button_save}" action="{!save}" />
+        <apex:commandButton value="{!$Label.zqu__button_cancel}" action="{!cancel}" />
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+
+  </apex:form>
+</apex:page>

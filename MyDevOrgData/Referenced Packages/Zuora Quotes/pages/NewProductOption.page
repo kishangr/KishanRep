@@ -1,0 +1,27 @@
+<apex:page standardController="zqu__ProductOption__c"
+           extensions="zqu.CreateProductOptionController"
+           tabStyle="Product2"
+           title="{!$Label.zqu__config_product_option_new}"
+           sidebar="true">
+    <apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}" />
+    <c:PageTitle title="{!$Label.zqu__config_product_option_new}" subTitle="{!$Label.zqu__config_product_option_subtitle}" />
+    <apex:form target="_top" >
+        <c:PropertyComponent options="{!pcOptions}" >
+        </c:PropertyComponent>
+    </apex:form>
+
+<script type="text/javascript">
+jQuery(document).ready(function($){
+	var zQuotesPrefix = "{!zQuotesPrefix}",
+		  propertyTable = $("table.detailList");
+
+	if (propertyTable.find('span[data-field-name="' + zQuotesPrefix + 'ProductOptionGroup__c"]').length > 0) {
+		propertyTable.find("span[data-field-name='" + zQuotesPrefix + "OptionType__c']")
+			.parent()
+			.find("select > option[value='Included']")
+			.remove();
+	}
+});
+</script>
+
+</apex:page>

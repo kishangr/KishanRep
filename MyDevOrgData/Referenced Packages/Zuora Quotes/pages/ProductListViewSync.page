@@ -1,0 +1,653 @@
+<apex:page id="ProductListViewSync" standardController="Product2" extensions="zqu.ProductListViewSyncController" recordSetVar="products" tabStyle="Z_Product_Catalog_Sync__tab">
+    <!-- Remote Object Setup -->
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="zqu__ZFeature__c" jsShorthand="ZFeature"
+                                fields="Id,Name,zqu__Description__c,zqu__Code__c,LastModifiedDate"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}">
+            <apex:remoteObjectField name="zqu__Deleted__c" jsShorthand="Deleted"/>
+            <apex:remoteObjectField name="zqu__ZuoraId__c" jsShorthand="ZuoraId"/>
+            <apex:remoteObjectField name="zqu__SyncStatus__c" jsShorthand="SyncStatus"/>
+            <apex:remoteObjectField name="zqu__SyncMessage__c" jsShorthand="SyncMessage"/>
+            <apex:remoteObjectField name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"/>
+            <apex:remoteObjectField name="zqu__FeatureName__c" jsShorthand="FeatureName"/>
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="AsyncApexJob"
+                                fields="Id,Status,JobType,CreatedDate,NumberOfErrors,ExtendedStatus">
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"
+                                fields="Id,Name,CreatedDate,LastModifiedDate,zqu__Number_of_Errors__c,zqu__Sync_seconds__c,zqu__Number_of_Objects_Requested__c,zqu__Number_of_Objects_Synced__c,zqu__Status__c,zqu__Error_Message__c"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}" >
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="Product2"
+                                fields="Name,Id,LastModifiedDate"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}">
+            <apex:remoteObjectField name="zqu__SKU__c" jsShorthand="SKU"/>
+            <apex:remoteObjectField name="zqu__ZuoraId__c" jsShorthand="ZuoraId"/>
+            <apex:remoteObjectField name="zqu__EffectiveStartDate__c" jsShorthand="EffectiveStartDate"/>
+            <apex:remoteObjectField name="zqu__EffectiveEndDate__c" jsShorthand="EffectiveEndDate"/>
+            <apex:remoteObjectField name="zqu__Type__c" jsShorthand="Type"/>
+            <apex:remoteObjectField name="zqu__Deleted__c" jsShorthand="Deleted"/>
+            <apex:remoteObjectField name="zqu__Category__c" jsShorthand="Category"/>
+            <apex:remoteObjectField name="zqu__SyncStatus__c" jsShorthand="SyncStatus"/>
+            <apex:remoteObjectField name="zqu__SyncMessage__c" jsShorthand="SyncMessage"/>
+            <apex:remoteObjectField name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"/>
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="zqu__ProductRatePlan__c" jsShorthand="ProductRatePlan"
+                                fields="Name,Id,LastModifiedDate"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}">
+            <apex:remoteObjectField name="zqu__Deleted__c" jsShorthand="Deleted"/>
+            <apex:remoteObjectField name="zqu__ZuoraId__c" jsShorthand="ZuoraId"/>
+            <apex:remoteObjectField name="zqu__SyncStatus__c" jsShorthand="SyncStatus"/>
+            <apex:remoteObjectField name="zqu__SyncMessage__c" jsShorthand="SyncMessage"/>
+            <apex:remoteObjectField name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"/>
+            <apex:remoteObjectField name="zqu__ProductRatePlanFullName__c" jsShorthand="ProductRatePlanFullName"/>
+            <apex:remoteObjectField name="zqu__Product__c" jsShorthand="Product"/>
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="zqu__ProductRatePlanCharge__c" jsShorthand="ProductRatePlanCharge"
+                                fields="Name,Id,LastModifiedDate"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}">
+            <apex:remoteObjectField name="zqu__Deleted__c" jsShorthand="Deleted"/>
+            <apex:remoteObjectField name="zqu__ZuoraId__c" jsShorthand="ZuoraId"/>
+            <apex:remoteObjectField name="zqu__SyncStatus__c" jsShorthand="SyncStatus"/>
+            <apex:remoteObjectField name="zqu__SyncMessage__c" jsShorthand="SyncMessage"/>
+            <apex:remoteObjectField name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"/>
+            <apex:remoteObjectField name="zqu__ProductRatePlanChargeFullName__c" jsShorthand="ProductRatePlanChargeFullName"/>
+            <apex:remoteObjectField name="zqu__ProductRatePlan__c" jsShorthand="ProductRatePlan"/>
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="zqu__ProductRatePlanChargeTier__c" jsShorthand="ProductRatePlanChargeTier"
+                                fields="Name,Id,LastModifiedDate"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}">
+            <apex:remoteObjectField name="zqu__Deleted__c" jsShorthand="Deleted"/>
+            <apex:remoteObjectField name="zqu__ZuoraId__c" jsShorthand="ZuoraId"/>
+            <apex:remoteObjectField name="zqu__SyncStatus__c" jsShorthand="SyncStatus"/>
+            <apex:remoteObjectField name="zqu__SyncMessage__c" jsShorthand="SyncMessage"/>
+            <apex:remoteObjectField name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"/>
+            <apex:remoteObjectField name="zqu__ProductRatePlanCharge__c" jsShorthand="ProductRatePlanCharge"/>
+        </apex:remoteObjectModel>
+        <apex:remoteObjectModel name="zqu__ZProductFeature__c" jsShorthand="ZProductFeature"
+                                fields="Name,Id,LastModifiedDate"
+                                retrieve="{!$RemoteAction.ProductListViewSyncController.retrieveObject}">
+            <apex:remoteObjectField name="zqu__ZuoraId__c" jsShorthand="ZuoraId"/>
+            <apex:remoteObjectField name="zqu__Deleted__c" jsShorthand="Deleted"/>
+            <apex:remoteObjectField name="zqu__SyncStatus__c" jsShorthand="SyncStatus"/>
+            <apex:remoteObjectField name="zqu__SyncMessage__c" jsShorthand="SyncMessage"/>
+            <apex:remoteObjectField name="zqu__Catalog_Sync_History__c" jsShorthand="CatalogSyncHistory"/>
+            <apex:remoteObjectField name="zqu__ZProductFeatureFullName__c" jsShorthand="ZProductFeatureFullName"/>
+            <apex:remoteObjectField name="zqu__Product__c" jsShorthand="Product"/>
+            <apex:remoteObjectField name="zqu__ZFeature__c" jsShorthand="Feature"/>
+        </apex:remoteObjectModel>
+    </apex:remoteObjects>
+
+    <!-- Remote Actions -->
+    <script>
+        var packageNS = '{!JSENCODE(packageNameSpace)}';
+        var JsRemote = {};
+        JsRemote.remoteSync = '{!$RemoteAction.ProductListViewSyncController.remoteSync}';
+        JsRemote.createSyncRequest = '{!$RemoteAction.ProductListViewSyncController.createSyncRequest}'
+        JsRemote.getJobProgress = '{!$RemoteAction.ProductListViewSyncController.getJobProgress}'
+        JsRemote.getT9Enabled = '{!$RemoteAction.ProductListViewSyncController.checkPermissions}';
+        JsRemote.getT9EnableCpq = '{!$RemoteAction.ProductListViewSyncController.checkCPQPermission}';
+        JsRemote.getSyncWrappers = '{!$RemoteAction.ProductListViewSyncController.getSyncWrappers}';
+        JsRemote.getSyncWrappersJSON = '{!$RemoteAction.ProductListViewSyncController.getSyncWrappersJSON}';
+        JsRemote.queryZuora = '{!$RemoteAction.ProductListViewSyncController.queryZuora}';
+        var passedInJSON = '{!JSENCODE(selectedProductIdsJSON)}';
+    </script>
+    
+    
+    <!-- Modal Popup for Selected Object Summary -->
+    <script type="text/ng-template" id="selectedObjectSummary.html">
+        <div class="bootstrap-force">
+        <div class="modal-header">
+            <h4 class="modal-title">Confirm Sync {{ selectedSType }} to Zuora</h4>
+        </div>
+        <div class="modal-body">
+            <h4>Selected Object Summary</h4>
+            <div class="sk-cube-grid" ng-show="syncWrapperJSON.loading">
+                <div class="sk-cube sk-cube1"></div>
+                <div class="sk-cube sk-cube2"></div>
+                <div class="sk-cube sk-cube3"></div>
+                <div class="sk-cube sk-cube4"></div>
+                <div class="sk-cube sk-cube5"></div>
+                <div class="sk-cube sk-cube6"></div>
+                <div class="sk-cube sk-cube7"></div>
+                <div class="sk-cube sk-cube8"></div>
+                <div class="sk-cube sk-cube9"></div>
+            </div>
+            <hr/>
+            <ul class="list-group" ng-hide="syncWrapperJSON.loading">
+                <li ng-if="syncWrapperJSON.data['Product2']" class="list-group-item " ng-class="getProductCountClass(syncWrapperJSON.data)">Product : {{syncWrapperJSON.data['Product2']}}</li>
+                <li ng-if="syncWrapperJSON.data['ProductRatePlan__c']" class="list-group-item " ng-class="getRatePlanCountClass(syncWrapperJSON.data)">Rate Plan : {{syncWrapperJSON.data['ProductRatePlan__c']}}</li>
+                <li ng-if="syncWrapperJSON.data['ProductRatePlanCharge__c']" class="list-group-item " ng-class="getChargeCountClass(syncWrapperJSON.data)">Charge : {{syncWrapperJSON.data['ProductRatePlanCharge__c']}}</li>
+                <li ng-if="syncWrapperJSON.data['ProductRatePlanChargeTier__c']" class="list-group-item " ng-class="getTierCountClass(syncWrapperJSON.data)">Tier : {{syncWrapperJSON.data['ProductRatePlanChargeTier__c']}}</li>
+                <li ng-if="syncWrapperJSON.data['ZFeature__c']" class="list-group-item " ng-class="getFeatureCountClass(syncWrapperJSON.data)">Feature : {{syncWrapperJSON.data['ZFeature__c']}}</li>
+                <li ng-if="syncWrapperJSON.data['ZProductFeature__c']" class="list-group-item " ng-class="getProductFeatureCountClass(syncWrapperJSON.data)">Product Feature : {{syncWrapperJSON.data['ZProductFeature__c']}}</li>
+            </ul>
+            <hr/>
+            <alert  ng-show="countAlert" ng-model="countAlert" type="{{countAlert.type}}" >{{countAlert.msg}}</alert>
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button ng-hide="syncWrapperJSON.loading" class="btn btn-lg btn-info " ng-class="{'' : syncWrapperJSON.canSync, 'disabled' : !syncWrapperJSON.canSync }" ng-click="ok()"> OK </button>
+            <button class="btn btn-lg btn-warning" ng-click="cancel()"> Cancel </button>
+        </div>
+        </div>
+    </script>
+    
+    <!-- Modal to query row details from Zuora -->
+    <script type="text/ng-template" id="ng-sync/sfdc/querydetails.html">
+        <div class="bootstrap-force">
+            <div class="modal-header">
+                <h4 class="modal-title">Query Zuora For Details {{ selectedObjectId }}</h4>
+            </div>
+            <div >
+                <div class="sk-cube-grid" ng-show="queryResult.loading">
+                    <div class="sk-cube sk-cube1"></div>
+                    <div class="sk-cube sk-cube2"></div>
+                    <div class="sk-cube sk-cube3"></div>
+                    <div class="sk-cube sk-cube4"></div>
+                    <div class="sk-cube sk-cube5"></div>
+                    <div class="sk-cube sk-cube6"></div>
+                    <div class="sk-cube sk-cube7"></div>
+                    <div class="sk-cube sk-cube8"></div>
+                    <div class="sk-cube sk-cube9"></div>
+                </div>
+                <div ng-hide="queryResult.loading">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th class="text-center hidden-sm hidden-md hidden-xs">#</th>
+                            <th> SFDC Type</th>
+                            <th> Id </th>
+                            <th> Zuora Id</th>
+                            <th> Zuora Type</th>
+                            <th> Error </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in displayData track by $index"
+                            ng-class="{'success' : !item.missingFromSfdc && !item.missingFromZuora , 'danger' : item.missingFromSfdc || item.missingFromZuora} ">
+                            <td>{{$index + 1}}</td>
+                            <td class="col-md-1"> {{item.sfdcType}}</td>
+                            <td class="col-md-1"> {{item.sfdcId}}</td>
+                            <td class="col-md-1"> {{item.zuoraId}}</td>
+                            <td class="col-md-1"> {{item.zuoraType}}</td>
+                            <td class="col-md-4"> {{item.errorMsg}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-lg btn-info" ng-click="ok()"> OK </button>
+            </div>
+        </div>
+    </script>
+    
+    <!-- Modal Popup for Sync History Details -->
+    <script type="text/ng-template" id="ng-sync/sfdc/syncdetails.html">
+        <div class="bootstrap-force">
+        <div class="modal-header">
+            <h4 class="modal-title">Sync Objects for Catalog Sync History {{ syncHistoryId }}</h4>
+        </div>
+        <div >
+            <div class="sk-cube-grid" ng-show="isAnyLoading()">
+                <div class="sk-cube sk-cube1"></div>
+                <div class="sk-cube sk-cube2"></div>
+                <div class="sk-cube sk-cube3"></div>
+                <div class="sk-cube sk-cube4"></div>
+                <div class="sk-cube sk-cube5"></div>
+                <div class="sk-cube sk-cube6"></div>
+                <div class="sk-cube sk-cube7"></div>
+                <div class="sk-cube sk-cube8"></div>
+                <div class="sk-cube sk-cube9"></div>
+            </div>
+            <tabset ng-hide="isAnyLoading()">
+            <tab>
+                <tab-heading >
+                    <i class="glyphicon glyphicon-th-large"></i> Product
+                </tab-heading>
+            <sfdc-catalog-objects remote-object-model="Product2Model" retrieve-options="Product2RetrieveOptions"
+                                  sfdc-namespace="packageNS" columns="Product2Columns" handle="Product2Handle" page-option="Product2PageOption" object-data="Product2Data"></sfdc-catalog-objects>
+            </tab>
+            <tab>
+                <tab-heading >
+                    <i class="glyphicon glyphicon-th-large"></i> Rate Plan
+                </tab-heading>
+            <sfdc-catalog-objects  remote-object-model="RatePlanModel" retrieve-options="RatePlanRetrieveOptions" sfdc-namespace="packageNS" columns="RatePlanColumns" handle="RatePlanHandle"
+                                   page-option="RatePlanPageOption" object-data="RatePlanData"></sfdc-catalog-objects>
+            </tab>
+            <tab>
+                <tab-heading >
+                    <i class="glyphicon glyphicon-th-large"></i> Charge
+                </tab-heading>
+            <sfdc-catalog-objects remote-object-model="ChargeModel" retrieve-options="ChargeRetrieveOptions" sfdc-namespace="packageNS" columns="ChargeColumns" handle="ChargeHandle"
+                                  page-option="ChargePageOption" object-data="ChargeData"></sfdc-catalog-objects>
+            </tab>
+            <tab>
+                <tab-heading >
+                    <i class="glyphicon glyphicon-th-large"></i> Tier
+                </tab-heading>
+            <sfdc-catalog-objects remote-object-model="TierModel" retrieve-options="TierRetrieveOptions" sfdc-namespace="packageNS" columns="TierColumns" handle="TierHandle"
+                                  page-option="TierPageOption" object-data="TierData"></sfdc-catalog-objects>
+            </tab>
+            <tab>
+                <tab-heading >
+                    <i class="glyphicon glyphicon-th-large"></i> Feature
+                </tab-heading>
+                <sfdc-catalog-objects remote-object-model="ZFeatureModel" retrieve-options="FeatureRetrieveOptions" sfdc-namespace="packageNS" columns="FeatureColumns" handle="FeatureHandle"
+                                      page-option="FeaturePageOption" object-data="FeatureData"></sfdc-catalog-objects>
+            </tab>
+            <tab>
+                <tab-heading >
+                    <i class="glyphicon glyphicon-th-large"></i> Product Feature
+                </tab-heading>
+                <sfdc-catalog-objects remote-object-model="ZProductFeatureModel" retrieve-options="ProductFeatureRetrieveOptions" sfdc-namespace="packageNS" columns="ProductFeatureColumns"
+                                      handle="ProductFeatureHandle" page-option="ProductFeaturePageOption" object-data="ProductFeatureData"></sfdc-catalog-objects>
+            </tab>
+            </tabset>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-lg btn-info" ng-click="ok()"> OK </button>
+        </div>
+        </div>
+    </script>
+    
+    <!-- Displays a list of records -->
+    <script type="text/ng-template" id="ng-sync/sfdc/objecttable.html">
+        <div class="container-fluid" >
+            <div cg-busy="{promise:loadObjectPromise,message:'Loading Your Data',templateUrl:'ng-sync/sfdc/loading_spin.html'}">
+                <div class="panel-body no-padding">
+                    <table class="table table-hover table-striped table-condensed">
+                        <thead>
+                        <tr>
+                            <th class="text-center hidden-sm hidden-md hidden-xs">#</th>
+                            <th ng-repeat="column in columns">{{ stripNamespace(column) }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in displayData track by $index">
+                            <td>{{$index + 1}}</td>
+                            <td class="col-md-3" ng-repeat="data in item track by $index"> <span ng-class="formatClass(data)">{{ data }}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                <pagination ng-show="!objectData.loading" total-items="pageOption.totalObjectCount" ng-model="pageOption.currentPage" ng-change="pageOption.pageChanged()" items-per-page="pageOption.limit"
+                            max-size="8" rotate="false" >
+                </pagination>
+                    </div>
+                    <div class="col-md-1">
+                        <nav ng-if="!fetchMore.disable">
+                            <ul class="pager">
+                                <li ng-click="fetchMore.fetch()"><a href="#">More</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- Checkbox component -->
+    <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+        <input type="checkbox" ng-model="checkAll.checked" id="select_all" name="filter-checkbox" value="" />
+    </script>
+    <!-- Loading Ball component -->
+    <script type="text/ng-template" id="ng-sync/sfdc/loading_ball.html">
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </script>
+    <!-- Loading Square component -->
+    <script type="text/ng-template" id="ng-sync/sfdc/loading_square.html">
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+    </script>
+    <!-- Loading Spin component -->
+    <script type="text/ng-template" id="ng-sync/sfdc/loading_spin.html">
+    <div class="sk-fading-circle">
+        <div class="sk-circle1 sk-circle"></div>
+        <div class="sk-circle2 sk-circle"></div>
+        <div class="sk-circle3 sk-circle"></div>
+        <div class="sk-circle4 sk-circle"></div>
+        <div class="sk-circle5 sk-circle"></div>
+        <div class="sk-circle6 sk-circle"></div>
+        <div class="sk-circle7 sk-circle"></div>
+        <div class="sk-circle8 sk-circle"></div>
+        <div class="sk-circle9 sk-circle"></div>
+        <div class="sk-circle10 sk-circle"></div>
+        <div class="sk-circle11 sk-circle"></div>
+        <div class="sk-circle12 sk-circle"></div>
+    </div>
+    </script>
+    <!-- Progress Bar component -->
+    <script type="text/ng-template" id="ng-sync/sfdc/progress.html">
+        <progressbar class="progress-striped active" max="percentageMax" value="barValue.value" type="barValue.status" ng-show="!barValue.hide">{{barValue.value}}% </progressbar>
+    </script>
+    
+    <!-- Renders a list of Apex jobs at the bottom of the Sync History screen. -->
+    <script type="text/ng-template" id="ng-sync/sfdc/apexJob.html">
+        <div cg-busy="{promise:apexJobPromise,message:'Loading Data',templateUrl:'ng-sync/sfdc/loading_spin.html'}">
+        <table class="table table-striped table-condensed">
+            <thead>
+            <tr>
+                <th class="text-center hidden-sm hidden-md hidden-xs">#</th>
+                <th>Job Id</th>
+                <th>Status</th>
+                <th>CreatedDate</th>
+                <th>CreatedTime</th>
+                <th class="hidden-sm hidden-xs">NumberOfErrors</th>
+                <th class="hidden-sm hidden-md hidden-xs">ErrorMessage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="job in apexJobData.data">
+                <td>{{$index + 1}}</td>
+                <td class="col-md-1">{{job._props.Id}}</td>
+                <td class="col-md-1"><span class="label" ng-class="getJobStatusColor(job._props.Status)">{{job._props.Status}}</span></td>
+                <td class="col-md-1">{{formatLocalDate(job._props.CreatedDate)}}</td>
+                <td class="col-md-1">{{formatLocalTime(job._props.CreatedDate)}}</td>
+                <td class="col-md-1"><span class="label label-default label-pill pull-xs-right">{{job._props.NumberOfErrors}}</span></td>
+                <td class="col-md-6">{{job._props.ExtendedStatus}}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </script>
+    
+    <!-- Table of Sync History records -->
+    <script type="text/ng-template" id="ng-sync/sfdc/catalogsynchistory.html">
+        <div cg-busy="{promise:catalogSyncPromise,message:'Loading Your Data',templateUrl:'ng-sync/sfdc/loading_spin.html'}">
+        <table class="table table-striped table-condensed">
+            <thead>
+            <tr>
+                <th class="text-center hidden-sm hidden-md hidden-xs">#</th>
+                <th>Sync Id</th>
+                <th>Status</th>
+                <th>CreatedDate</th>
+                <th>CreatedTime</th>
+                <th class="hidden-sm hidden-xs">Requested</th>
+                <th class="hidden-sm hidden-xs">Synced</th>
+                <th class="hidden-sm hidden-xs">Failed</th>
+                <th class="hidden-sm hidden-md hidden-xs">Error Message</th>
+                <th class="hidden-sm hidden-xs">Duration</th>
+                <th>Detail</th>
+            </tr>
+            </thead>
+            <tbody ng-controller="OpenDetailController">
+            <tr ng-repeat="job in catalogSyncData.data">
+                <td>{{$index + 1}}</td>
+                <td class="col-md-1">{{job._props.Id}}</td>
+                <td class="col-md-1"><span class="label" ng-class="getJobStatusColor(job._props[sfdcNamespace + 'Status__c'])">{{job._props[sfdcNamespace + 'Status__c']}}</span></td>
+                <td class="col-md-1">{{formatLocalDate(job._props.CreatedDate)}}</td>
+                <td class="col-md-1">{{formatLocalTime(job._props.CreatedDate)}}</td>
+                <td class="col-md-1"><span class="label zlabel-default label-pill pull-xs-right">{{job._props[sfdcNamespace + 'Number_of_Objects_Requested__c']}}</span></td>
+                <td class="col-md-1"><span class="label zlabel-success label-pill pull-xs-right">{{job._props[sfdcNamespace + 'Number_of_Objects_Synced__c']}}</span></td>
+                <td class="col-md-1"><span class="label zlabel-danger label-pill pull-xs-right">{{job._props[sfdcNamespace + 'Number_of_Errors__c']}}</span></td>
+                <td class="col-md-4"><div popover="{{job._props[sfdcNamespace + 'Error_Message__c']}}" popover-trigger="mouseenter" popover-placement="bottom">
+                    {{getTruncatedText(job._props[sfdcNamespace + 'Error_Message__c'], 80)}}</div></td>
+                <td class="col-md-1">{{job._props[sfdcNamespace + 'Sync_seconds__c']}} sec</td>
+                <td class="col-md-1"><button class="btn zbtn-success" ng-click="openSyncDetail(job._props.Id)">Get Details</button></td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </script>
+    
+    <!-- Used to render all object tables on page load -->
+    <script type="text/ng-template" id="sfdcNgTableTemplate.html">
+        <div class="container-fluid" >
+
+            <div cg-busy="{promise:remoteFetchPromise,message:'Loading Data',templateUrl:'ng-sync/sfdc/loading_spin.html'}">
+            <div class="panel-body no-padding">
+                <table class="table table-striped table-condensed">
+                    <tbody>
+                    <tr >
+                        <td class="col-md-6">
+                            <div class="btn-group" dropdown>
+                                <button type="button" class="btn zbtn-info" ng-click="setSelectedFilter();sfdcFetchControl.fetch()">Clear</button>
+                                <button type="button" class="btn " ng-class="getToggleClass()" dropdown-toggle>
+                                    <i class="glyphicon glyphicon-chevron-down"></i>  {{getSelectedFilter()}}
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="split-button">
+                                    <li role="menuitem" class="zdrop-down" ng-click="setSelectedFilter(critera)" ng-repeat="critera in sfdcFilterCriteras"><span>  {{critera}}</span></li>
+                                </ul>
+                                <div class="animate-switch-container" ng-switch on="selectedFilter.selected">
+                                <div class="animate-switch" ng-switch-when="SyncStatus" ng-init="filterByCritera('')">
+                                    <select ng-model="selectedObject.status" ng-change="filterByCritera(selectedObject.status)">
+                                    <option value="" selected="selected">Never Synced</option>
+                                    <option value="Synced">Synced</option>
+                                    <option value="Failed">Failed</option>
+                                    <option value="Updated">Updated</option>
+                                </select>
+                                </div>
+                                <div class="animate-switch" ng-switch-when="Id">
+                                    <input ng-keyup="filterById($event.keyCode, selectedObject.id)" class="form-control input-lg" type="text" ng-model="selectedObject.id" placeholder="Search for object by {{getSelectedFilter()}}"/>
+                                </div>
+                                <div class="animate-switch" ng-switch-when="ProductId">
+                                    <input ng-keyup="filterById($event.keyCode, selectedObject.productId)" class="form-control input-lg" type="text" ng-model="selectedObject.productId"
+                                           placeholder="Filter by Product Id"/>
+                                </div>
+                                <div class="animate-switch" ng-switch-when="ProductRatePlanId">
+                                    <input ng-keyup="filterById($event.keyCode, selectedObject.productRatePlanId)" class="form-control input-lg" type="text" ng-model="selectedObject.productRatePlanId"
+                                           placeholder="Filter by Product Rate Plan Id"/>
+                                </div>
+                                <div class="animate-switch" ng-switch-when="ProductRatePlanChargeId">
+                                    <input ng-keyup="filterById($event.keyCode, selectedObject.productRatePlanChargeId)" class="form-control input-lg" type="text" ng-model="selectedObject.productRatePlanChargeId"
+                                           placeholder="Filter by Product Rate Plan Charge Id"/>
+                                </div>
+                                <div class="animate-switch" ng-switch-when="LastSyncId">
+                                    <input ng-keyup="filterById($event.keyCode, selectedObject.lastSyncId)" class="form-control input-lg" type="text" ng-model="selectedObject.lastSyncId"
+                                           placeholder="Filter by Last Synch Job Id"/>
+                                </div>
+                                <div class="animate-switch" ng-switch-when="Name">
+                                <input type="text" ng-model="selectedObject.name" placeholder="Search for object by {{getSelectedFilter()}}"
+                                       typeahead="obj for obj in getObjects($viewValue)"
+                                       typeahead-on-select="getObjectDetail($item);"
+                                       typeahead-loading="loadingObject"
+                                       class="form-control input-lg" />
+                                <label class="label zlabel-success" ng-show="loadingObject" ><i class="glyphicon glyphicon-refresh gly-spin">
+                                </i></label>
+                                </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="col-md-1"><span class="label zlabel-default label-pill">Number of Objects {{sfdcObjectData.totalCount}}</span></td>
+                        <td class="col-md-1"><span class="label zlabel-danger label-pill">Number of Errors {{sfdcObjectData.totalFailedCount}}</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped table-condensed table-hover" >
+                    <thead>
+                    <tr>
+                        <th class="text-center hidden-sm hidden-md hidden-xs">#</th>
+                        <th ng-if="sfdcFetchControl.showSelect"><input type="checkbox" ng-model="checkAll.checked" id="select_all" name="filter-checkbox" value="" /></th>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th ng-if="sfdcAdditionalColumn.show">{{sfdcAdditionalColumn.Name}}</th>
+                        <th>ZuoraId</th>
+                        <th class="hidden-sm hidden-xs">Status</th>
+                        <th >Message</th>
+                        <th class="hidden-sm hidden-xs">Mark for Deletion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in sfdcTableParams.data" >
+                        <td class="text-center hidden-sm hidden-md hidden-xs">{{ $index+1 }}</td>
+                        <td ng-if="sfdcFetchControl.showSelect" class="hidden-sm hidden-xs" header="'ng-table/headers/checkbox.html'">
+                            <label class="btn-check">
+                                <input type="checkbox" ng-model="item.selected" />
+                                <span></span>
+                            </label>
+                        </td>
+                        <td>
+                            <a href="/{{item._props.Id}}" target="_self">{{item._props.Id}}</a>
+                        </td>
+                        <td class="col-md-2"><div popover="{{item._props.Name}}" popover-trigger="mouseenter">{{ getTruncatedText(item._props.Name, 30) }}</div>
+                        </td>
+                        <td class="col-md-2"ng-if="sfdcAdditionalColumn.show" ><div popover="{{sfdcAdditionalColumn.eval(item._props, sfdcNamespace)}}" popover-trigger="mouseenter">{{getTruncatedText(sfdcAdditionalColumn.eval(item._props, sfdcNamespace), 20)}}</div></td>
+                        <td ng-controller="OpenQueryController" class="col-md-2"> <span ng-if="item._props[sfdcNamespace + 'ZuoraId__c']" class="label zlabel-success clickable-span" ng-click="queryItemZuora(item._props[sfdcNamespace + 'ZuoraId__c'], sfdcObjectData.type, item._props.Id)">
+                            <i class="glyphicon glyphicon-cloud-download"></i>  {{item._props[sfdcNamespace + 'ZuoraId__c']}}</span></td>
+                        <td class="col-md-1"><span class="label " ng-class="getSyncStatusLabelClass(item._props[sfdcNamespace + 'SyncStatus__c'], item._props[sfdcNamespace + 'SyncMessage__c'])">
+                            {{item._props[sfdcNamespace + 'SyncStatus__c']}}</span></td>
+                        <td class="col-md-4" ><div popover="{{item._props[sfdcNamespace + 'SyncMessage__c']}}" popover-trigger="mouseenter">{{parseMessage(item._props[sfdcNamespace + 'SyncMessage__c'])}}</div></td>
+                        <td class="col-md-1" tooltip="Delete from Zuora, but not in Salesforce" tooltip-class="tooltipCustomClass">
+                             <span class="label " ng-class="getDeletedLabelClass(item._props[sfdcNamespace + 'Deleted__c'])" ng-click="toggleDelete(item)" ng-disable="item.fetching">
+                                 <i  class="glyphicon " ng-class="{'glyphicon-refresh gly-spin' : item.fetching , 'glyphicon-trash' : !item.fetching }"></i>  {{item._props[sfdcNamespace + 'Deleted__c']}}</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <pagination ng-show="!sfdcObjectData.loading" total-items="sfdcPageOption.totalObjectCount" ng-model="sfdcPageOption.currentPage" ng-change="sfdcPageOption.pageChanged()"
+                        items-per-page="sfdcRetrieveOption.limit" max-size="18" rotate="false"></pagination>
+        </div>
+        </div>
+    </script>
+
+<body xmlns:ng="http://angularjs.org" ng-app="app.sync.product" ng-controller="controll.sync.status" ng-cloak="ngCloak">
+<div class="bootstrap-force">
+    <toaster-container toaster-options="{'time-out': 5000, 'close-button':true,
+    'showCloseButton':true,'position-class': 'toast-center-full-width'}"></toaster-container>
+<tabset>
+<tab active="tabs.Product">
+    <tab-heading >
+        <i class="glyphicon glyphicon-th-large"></i> Product
+    </tab-heading>
+    <div class="container-fluid" >
+        <div class="panel-body no-padding"  >
+            <table class="table table-striped table-condensed">
+                <tbody>
+                <tr>
+                    <td>
+                        <button class="btn zbtn-info" ng-click="openSyncConfirm(selectedProductsJSON.data.length, selectedProductsJSON, typeProduct, productBarValue, productBarOption, productBarHandle)" ng-disabled="syncToZuora.active || selectedProductsJSON.loading || !t9CpqEnabled" >
+                            <i class="glyphicon " ng-class="{ 'glyphicon-cloud-upload': !selectedProductsJSON.loading && !gettingT9Cpq && !syncToZuora.active , 'glyphicon-refresh gly-spin': selectedProductsJSON.loading || gettingT9Cpq || syncToZuora.active}"></i>
+                            Sync Products</button>
+                    </td>
+                    <td ><span class="label zlabel-danger" ng-if="!t9CpqEnabled && !gettingT9Cpq"><i class="glyphicon glyphicon-off" ></i>Product Catalog Sync cannot be executed from Salesforce as customer does not have CPQ enabled</span></td>
+                    <td class="col-lg-8"><sfdc-ng-progress sfdc-progress-list="" bar-handle="productBarHandle" bar-option="productBarOption" bar-value="productBarValue"></sfdc-ng-progress></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <sfdc-ng-table sfdc-namespace="packageNS" sfdc-object-data="selectedProductsJSON" sfdc-remote-model="Product2Model" sfdc-retrieve-option="productRetrieveOption"
+                   sfdc-page-option="productPageOption" sfdc-fetch-control="productFetchControl" sfdc-additional-column="productSKUColumn"
+                   sfdc-filter-criteras="productFilters"></sfdc-ng-table>
+
+</tab>
+<tab active="tabs.Feature">
+    <tab-heading >
+        <i class="glyphicon glyphicon-barcode"></i> Feature
+    </tab-heading>
+    <div class="container-fluid" >
+        <div class="panel-body no-padding"  >
+            <table class="table table-striped table-condensed">
+                <tbody>
+                <tr>
+                    <td>
+                        <button class="btn zbtn-info" ng-click="openSyncConfirm(featuresJSON.data.length, featuresJSON, typeZFeature, featureBarValue, featureBarOption, featureBarHandle)" ng-disabled="syncToZuora.active || featuresJSON.loading || !t9CpqEnabled" >
+                            <i class="glyphicon " ng-class="{ 'glyphicon-cloud-upload': !featuresJSON.loading && !gettingT9Cpq && !syncToZuora.active , 'glyphicon-refresh gly-spin': featuresJSON.loading || gettingT9Cpq || syncToZuora.active}"></i>
+                            Sync Features</button>
+                    </td>
+                    <td class="col-lg-8">
+                        <sfdc-ng-progress sfdc-progress-list="" bar-handle="featureBarHandle" bar-option="featureBarOption" bar-value="featureBarValue"></sfdc-ng-progress>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <sfdc-ng-table sfdc-namespace="packageNS" sfdc-object-data="featuresJSON" sfdc-remote-model="ZFeatureModel" sfdc-retrieve-option="featureRetrieveOption" sfdc-page-option="featurePageOption"
+                   sfdc-fetch-control="featureFetchControl" sfdc-additional-column="noColumn"
+                   sfdc-filter-criteras="featureFilters"></sfdc-ng-table>
+</tab>
+<tab active="tabs.RatePlan">
+    <tab-heading >
+        <i class="glyphicon glyphicon-th"> </i> Rate Plan
+    </tab-heading>
+    <sfdc-ng-table sfdc-namespace="packageNS" sfdc-object-data="ratePlansJSON" sfdc-remote-model="RatePlanModel" sfdc-retrieve-option="ratePlanRetrieveOption" sfdc-page-option="ratePlanPageOption"
+        sfdc-fetch-control="ratePlanFetchControl" sfdc-additional-column="noColumn"
+                   sfdc-filter-criteras="ratePlanFilters"></sfdc-ng-table>
+</tab>
+<tab active="tabs.Charge">
+    <tab-heading >
+        <i class="glyphicon glyphicon-th-list"> </i> Charge
+    </tab-heading>
+    <sfdc-ng-table sfdc-namespace="packageNS" sfdc-object-data="chargesJSON" sfdc-remote-model="ChargeModel" sfdc-retrieve-option="chargeRetrieveOption" sfdc-page-option="chargePageOption"
+                   sfdc-fetch-control="chargeFetchControl" sfdc-additional-column="noColumn"
+                   sfdc-filter-criteras="chargeFilters"></sfdc-ng-table>
+</tab>
+<tab active="tabs.Tier">
+    <tab-heading >
+        <i class="glyphicon glyphicon-list-alt"> </i> Tier
+    </tab-heading>
+    <sfdc-ng-table sfdc-namespace="packageNS" sfdc-object-data="tiersJSON" sfdc-remote-model="TierModel" sfdc-retrieve-option="tierRetrieveOption" sfdc-page-option="tierPageOption"
+                   sfdc-fetch-control="tierFetchControl" sfdc-additional-column="noColumn"
+                   sfdc-filter-criteras="tierFilters"></sfdc-ng-table>
+</tab>
+<tab active="tabs.ProductFeature">
+    <tab-heading >
+        <i class="glyphicon glyphicon-barcode"> </i> Product Feature
+    </tab-heading>
+    <sfdc-ng-table sfdc-namespace="packageNS" sfdc-object-data="productFeaturesJSON" sfdc-remote-model="ProductFeatureModel" sfdc-retrieve-option="productFeatureRetrieveOption" sfdc-page-option="productFeaturePageOption"
+                   sfdc-fetch-control="productFeatureFetchControl" sfdc-additional-column="noColumn"
+                   sfdc-filter-criteras="productFeatureFilters"></sfdc-ng-table>
+</tab>
+<tab active="tabs.History">
+    <tab-heading >
+        <i class="glyphicon glyphicon-bell" ></i> History
+    </tab-heading>
+        <h4> Catalog Sync History </h4>
+        <sfdc-ng-progress sfdc-progress-list="" bar-handle="syncBarHandle" bar-option="syncBarOption" bar-value="syncBarValue"></sfdc-ng-progress>
+        <button class="btn zbtn-success" ng-click="catalogSyncHandle.fetch()"><i class="glyphicon glyphicon-refresh"></i>  Load </button>
+        <hr/>
+        <sfdc-catalog-sync-history sfdc-namespace="packageNS" catalog-sync-data="catalogSyncJSON" catalog-sync-history-handle="catalogSyncHandle" history-retrieve-option="catalogSyncRetrieveOption"></sfdc-catalog-sync-history>
+        <hr/>
+        <hr/>
+        <h4> Apex Job History </h4>
+        <hr/>
+        <button class="btn zbtn-success" ng-click="apexJobHandle.fetch()"><i class="glyphicon glyphicon-refresh"></i> Load </button>
+        <sfdc-apex-job apex-job-data="apexJobsJSON" job-handle="apexJobHandle" job-retrieve-option="apexJobRetrieveOption"
+                       job-interval-option="apexJobIntervalOption" all-done-call-back="apexJobAllDoneCallBack"></sfdc-apex-job>
+</tab>
+
+</tabset>
+
+</div> <!-- bootstrap-force-->
+</body>
+
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/bootstrap-force-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/bootstrap.3.1.1min-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/ng-table.1.0.0.min-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/angular-ui-tree.2.11.0.min-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/angular-chart.min-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/toaster.0.4.16.min-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/angular-busy-min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/productsync-min.css')}" />
+
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular.1.3.15.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/ui-bootstrap-tpls-0.13.1-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-animate.1.3.15-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/toaster.0.4.16.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/Chart.1.0.1min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/ng-table.1.0.0.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-chart.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-ui-tree.2.11.0.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-busy-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/productsync-compressed.js')}" />
+</apex:page>

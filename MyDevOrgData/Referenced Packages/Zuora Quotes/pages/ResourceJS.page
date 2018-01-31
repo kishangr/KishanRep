@@ -1,0 +1,121 @@
+<apex:page contentType="text/javascript" showHeader="false" sidebar="false" controller="zqu.ResourceJSController" extensions="zqu.JsRemoteController" standardStylesheets="false" >
+
+<!-- Resource file used in javascript -->
+Resource = {};
+Resource.close = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/close.gif')}";
+Resource.iconEditMode = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/iconEditMode.png')}";
+Resource.open = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/open.gif')}";
+Resource.checkboxChecked = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/checkbox_checked.gif')}";
+Resource.checkboxUnChecked = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/checkbox_unchecked.gif')}";
+Resource.urlIconRemove = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/icon_remove.gif')}";
+Resource.TODAY = "{!TODAY()}";
+Resource.expand = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/selectIcon.png')}";
+
+
+<!-- JsRemote actions -->
+JsRemote = {};
+JsRemote.requestBillingAccounts = '{!$RemoteAction.JsRemoteController.requestBillingAccounts}';
+JsRemote.requestSubscriptionCharges = '{!$RemoteAction.JsRemoteController.requestSubscriptionCharges}';
+JsRemote.requestSubscriptions = '{!$RemoteAction.JsRemoteController.requestSubscriptions}';
+
+JsRemote.requestAvailableBillingAccounts = '{!$RemoteAction.JsRemoteController.requestAvailableBillingAccounts}';
+JsRemote.requestAvailableQuoteTypes = '{!$RemoteAction.JsRemoteController.requestAvailableQuoteTypes}';
+JsRemote.requestAvailableSubscriptions = '{!$RemoteAction.JsRemoteController.requestAvailableSubscriptions}';
+
+JsRemote.getSfdcObjects = '{!$RemoteAction.JsRemoteController.getSfdcObjects}';
+JsRemote.getQuickListObjects = '{!$RemoteAction.JsRemoteController.getQuickListObjectData}';
+JsRemote.getQuickListColumnRefs = '{!$RemoteAction.JsRemoteController.getQuickListColumnRefs}';
+JsRemote.getQuickListRecords = '{!$RemoteAction.JsRemoteController.getQuickListRecords}';
+ 
+<!-- Custom label used in javascript -->
+Label = {};
+Label.ADD_FEATURES = "{!JSENCODE($Label.BUTTON_ADD_FEATURES)}";
+Label.BILLING_PERIODS = "{!JSENCODE($Label.BILLING_PERIODS)}";
+Label.BUTTON_ADD = "{!JSENCODE($Label.BUTTON_ADD)}";
+Label.BUTTON_ADDED = "{!JSENCODE($Label.BUTTON_ADDED)}";
+Label.BUTTON_CANCEL = "{!JSENCODE($Label.BUTTON_CANCEL)}";
+Label.BUTTON_CLONE = "{!JSENCODE($Label.BUTTON_CLONE)}";
+Label.BUNDLE_COLUMN_FEATURES = "{!JSENCODE($Label.BUNDLE_COLUMN_FEATURES)}";
+Label.BUNDLE_COLUMN_PRODUCT_NAME = "{!JSENCODE($Label.BUNDLE_COLUMN_PRODUCT_NAME)}";
+Label.BUNDLE_COLUMN_RATE_PLANS = "{!JSENCODE($Label.BUNDLE_COLUMN_RATE_PLANS)}";
+Label.BUTTON_CONFIGURE = "{!JSENCODE($Label.BUTTON_CONFIGURE)}";
+Label.BUTTON_DEL = "{!JSENCODE($Label.BUTTON_DEL)}";
+Label.BUTTON_DONE = "{!JSENCODE($Label.BUTTON_DONE)}";
+Label.BUTTON_EDIT = "{!JSENCODE($Label.BUTTON_EDIT)}";
+Label.BUTTON_EDIT_AMENDMENT = "{!JSENCODE($Label.BUTTON_EDIT_AMENDMENT)}";
+Label.BUTTON_EDIT_FEATURES = "{!JSENCODE($Label.BUTTON_EDIT_FEATURES)}";
+Label.BUTTON_EDIT_RATE_PLAN = "{!JSENCODE($Label.BUTTON_EDIT_RATE_PLAN)}";
+Label.BUTTON_OK = "{!JSENCODE($Label.BUTTON_OK)}";
+Label.BUTTON_OPTIONS = "{!JSENCODE($Label.BUTTON_OPTIONS)}";
+Label.BUTTON_REMOVE = "{!JSENCODE($Label.BUTTON_REMOVE)}";
+Label.BUTTON_SEE_MORE = "{!JSENCODE($Label.BUTTON_SEE_MORE)}";
+Label.BUTTON_SELECT = "{!JSENCODE($Label.BUTTON_SELECT)}";
+Label.BUTTON_SELECT_PLAN = "{!JSENCODE($Label.BUTTON_SELECT_PLAN)}";
+Label.BUTTON_UNDO_CHANGES = "{!JSENCODE($Label.BUTTON_UNDO_CHANGES)}";
+Label.BUTTON_VIEW_DETAILS = "{!JSENCODE($Label.BUTTON_VIEW_DETAILS)}";
+Label.BUNDLE_EDIT_PRODUCT = "{!JSENCODE($Label.BUNDLE_EDIT_PRODUCT)}";
+Label.BUNDLE_PAGING_EMPTY = "{!JSENCODE($Label.BUNDLE_PAGING_EMPTY)}";
+Label.BUNDLE_PAGING_INFO = "{!JSENCODE($Label.BUNDLE_PAGING_INFO)}";
+Label.BUNDLE_PAGING_LENGTH_MENU = "{!JSENCODE($Label.BUNDLE_PAGING_LENGTH_MENU)}";
+Label.BUNDLE_PAGING_TOTAL = "{!JSENCODE($Label.BUNDLE_PAGING_TOTAL)}";
+Label.BUNDLE_PRODUCT_OPTION_TYPE_INCLUDED = "{!JSENCODE($Label.BUNDLE_PRODUCT_OPTION_TYPE_INCLUDED)}";
+Label.BUNDLE_PRODUCT_OPTION_TYPE_REQUIRED = "{!JSENCODE($Label.BUNDLE_PRODUCT_OPTION_TYPE_REQUIRED)}";
+Label.BUNDLE_REMOVE_PRODUCT = "{!JSENCODE($Label.BUNDLE_REMOVE_PRODUCT)}";
+Label.BUNDLE_TITLE_INCLUDED_PRODUCTS = "{!JSENCODE($Label.BUNDLE_TITLE_INCLUDED_PRODUCTS)}";
+Label.BUNDLE_WARNING_ENTER_TWO_CHARACTERS = "{!JSENCODE($Label.BUNDLE_WARNING_ENTER_TWO_CHARACTERS)}";
+Label.CHANGES_NO_CHANGE_YET_SHORT = "{!JSENCODE($Label.CHANGES_NO_CHANGE_YET_SHORT)}";
+Label.CHARGE_MODEL_DISCOUNT_FIXEDAMOUNT_DESC = "{!JSENCODE($Label.CHARGE_MODEL_DISCOUNT_FIXEDAMOUNT_DESC)}";
+Label.CHARGE_MODEL_DISCOUNT_PERCENT_DESC = "{!JSENCODE($Label.CHARGE_MODEL_DISCOUNT_PERCENT_DESC)}";
+Label.COLLAPSE_ALL = "{!JSENCODE($Label.COLLAPSE_ALL)}";
+Label.COLUMN_ACTION = "{!JSENCODE($Label.COLUMN_ACTION)}";
+Label.COLUMN_ADDITIONAL_ATTRIBUTES = "{!JSENCODE($Label.COLUMN_ADDITIONAL_ATTRIBUTES)}";
+Label.COLUMN_FEATURE_CODE = "{!JSENCODE($ObjectType.ZFeature__c.fields.Code__c.Label)}";
+Label.COLUMN_FEATURE_DESCRIPTION = "{!JSENCODE($ObjectType.ZFeature__c.fields.Description__c.Label)}";
+Label.COLUMN_FEATURE_NAME = "{!JSENCODE($ObjectType.ZFeature__c.fields.FeatureName__c.Label)}";
+Label.CONFIRMATION = "{!JSENCODE($Label.CONFIRMATION)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_ADDED = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_ADDED)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_EXPIRED = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_EXPIRED)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_REMOVED = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_REMOVED)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_UPDATED = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_UPDATED)}";
+Label.VIEW_EDIT_TIERS = "{!JSENCODE($Label.VIEW_EDIT_TIERS)}";
+Label.END_OF_TERM = "{!JSENCODE($Label.END_OF_TERM)}";
+Label.ERROR = "{!JSENCODE($Label.ERROR)}";
+Label.ERROR_CANNOT_REMOVE_RATE_PLANS = "{!JSENCODE($Label.ERROR_CANNOT_REMOVE_RATE_PLANS)}";
+Label.ERROR_CANNOT_SAVE_QUOTE = "{!JSENCODE($Label.ERROR_CANNOT_SAVE_QUOTE)}";
+Label.ERROR_CRM_ACCOUNT_REQUIRED = "{!JSENCODE($Label.ERROR_CRM_ACCOUNT_REQUIRED)}";
+Label.ERROR_NOT_ALL_RATE_PLANS_ADDED = "{!JSENCODE($Label.ERROR_NOT_ALL_RATE_PLANS_ADDED)}";
+Label.EXPAND_ALL = "{!JSENCODE($Label.EXPAND_ALL)}";
+Label.FEATURE_ADDITIONAL_ATTRIBUTE_FIELD_NAME = "{!JSENCODE($Label.FEATURE_ADDITIONAL_ATTRIBUTE_FIELD_NAME)}";
+Label.FEATURE_ADDITIONAL_ATTRIBUTE_FIELD_VALUE = "{!JSENCODE($Label.FEATURE_ADDITIONAL_ATTRIBUTE_FIELD_VALUE)}";
+Label.FEATURE_NO_FEATURES_ASSOCIATED_WIHT_PRODUCT = "{!JSENCODE($Label.FEATURE_NO_FEATURES_ASSOCIATED_WIHT_PRODUCT)}";
+Label.FEATURE_REMOVE_FEATURE_CONFIRMATION = "{!JSENCODE($Label.FEATURE_REMOVE_FEATURE_CONFIRMATION)}";
+Label.GUIDED_SELLING_SAVE_MESSAGE = "{!JSENCODE($Label.GUIDED_SELLING_SAVE_MESSAGE)}";
+Label.INCLUDED = "{!JSENCODE($Label.INCLUDED)}";
+Label.NO_BILLING_ACCOUNTS_FOUND = "{!JSENCODE($Label.NO_BILLING_ACCOUNTS_FOUND)}";
+Label.PICKLIST_OPTION_NO="{!JSENCODE($Label.PICKLIST_OPTION_NO)}";
+Label.PICKLIST_OPTION_NONE="{!JSENCODE($Label.PICKLIST_OPTION_NONE)}";
+Label.PICKLIST_OPTION_YES="{!JSENCODE($Label.PICKLIST_OPTION_YES)}";
+Label.Tiers_Has_Custom_Tiers = "{!JSENCODE($Label.Tiers_Has_Custom_Tiers)}";
+Label.SELECT_PRODUCT_WARNING_SAVE_FIRST = "{!JSENCODE($Label.SELECT_PRODUCT_WARNING_SAVE_FIRST)}";
+Label.WARNING = "{!JSENCODE($Label.Warning)}";
+Label.ERROR_PAGE_LOAD = "{!JSENCODE($Label.ERROR_PAGE_LOAD)}";
+Label.SBA_NO_SUBSCRIPTION_CHARGES = "{!JSENCODE($Label.SBA_NO_SUBSCRIPTION_CHARGES)}";
+Label.SBA_NO_SUBSCRIPTIONS = "{!JSENCODE($Label.SBA_NO_SUBSCRIPTIONS)}";
+Label.SELECT_PRODUCT_STATUS_ORIGINAL = "{!JSENCODE($Label.SELECT_PRODUCT_STATUS_ORIGINAL)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_FUTURE_UPDATE = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_FUTURE_UPDATE)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_FUTURE_REMOVAL = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_FUTURE_REMOVAL)}";
+Label.CPQ_SELECT_PRODUCT_STATUS_ORIGINAL_FUTURE = "{!JSENCODE($Label.CPQ_SELECT_PRODUCT_STATUS_ORIGINAL_FUTURE)}";
+
+ZConfig = {};
+ZConfig.isDiscountDisabled = {!isDiscountDisabled};
+ZConfig.isGettingBillingAccountsFrom360 = {!isGettingBillingAccountsFrom360};
+ZConfig.zqns = "{!zquotesPrefix}";
+ZConfig.z360ns = "{!z360Prefix}";
+ZConfig.useBlendedEffectivePrice = "{!zconfig.use_blended_effective_price__c}";
+ZConfig.isGuidedSellingEnabled = "{!zconfig.Enable_GuidedSelling__c}";
+
+<!-- Topic published by the different components -->
+Topic = {};
+Topic.BREADCRUMB_ITEM_DELETED = 'BREADCRUMB_ITEM_DELETED';
+
+</apex:page>

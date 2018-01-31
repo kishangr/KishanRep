@@ -1,0 +1,246 @@
+<apex:page controller="zqu.ZQConfigController" sideBar="false" action="{!quoteConfiguration.onLoad}" title="{!$Label.zqu__config_default_values}" tabstyle="Z_Quote_Config__tab" id="configurationPage">
+    <apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}"/>
+    <!--TODO: need to make as much of this as possible into a component (must make the checkbox section into a component, also make rendering each field into a component (ConfigField component maybe?)-->
+    <!--TODO: need to make sure the blocks render properly, both with and without multientity-->
+    <style>
+        body .bPageBlock .pbBody .labelCol {
+            color: #4A4A56;
+            padding-top: 10px !important;
+        }
+
+        body .bPageBlock .pbBody .dataCol,  body .bPageBlock .pbBody .data2Col{
+            padding-top: 10px !important;
+        }
+
+        .tertiaryPalette {
+            background-color: #DADFEB !important;
+        }
+    </style>
+
+    <script>
+        $jq = jQuery.noConflict();
+    </script>
+
+    <c:HelpComponent cid="COM-0009" rightAlign="true"/>
+    <c:StatusModal />
+    <apex:outputPanel id="msg">
+        <c:Notification />
+    </apex:outputPanel>
+    <c:PageTitle title="{!$Label.zqu__config_default_values}" subTitle="{!$Label.zqu__config_default_values_subtitle}"/>
+
+    <apex:form id="configurationForm">
+        <apex:pageBlock id="entityConfig">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="{!$Label.zqu__button_edit_settings}" rendered="{!IF(isMultiEntityEnabled, AND(NOT(quoteConfiguration.isEditMode), quoteConfiguration.hasBillingEntities), NOT(quoteConfiguration.isEditMode))}" action="{!quoteConfiguration.edit}" style="margin-left:10%" reRender="entityConfig,msg"/>
+                <apex:commandButton value="{!$Label.zqu__button_back_settings}" rendered="{!NOT(quoteConfiguration.isEditMode)}" action="{!quoteConfiguration.back}" style="{!IF(isMultiEntityEnabled, IF(quoteConfiguration.hasBillingEntities, '', 'margin-left:10%'), '')}"/>
+                <apex:commandButton value="{!$Label.zqu__button_save}" rendered="{!quoteConfiguration.isEditMode}" action="{!quoteConfiguration.save}" style="margin-left:10%"/>
+                <apex:commandButton value="{!$Label.zqu__button_cancel}" rendered="{!quoteConfiguration.isEditMode}" immediate="true" action="{!quoteConfiguration.onLoad}"/>
+            </apex:pageBlockButtons>
+
+            <!--Detail Mode-->
+            <apex:pageBlockSection rendered="{!AND(isMultiEntityEnabled, NOT(quoteConfiguration.hasBillingEntities))}" collapsible="false" columns="2" title="{!$Label.zqu__section_empty_entity_list}">
+                <apex:outputPanel >{!$Label.zqu__error_no_synced_entities}</apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" title="{!$Label.zqu__section_view_and_entity_selection}" collapsible="false" rendered="{!IF(isMultiEntityEnabled, AND(NOT(quoteConfiguration.isEditMode), quoteConfiguration.hasBillingEntities), false)}">
+                <apex:pageBlockSectionItem helpText="{!$Label.zqu__configuration_view_help}">
+                    <apex:outputLabel value="{!$Label.zqu__configuration_view}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentView}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(quoteConfiguration.isGlobalView)}" helpText="{!$ObjectType.zqu__Zuora_Entity_Config__c.fields.zqu__EntityName__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Entity_Config__c.fields.zqu__EntityName__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.entityName}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" title="{!$Label.zqu__section_ba_default}" collapsible="false" rendered="{!IF(NOT(isMultiEntityEnabled), NOT(quoteConfiguration.isEditMode), AND(NOT(quoteConfiguration.isEditMode), quoteConfiguration.hasBillingEntities))}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Currency__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Currency__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultCurrency}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Payment_Term__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Payment_Term__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultPaymentTerm}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Invoice_Delivery_Preferences__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Invoice_Delivery_Preferences__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultInvoiceDeliveryPreference}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_Batch__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_Batch__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultBatch}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_BillCycleDay__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_BillCycleDay__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultBillCycleDay}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_AllowInvoiceEdit__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_AllowInvoiceEdit__c.Label}"/>
+                    <c:CheckBox isChecked="{!quoteConfiguration.currentDefaultConfiguration.shouldAllowInvoiceEdit}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="{!$Label.zqu__section_quote_default_settings}" columns="1" collapsible="false" rendered="{!IF(NOT(isMultiEntityEnabled), NOT(quoteConfiguration.isEditMode), AND(NOT(quoteConfiguration.isEditMode), quoteConfiguration.hasBillingEntities))}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Prefix_Quote_for_in_Quote_Name__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Prefix_Quote_for_in_Quote_Name__c.Label}"/>
+                    <c:CheckBox isChecked="{!quoteConfiguration.currentDefaultConfiguration.shouldIncludePrefixInQuoteName}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Calculate_Quote_Metrics_Through__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Calculate_Quote_Metrics_Through__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.calculateQuoteMetricsThroughLabel}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" title="{!$Label.zqu__section_subscription_default_settings}" collapsible="false" rendered="{!IF(NOT(isMultiEntityEnabled), NOT(quoteConfiguration.isEditMode), AND(NOT(quoteConfiguration.isEditMode), quoteConfiguration.hasBillingEntities))}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Default_Subscription_Term_Type__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Default_Subscription_Term_Type__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultTermType}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__SubscriptionAutorenewDefault__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__SubscriptionAutorenewDefault__c.Label}"/>
+                    <c:CheckBox isChecked="{!quoteConfiguration.currentDefaultConfiguration.shouldDefaultAutoRenew}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Subscription_Name_Option__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Subscription_Name_Option__c.Label}"/>
+                    <apex:outputText value="{!quoteConfiguration.currentDefaultConfiguration.defaultSubscriptionName}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <!--End Detail Mode-->
+
+            <!--Edit Mode-->
+            <apex:pageBlockSection columns="2" title="{!$Label.zqu__section_view_and_entity_selection}" collapsible="false" rendered="{!IF(isMultiEntityEnabled, quoteConfiguration.isEditMode, false)}">
+                <apex:pageBlockSectionItem helpText="{!$Label.zqu__configuration_view_help}">
+                    <apex:outputLabel value="{!$Label.zqu__configuration_view}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentView}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultViewOptions}"/>
+                            <apex:actionSupport event="onchange" action="{!quoteConfiguration.viewChange}" onsubmit="displayStatusModal();" oncomplete="closeStatusModal();" rerender="entityConfig,msg"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(quoteConfiguration.isGlobalView)}" helpText="{!$ObjectType.zqu__Zuora_Entity_Config__c.fields.zqu__EntityName__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Entity_Config__c.fields.zqu__EntityName__c.Label}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentEntityId}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.billingEntityOptions}"/>
+                            <apex:actionSupport event="onchange" action="{!quoteConfiguration.entityChange}" onsubmit="displayStatusModal();" oncomplete="closeStatusModal();" rerender="entityConfig,msg"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" title="{!$Label.zqu__section_ba_default}" collapsible="false" rendered="{!quoteConfiguration.isEditMode}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Currency__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$Label.zqu__config_currency}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultCurrency}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultCurrencyOptions}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Payment_Term__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$Label.zqu__config_payment_term}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultPaymentTerm}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultPaymentTermOptions}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Invoice_Delivery_Preferences__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$Label.zqu__config_invoice_delivery_preferences}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultInvoiceDeliveryPreference}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultInvoiceDeliveryPreferenceOptions}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_Batch__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$Label.zqu__config_billing_account_batch}"></apex:outputLabel>
+                    <apex:outputPanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultBatch}" size="1" multiselect="false">
+                                <apex:selectOptions value="{!quoteConfiguration.defaultBatchOptions}"></apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_BillCycleDay__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$Label.zqu__config_billing_account_bill_cycle_day}"></apex:outputLabel>
+                    <apex:outputPanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultBillCycleDay}" size="1" multiselect="false">
+                                <apex:selectOptions value="{!quoteConfiguration.defaultBillCycleDayOptions}"></apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_AllowInvoiceEdit__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__BillingAccount_AllowInvoiceEdit__c.Label}"/>
+                    <apex:inputCheckbox value="{!quoteConfiguration.currentDefaultConfiguration.shouldAllowInvoiceEdit}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="{!$Label.zqu__section_quote_default_settings}" columns="1" collapsible="false" rendered="{!quoteConfiguration.isEditMode}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Prefix_Quote_for_in_Quote_Name__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Prefix_Quote_for_in_Quote_Name__c.Label}"/>
+                    <apex:inputCheckbox value="{!quoteConfiguration.currentDefaultConfiguration.shouldIncludePrefixInQuoteName}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Calculate_Quote_Metrics_Through__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Calculate_Quote_Metrics_Through__c.Label}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.calculateQuoteMetricsOption}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultCalculateQuoteMetricsOptions}"/>
+                            <apex:actionSupport event="onchange" rerender="specificBillingPeriods"/>
+                        </apex:selectList>
+                        <apex:outputPanel id="specificBillingPeriods">
+                            <apex:outputPanel rendered="{!quoteConfiguration.currentDefaultConfiguration.calculateQuoteMetricsOption == $Label.zqu__specific_billing_periods}" style="margin-left:1em">
+                                <apex:inputText style="width: 3em" value="{!quoteConfiguration.currentDefaultConfiguration.calculateQuoteMetricsBillingPeriods}" onchange="zqc.afterPeriodsInput(this.value);"/>
+                                <apex:outputText value=" {!$Label.zqu__billing_periods} (1 - 36)"></apex:outputText>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" title="{!$Label.zqu__section_subscription_default_settings}" collapsible="false" rendered="{!quoteConfiguration.isEditMode}">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Default_Subscription_Term_Type__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$Label.zqu__config_default_subscription_term_type}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultTermType}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultSubscriptionTermTypeOptions}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__SubscriptionAutorenewDefault__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__SubscriptionAutorenewDefault__c.Label}"/>
+                    <apex:inputCheckbox value="{!quoteConfiguration.currentDefaultConfiguration.shouldDefaultAutoRenew}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Subscription_Name_Option__c.inlineHelpText}">
+                    <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Subscription_Name_Option__c.Label}"/>
+                    <apex:outputPanel >
+                        <apex:selectList value="{!quoteConfiguration.currentDefaultConfiguration.defaultSubscriptionName}" size="1" multiSelect="false">
+                            <apex:selectOptions value="{!quoteConfiguration.defaultSubscriptionNameOptions}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <!--End Edit Mode-->
+        </apex:pageBlock>
+    </apex:form>
+
+    <script>
+        var zqc = {};
+
+        zqc.afterPeriodsInput = function(val){
+            if((typeof val) != 'undefined' && val != null && !isNaN(val) && parseInt(val).toString() == val){
+                if(parseInt(val) > 0 && parseInt(val) <= 36){
+                    return;
+                }
+            }
+            alert('{!$Label.zqu__billing_periods_validation_msg}');
+        }
+    </script>
+
+</apex:page>

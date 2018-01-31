@@ -1,0 +1,56 @@
+<apex:page id="QuoteBundle" standardController="zqu__Quote__c" extensions="zqu.QuoteBundleForestController" sideBar="false">
+<c:BundleTree />
+<script type="text/javascript">
+    var packageNS = '{!packageNameSpace}';
+
+    var JsRemote = {};
+    JsRemote.getBundleByQuote = '{!$RemoteAction.QuoteBundleForestController.getQuoteBundleJSON}';
+    JsRemote.getBundleFromZuoraByQuote = '{!$RemoteAction.QuoteBundleForestController.getQuoteJSONFromZuora}';
+    JsRemote.getBundleFromZuoraBySubscription = '{!$RemoteAction.QuoteBundleForestController.getQuoteJSONFromZuoraWithSubscription}';
+
+
+    var quoteBundleApp = angular.module('sfdc.quote.bundle', ['sfdcAngularRemoting','sfdc.bundle.tree']);
+    quoteBundleApp.controller('controller.quote.bundle', ['$scope', '$location', 'sfdcRemoting',function ($scope, $location, sfdcRemoting) {
+        var urlParam = $location.search();
+        $scope.selectedBundle = {};
+        var remoteFunctionCall = undefined;
+        if (angular.isDefined(urlParam.subscriptionId)) {
+            $scope.selectedBundle.Id = urlParam.subscriptionId;
+            remoteFunctionCall = JsRemote.getBundleFromZuoraBySubscription;
+        }
+        else if (angular.isDefined(urlParam.quoteId)) {
+            $scope.selectedBundle.Id = urlParam.quoteId;
+            remoteFunctionCall = JsRemote.getBundleFromZuoraByQuote;
+        }
+        else {
+            $scope.selectedBundle.Id = '{!selectedQuoteId}';
+            remoteFunctionCall = JsRemote.getBundleByQuote;
+        }
+        $scope.$watch('selectedBundle.Id', function(value) {
+            if (angular.isDefined(value)) {
+                $scope.fetchPromise = sfdcRemoting.fetch($scope, remoteFunctionCall, value);
+                $scope.fetchPromise.then(function (result) {
+                    console.log(result);
+                    $scope.selectedBundle.data = angular.copy(JSON.parse(result));
+                });
+            }
+        });
+
+    }]).config(function($locationProvider) {
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        });
+    });
+</script>
+    <body xmlns:ng="http://angularjs.org" ng-app="sfdc.quote.bundle" ng-controller="controller.quote.bundle" ng-cloak="ngCloak">
+        <sfdc-bundle-tree bundle="selectedBundle" graph-promise="fetchPromise"></sfdc-bundle-tree>
+
+    </body>
+    <apex:stylesheet value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/css/angular-busy-min.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular.1.3.15.min-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-animate.1.3.15-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/angular-busy-compressed.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/sfdc-angular-compressed.js')}" />
+
+</apex:page>

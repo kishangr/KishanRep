@@ -1,0 +1,8 @@
+<apex:page standardController="zqu__ZRule__c" recordSetVar="rules" extensions="zqu.RuleExportFileController" cache="true" contentType="text/csv#rule_export.csv" language="en-US"
+  sidebar="false" showHeader="false" standardStylesheets="false" >
+<apex:outputText >{!headerLine}</apex:outputText>
+<apex:variable value="" var="newline"/>
+<apex:repeat value="{!csvLines}" var="csvLine">
+{!newline}<apex:outputText escape="false">{!csvLine}</apex:outputText>
+</apex:repeat>
+</apex:page>

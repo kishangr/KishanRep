@@ -1,0 +1,26 @@
+<apex:page standardController="zqu__ProductOption__c"
+           extensions="zqu.EditProductOptionController"
+           tabStyle="Product2"
+           title="{!$Label.zqu__config_product_option_edit}"
+           sidebar="true">
+    <apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}" />
+    <c:PageTitle title="{!$Label.zqu__config_product_option_edit}" subTitle="{!$Label.zqu__config_product_option_subtitle}" />
+    <apex:form target="_top" >
+       <c:PropertyComponent options="{!pcOptions}" >
+         
+         <!-- Render Option Type -->
+         <apex:outputPanel html-data-id="optionType" rendered="{!IF(field.name == zQuotesPrefix + 'OptionType__c', true, false)}">
+           <apex:outputPanel style="padding-right:0px; float: left; padding-top: 0px; width: {!IF(fieldSet.isSingleColumn, '18%','36%')};" styleClass="labelCol">
+             <apex:outputLabel style="{!IF(isLightningTheme, 'margin-right: 1.25em;' ,'margin-right: 10px;')}">{!field.label}</apex:outputLabel>
+           </apex:outputPanel>
+           <apex:outputPanel style=" {!IF(isLightningTheme, 'width: 3px; height: 1.5em; background-color: #c05f68; display: inline-block; margin-right: 0.1em; margin-top: 0.1em;',
+                                            'width: 3px; height: 15px; background-color: #c00; display: inline-block')}"></apex:outputPanel>
+           <apex:selectList value="{!optionType}"  multiselect="false" size="1" style="position: absolute;"
+                            styleClass="{!IF(isLightningTheme, 'slds-input SELECT', '')}">
+             <apex:selectOptions value="{!optionTypes}"/>
+           </apex:selectList>
+         </apex:outputPanel>
+         
+       </c:PropertyComponent>
+    </apex:form>
+</apex:page>

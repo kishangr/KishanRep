@@ -1,0 +1,63 @@
+<apex:page controller="zqu.AdvancedQuotingConfigController" title="{!$Label.zqu__config_advanced_quoting}" sidebar="false" tabStyle="Z_Quote_Config__tab">
+  
+  <c:HelpComponent cid="COM-0019" rightAlign="true" />
+  
+  <c:PageTitle title="{!$Label.zqu__config_advanced_quoting}" subTitle="{!$Label.zqu__config_advanced_quoting_subtitle}" />
+        
+  <apex:outputPanel id="msg">
+    <c:Notification />
+  </apex:outputPanel>
+  
+  <apex:form id="theform">
+    <apex:pageBlock id="configPageBlock">
+    
+      <apex:pageBlockButtons >
+        <apex:commandButton value="{!$Label.zqu__button_edit_settings}"
+            rendered="{!NOT(editMode)}" action="{!edit}"
+            style="margin-left:10%" reRender="configPageBlock, msg" />
+        <apex:commandButton value="{!$Label.zqu__button_back_settings}"
+            rendered="{!NOT(editMode)}" action="{!back}"
+            reRender="configPageBlock, msg" />
+        <apex:commandButton value="{!$Label.zqu__button_save}"
+            rendered="{!editmode}" action="{!save}" style="margin-left:10%"
+            reRender="configPageBlock, msg" />
+        <apex:commandButton value="{!$Label.zqu__button_cancel}"
+            rendered="{!editmode}" action="{!cancel}"
+            reRender="configPageBlock, msg" />
+      </apex:pageBlockButtons>
+      
+      <apex:pageBlockSection columns="2" collapsible="false" rendered="{!NOT(editMode)}">
+        <apex:outputField value="{!zqconfig.zqu__Enable_Feature__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_GuidedSelling__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_CPQ__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Maximum_Rate_Plans_Added_To_Quote__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_Multi_Entity__c}" />
+        <apex:outputField value="{!zrconfig.zqu__EnableZuoraRulesEngine__c}" />
+        <apex:outputField value="{!zqconfig.zqu__EnableOrders__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_Multi_Subscription_Quoting__c}" rendered="{!isOrdersEnabled}"/>
+        <apex:outputField value="{!zqconfig.zqu__Enable_Ramped_Pricing__c}" rendered="{!isOrdersEnabled}"/>
+        <apex:outputField value="{!zqconfig.zqu__Allow_Multiple_Rate_Plan_Selection__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_Force_Recalculation__c}" rendered="{!isAdvancedCalculationEnabled}" />
+        <apex:outputField value="{!zqconfig.zqu__Display_Rules_Engine_Change_Logs__c}" rendered="{!isAdvancedCalculationEnabled}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_Real_Time_Rule_Calculation__c}" rendered="{!isAdvancedCalculationEnabled}" />
+      </apex:pageBlockSection>
+      
+      <apex:pageBlockSection columns="2" collapsible="false" rendered="{!editMode}">
+        <apex:outputField value="{!zqconfig.zqu__Enable_Feature__c}" />
+        <apex:inputField value="{!zqconfig.zqu__Enable_GuidedSelling__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_CPQ__c}" />
+        <apex:inputField value="{!zqconfig.zqu__Maximum_Rate_Plans_Added_To_Quote__c}" />
+        <apex:outputField value="{!zqconfig.zqu__Enable_Multi_Entity__c}" />
+        <apex:inputField value="{!zrconfig.zqu__EnableZuoraRulesEngine__c}" />
+        <apex:outputField value="{!zqconfig.zqu__EnableOrders__c}" />
+        <apex:inputField value="{!zqconfig.zqu__Enable_Multi_Subscription_Quoting__c}" rendered="{!isOrdersEnabled}"/>
+        <apex:inputField value="{!zqconfig.zqu__Enable_Ramped_Pricing__c}" rendered="{!isOrdersEnabled}"/>
+        <apex:inputField value="{!zqconfig.zqu__Allow_Multiple_Rate_Plan_Selection__c}" />
+        <apex:inputField value="{!zqconfig.zqu__Enable_Force_Recalculation__c}" rendered="{!isAdvancedCalculationEnabled}" />
+        <apex:inputField value="{!zqconfig.zqu__Display_Rules_Engine_Change_Logs__c}" rendered="{!isAdvancedCalculationEnabled}" />
+        <apex:inputField value="{!zqconfig.zqu__Enable_Real_Time_Rule_Calculation__c}" rendered="{!isAdvancedCalculationEnabled}" />
+      </apex:pageBlockSection>
+    
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

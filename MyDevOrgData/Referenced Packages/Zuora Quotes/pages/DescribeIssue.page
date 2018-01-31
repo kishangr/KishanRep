@@ -1,0 +1,2 @@
+<apex:page showHeader="true" sidebar="false" title="Describe Issue" controller="zqu.DescribeIssueController">
+</apex:page>

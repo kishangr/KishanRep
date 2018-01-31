@@ -1,0 +1,6 @@
+Hello {!Opportunity.OwnerFullName},
+
+Your Opportunity has moved to Closed Won.
+
+regards,
+Admin team

@@ -1,0 +1,17 @@
+<apex:page sidebar="false" tabStyle="Z_Quote_Config__tab" standardController="zqu__Hosted_Page_Setting__c" 
+  recordSetvar="hostedPageSettings" title="{!$Label.zqu__config_hpm_titl}" >
+
+  <style>
+    .tertiaryPalette {
+      background-color: #DADFEB !important;
+    }
+  </style>
+
+  <c:HelpComponent cid="COM-0012" rightAlign="true" />
+  
+  <c:PageTitle title="{!$Label.zqu__config_hpm_titl}" subTitle="{!$Label.zqu__config_hpm_subtitle}"/>
+  
+  <apex:enhancedList type="Hosted_Page_Setting__c" height="300" rowsPerPage="25"
+    id="hostedPageSettings" customizable="true" />   
+    
+</apex:page>

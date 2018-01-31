@@ -1,0 +1,3 @@
+<apex:page id="CloneQuote" standardController="zqu__Quote__c" extensions="zqu.CloneQuotePageController" sideBar="false" title="Clone Quote Configuration" action="{!redirectOnCancelQuote}">
+    <c:CloneQuote cloneQuoteOptions="{!options}"/>
+</apex:page>

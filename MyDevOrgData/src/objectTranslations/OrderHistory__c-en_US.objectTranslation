@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>OrderHistory</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>OrderHistorys</value>
+    </caseValues>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>Contact__c</name>
+        <relationshipLabel><!-- OrderHistorys --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- OrderLink --></label>
+        <name>OrderLink__c</name>
+    </fields>
+    <fields>
+        <label><!-- OrderNumber --></label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- Order Link In HTML --></label>
+        <name>Order_Link_In_HTML__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

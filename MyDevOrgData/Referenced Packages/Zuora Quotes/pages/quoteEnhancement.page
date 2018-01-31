@@ -1,0 +1,26 @@
+<apex:page standardController="zqu__Quote__c" showHeader="true" tabStyle="zqu__Quote__c" sidebar="false">
+  <style>
+    .tertiaryPalette {
+      background-color: #E1EBE7 !important;
+    }
+    
+    .apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader {
+        border-top: 0 none;
+        color: black;
+    }   
+    
+    .bPageBlock .pbTitle {
+      width: 45%; !important; 
+    } 
+  </style>
+  
+  <apex:composition template="zqu__QuoteWizardTemplateNoForm">
+  	<apex:define name="PageBody" > 
+  		<c:SelectBillingAccount title="{!$Label.zqu__quote_enhancement_title}"  
+  			subTitle="{!$Label.zqu__select_billing_account}"
+  			opportunityId="{!$CurrentPage.parameters.oppid}"
+  			crmAccountId="{!$CurrentPage.parameters.crmAccountId}"
+            existingQuoteId="{!$CurrentPage.parameters.id}"/>
+  	</apex:define>
+  </apex:composition>
+</apex:page>

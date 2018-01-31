@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>APICode__c</fullName>
+        <defaultValue>&apos;xxxxx&apos;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>To generate an API code please visit the &quot;Sertifi Getting Started&quot; tab or &quot;Configure&quot; under Sertifi in &quot;Installed Packages&quot;</inlineHelpText>
+        <label>APICode</label>
+        <length>50</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AllowPrefill__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables senders to preview or prefill documents when sending.</inlineHelpText>
+        <label>AllowPrefill</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>AlternateAPIUrl__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Allows to specify a different endpoint for the gateway API</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Allows to specify a different API from the default production URL.  For sandbox, use https://sandbox.sertifi.net/apps/services/gateway.asmx</inlineHelpText>
+        <label>Alternate API Url</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>AppendFileName__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This will append a value to the File Name when sending.</inlineHelpText>
+        <label>AppendFileName</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Attach_Signed_Certificate_To_EContract__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Attach Signed Certificate To EContract</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Attach_Signed_To_EContract__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Attach Signed Document To EContract</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Attach_Signed_To_Sending__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Attach Signed Document To Sending Object</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CCs__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Defaults a Carbon Copy email address when sending.  Alternatively you may add &quot;&amp;CCSigner=&quot; to the Sertifi button.</inlineHelpText>
+        <label>CCs</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Consolidated_Sign_All__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Merge all documents sent into one view for the signer.  The setting must also be enabled in your associated Sertifi Portal.</inlineHelpText>
+        <label>Consolidated Sign All</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CreateActivityUsesGmt__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>CreateActivityUsesGmt</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CustomField1__c</fullName>
+        <defaultValue>&quot;placeholder&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This will add a field for the signer to complete in the large signature stamp.  Examples include &quot;Title&quot; or &quot;Company.&quot;</inlineHelpText>
+        <label>Custom Field 1</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomField2__c</fullName>
+        <defaultValue>&quot;placeholder&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This will add a field for the signer to complete in the large signature stamp.  Examples include &quot;Title&quot; or &quot;Company.&quot;   Please note this will be set for all transactions.</inlineHelpText>
+        <label>Custom Field 2</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomField3__c</fullName>
+        <defaultValue>&quot;placeholder&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This will add a field for the signer to complete in the large signature stamp.  Examples include &quot;Title&quot; or &quot;Company.&quot;   Please note this will be set for all transactions.</inlineHelpText>
+        <label>Custom Field 3</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>CustomField4__c</fullName>
+        <defaultValue>&quot;placeholder&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This will add a field for the signer to complete in the large signature stamp.  Examples include &quot;Title&quot; or &quot;Company.&quot;   Please note this will be set for all transactions.</inlineHelpText>
+        <label>Custom Field 4</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DefaultExpireDays__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of days after which unsigned documents will expire.  Expired documents will be unavailable for signature.</inlineHelpText>
+        <label>Unsigned Documents Expire After (days)</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DefaultSignMethod__c</fullName>
+        <defaultValue>&apos;elec&apos;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>This will set the default method on the sending page for the signer. Values available to set here are &quot;Elec&quot;  &quot;Fax&quot; or &quot;Both.&quot;</inlineHelpText>
+        <label>DefaultSignMethod</label>
+        <length>10</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DocLibraryFolder__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables sender to select and upload documents from the &quot;Documents&quot; folder. Enter the &quot;Documents&quot; folder name here and enable &quot;ShowSFFolderSelect&quot; below.</inlineHelpText>
+        <label>Document Library Folder ID</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EmailMessage__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Prefills a message in the &quot;Email Message&quot; section in the sending process. This will appear in emails and on the landing page for signers.</inlineHelpText>
+        <label>EmailMessage</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Email_Logo_Groups__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Comma separated list of email/logo groups to chose from</inlineHelpText>
+        <label>Email/Logo Groups</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>InviteSignerDefault__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Recommended setting.  Sets all transactions to automatically invite the signer.</inlineHelpText>
+        <label>InviteSignerDefault</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>LinkObjectType__c</fullName>
+        <defaultValue>&quot;Opportunity&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Object you will be sending from (standard objects include Account, Opportunity, Contract, Lead, Contact).  For custom objects please add the API name. To run from multiple objects add a new custom setting and add &quot;&amp;customsettings=&quot; to your Sertifi button.</inlineHelpText>
+        <label>LinkObjectType</label>
+        <length>100</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Link_Object_Field__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Lookup field name on the EContract object that is used for linking in custom objects.  If this is specified, then our package will attempt to link a custom sending object into this field.</inlineHelpText>
+        <label>Link Object Field</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>MaskEmailsFromClient__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Mask Emails From Client</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SFDataIntegration__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Required to merge values into documents or push data back into Salesforce.</inlineHelpText>
+        <label>SFDataIntegration</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowApplySignature__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables the sender to apply their signature during the sending process.</inlineHelpText>
+        <label>ShowApplySignature</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowEmailMessageField__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Displays the optional email message during the sending process.</inlineHelpText>
+        <label>ShowEmailMessageField</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowExpirationDate__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Allows sender to set the expiration date for the agreement.  Once the expiration date is reached, all unsigned documents will be made unavailable for signature.</inlineHelpText>
+        <label>Show Expiration Date</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowHardDriveUpload__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables sender to upload and select documents from the hard drive when sending.</inlineHelpText>
+        <label>ShowHardDriveUpload</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowInviteSigner__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables the sender to select whether to send an email invite to the signer.  Only recommended for certain workflows such as &quot;In-Person&quot; signing.</inlineHelpText>
+        <label>ShowInviteSigner</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowPasswordField__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables the sender to optionally add a file password to the transaction.  This will require the sender to provide the password to the user directly.</inlineHelpText>
+        <label>ShowPasswordField</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowPaymentOption__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables sender to add a payment request to a transaction.  *Please note payments must be configured on your Sertifi Portal.</inlineHelpText>
+        <label>ShowPaymentOption</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowPaymentVerificationOption__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables sender to add a payment method verification request to a transaction. *Please note payments must be configured on your Sertifi Portal.</inlineHelpText>
+        <label>ShowPaymentVerificationOption</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowQuoteDocumentSelect__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Required when sending from Salesforce quotes.</inlineHelpText>
+        <label>ShowQuoteDocumentSelect</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowRelatedObjectSelect__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables the sender to select a document from the related notes and attachments when sending.</inlineHelpText>
+        <label>ShowRelatedObjectSelect</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowSFFolderSelect__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables a sender to select a document from a specified Salesforce folder when sending. Please add the folder name to &quot;Document Folder Library ID&quot; setting.</inlineHelpText>
+        <label>ShowSFFolderSelect</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowSignerFromAddress__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>An email that is not a Contact can be added to a signature request.</inlineHelpText>
+        <label>Enable Non-Contact Signer</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>ShowSignerFromContact__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Requires a signer to be Contact to be added to the transaction.</inlineHelpText>
+        <label>Enable Contact Signer</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Show_Language_Selection__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Allows to select a preferred language for the signer</inlineHelpText>
+        <label>Show Language Selection</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Show_Signing_Methods__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>On the sending wizard, gives an option to chose whether the signer can sign by fax, electronically, or both.  Fax module must be purchased in order for this to work.</inlineHelpText>
+        <label>Show Signing Methods</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>SigningLevels__c</fullName>
+        <defaultValue>&quot;1st Signer-1/2nd Signer-2/3rd Signer-3/Carbon Copy-0&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Adjust signing level names or add more levels on the sending page.  For example to change the &quot;1st Signer&quot; label to &quot;Customer&quot; replace 1st Signer-1 with Customer-1.   Add more signing levels by adding -4, -5 (i.e. 4th Signer-4) up to 10 levels supported.</inlineHelpText>
+        <label>Signing Level Names</label>
+        <length>100</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UpdateMethodName__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>UpdateMethodName</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UseChatter__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Post events back to Chatter such as comments by signers and document signed events.</inlineHelpText>
+        <label>UseChatter</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>UsingMergeDocuments__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>MergeUploadedDocuments</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>X1stSigners__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Defaults a 1st Signer email address when sending.  Alternatively you may add &quot;&amp;1stSigner=&quot; to the Sertifi button.</inlineHelpText>
+        <label>1stSigners</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>X2ndSigners__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Defaults a 2nd Signer email address when sending.  Alternatively you may add &quot;&amp;2ndSigner=&quot; to the Sertifi button.</inlineHelpText>
+        <label>2ndSigners</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Sertifi Application Settings</label>
+    <visibility>Public</visibility>
+</CustomObject>

@@ -1,0 +1,51 @@
+<apex:page sideBar="false" standardController="zqu__Quote__c" extensions="zqu.QuoteDetailProductSelectorController,zqu.QuoteRecalculateController">
+
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/BrowserSupport-compressed.js')}" />
+    <apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}" />
+    <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/ChargeMetricsUpdater-compressed.js')}" />
+
+    <script>
+        if(!document.getElementsByClassName){
+            document.getElementsByClassName = function(className, element){
+                var children = (element || document).getElementsByTagName('*');
+                var elements = new Array();
+                for (var i=0; i<children.length; i++){
+                    var child = children[i];
+                    if((' ' + child.className + ' ').indexOf(' ' + className + ' ') > -1){
+                        elements.push(child);
+                    }
+                }
+                return elements;
+            };
+        }
+        function init() {
+            var headerElements = document.getElementsByClassName('pbHeader');
+            for ( var i=0; i<headerElements.length; i++ ) {
+                headerElements[i].style.display = 'none';
+            }
+        }
+
+        var previousOnload = window.onload;
+        window.onload = function () {
+            if (previousOnload) {
+                previousOnload();
+            }
+            init();
+        };
+
+        var $jq = jQuery.noConflict();
+
+        ChargeMetricsUpdater.namespace = '{!namespace}';
+        ChargeMetricsUpdater.remoteMethod = '{!$RemoteAction.QuoteRecalculateController.recalculateNoUpdate}';
+        ChargeMetricsUpdater.userLocale = '{!userLocaleForJs}';
+
+        $jq(
+          function() {
+            ChargeMetricsUpdater.recalculateMetrics('{!$CurrentPage.parameters.id}', '{!selectProductOptions.quoteType}');
+          }
+        );
+    </script>
+    <apex:form >
+        <c:SelectProduct options="{!selectProductOptions}"/>
+    </apex:form>
+</apex:page>

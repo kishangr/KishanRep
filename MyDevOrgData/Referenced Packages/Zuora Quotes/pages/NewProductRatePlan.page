@@ -1,0 +1,12 @@
+<apex:page standardController="zqu__ProductRatePlan__c"
+           extensions="zqu.CreateProductRatePlanController"
+           tabStyle="Product2" 
+           title="{!$Label.zqu__config_product_rate_plan_new}" 
+           sidebar="true">
+
+   	<c:PageTitle title="{!$Label.zqu__config_product_rate_plan_new}" subTitle="{!$Label.zqu__config_product_rate_plan_subtitle}" />
+     <apex:form target="_top" >
+         <c:PropertyComponent options="{!pcOptions}" >
+         </c:PropertyComponent>
+     </apex:form>
+</apex:page>

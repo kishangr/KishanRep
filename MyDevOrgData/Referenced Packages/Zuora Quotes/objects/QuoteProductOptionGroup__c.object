@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>A group of optional products that the user can select.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Max_Option__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The maximum number of Quote Options that can be selected from this group. Inherited from Product Option Group.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The maximum number of Quote Options that can be selected from this group. Inherited from Product Option Group.</inlineHelpText>
+        <label>Max Option</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Min_Option__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The minimum number of Quote Options that must be selected from this group. Inherited from Product Option Group.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The minimum number of Quote Options that must be selected from this group. Inherited from Product Option Group.</inlineHelpText>
+        <label>Min Option</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ParentProduct__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>A reference to the product that contains this group.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A reference to the product that contains this group.</inlineHelpText>
+        <label>Parent Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Quote Product Option Groups</relationshipLabel>
+        <relationshipName>Quote_Product_Option_Groups</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ProductOptionGroup__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>A reference to the original Product Option Group from the Product Catalog.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>A reference to the original Product Option Group from the Product Catalog.</inlineHelpText>
+        <label>Product Option Group</label>
+        <referenceTo>ProductOptionGroup__c</referenceTo>
+        <relationshipLabel>Quote Product Option Groups</relationshipLabel>
+        <relationshipName>Quote_Product_Option_Groups</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Quote__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The quote that contains this Quote Option Group.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The quote that contains this Quote Option Group.</inlineHelpText>
+        <label>Quote</label>
+        <referenceTo>Quote__c</referenceTo>
+        <relationshipLabel>Quote Product Option Groups</relationshipLabel>
+        <relationshipName>Quote_Product_Option_Groups</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>true</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>RootProduct__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The top-level product in the bundle that contains this group.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The top-level product in the bundle that contains this group.</inlineHelpText>
+        <label>Root Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Quote Product Option Groups (Root Product)</relationshipLabel>
+        <relationshipName>Quote_Product_Option_Groups1</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RootQrpId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Id of the top level Quote Rate Plan in the bundle.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Id of the top level Quote Rate Plan in the bundle.</inlineHelpText>
+        <label>Root Quote Rate Plan Id</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Quote Product Option Group</label>
+    <nameField>
+        <label>Quote Product Option Group Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Quote Product Option Groups</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Max_Option_Rule</fullName>
+        <active>true</active>
+        <description>Max Option cannot be less than 0.</description>
+        <errorConditionFormula>AND( NOT( ISNULL(Max_Option__c) ) ,
+            Max_Option__c &lt; 0)</errorConditionFormula>
+        <errorDisplayField>Max_Option__c</errorDisplayField>
+        <errorMessage>Max Option cannot be less than 0.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Min_Option_Less_Than_Max</fullName>
+        <active>true</active>
+        <description>Min Option should be less than Max Option</description>
+        <errorConditionFormula>AND( NOT( ISNULL( Min_Option__c ) ) ,
+            NOT( ISNULL( Max_Option__c ) ) ,
+            Min_Option__c  &gt; Max_Option__c )</errorConditionFormula>
+        <errorDisplayField>Min_Option__c</errorDisplayField>
+        <errorMessage>Min Option should be equal or less  than Max Option</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Min_Option_Rule</fullName>
+        <active>true</active>
+        <description>Min Option cannot be less than 0</description>
+        <errorConditionFormula>AND( NOT( ISNULL( Min_Option__c ) ) ,
+            Min_Option__c  &lt; 0)</errorConditionFormula>
+        <errorDisplayField>Min_Option__c</errorDisplayField>
+        <errorMessage>Min Option cannot be less than 0</errorMessage>
+    </validationRules>
+</CustomObject>

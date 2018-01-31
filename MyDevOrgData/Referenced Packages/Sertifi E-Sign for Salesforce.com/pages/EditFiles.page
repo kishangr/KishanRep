@@ -1,0 +1,117 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController" action="{!RedirectToConsolidatedPage}">
+<apex:messages style="color: red; font-weight: bold; text-align: center;"/>
+<apex:form >
+    <style>
+        .dateFormat { /* Salesforce adds a default value for today's date, hide it */
+    		display: none !important;
+        }
+    </style>
+<apex:pageBlock title="Add Documents">
+<Apex:outputLabel value="Documents must be under 3 MB in size" style="font-size: 6pt;" />
+    <div>
+        <b>Hard Drive</b>
+    </div>
+    <div style="float:left;width:400px">
+        <apex:inputfile rendered="{!ShowHardDriveUpload}" value="{!uploadDocument.body}" filename="{!uploadDocument.name}"/>
+    </div>
+    <div>    
+        <apex:selectList rendered="{!ShowHardDriveUpload}" size="1" value="{!DocType}"><apex:selectOptions value="{!DocTypes}"/></apex:selectList>
+    </div>
+    <div style="clear:both">
+        <b>Salesforce Folder</b>
+    </div>
+    <div style="float:left;width:400px">
+        <apex:selectList rendered="{!ShowSFFolderSelect}" size="1" value="{!folderDocumentID}">
+            <apex:selectOptions value="{!DocumentList}"/>
+        </apex:selectList>
+    </div>
+    <div>
+        <apex:selectList rendered="{!ShowSFFolderSelect}" size="1" value="{!folderDocType}"><apex:selectOptions value="{!DocTypes}"/></apex:selectList>
+    </div>
+    <div style="clear:both">
+        <b>Opportunity Notes and Attachments</b>
+    </div>
+    <div style="float:left;width:400px">
+        <apex:selectList rendered="{!ShowRelatedObjectSelect}" size="1" value="{!attachmentID}">
+            <apex:selectOptions value="{!AttachmentList}"/>
+        </apex:selectList>
+    </div>
+    <div>    
+        <apex:selectList rendered="{!ShowRelatedObjectSelect}" size="1" value="{!attachmentDocType}">
+        <apex:selectOptions value="{!DocTypes}"/></apex:selectList>
+    </div>
+    <!--
+    <div>
+        <b><apex:outputLabel rendered="{!ShowQuoteDocumentSelect}" value="Related Quote PDFs" /></b>
+    </div>
+    <div>
+        <apex:selectList rendered="{!ShowQuoteDocumentSelect}" size="1" value="{!quoteDocumentID}">
+            <apex:selectOptions value="{!QuoteDocumentList}"/>
+        </apex:selectList>
+        <apex:selectList rendered="{!ShowQuoteDocumentSelect}" size="1" value="{!quoteDocType}"><apex:selectOptions value="{!DocTypes}"/></apex:selectList>
+    </div>
+    -->
+    
+    <apex:outputPanel rendered="{!ShowPaymentOption}">
+        <div>
+            <b><apex:outputLabel rendered="{!ShowPaymentOption}" value="Add a Payment Request" /></b>
+        </div>
+        
+        <div>
+            <apex:outputLabel value="Payment Description:" /><apex:inputText value="{!TempPayment.Name}" maxlength="100" />
+            <apex:outputLabel value="Payment Amount:" /><apex:inputText value="{!TempPayment.Sertifi2_0__Amount__c}" maxlength="50" />
+            <apex:outputLabel value="Date due:" /><apex:inputField value="{!TempPayment.Sertifi2_0__DueDate__c}" showDatePicker="true"/>
+    	</div>
+    </apex:outputPanel>
+    
+    <div>
+        <apex:commandButton id="UploadButton2" value="Add" action="{!UploadFile}"/>
+    </div>
+</apex:pageBlock>
+<apex:pageBlock title="Content Added To Folder" rendered="{!FolderContentAdded}">
+<div>
+    <b><apex:outputLabel rendered="{!SigningDocAdded}" value="Signing Documents" /></b>
+</div>
+<div>     
+     <apex:repeat value="{!SignDocumentList}" var="doc" id="signdocList" rendered="{!SigningDocAdded}">
+         <div>
+            <apex:outputText value="{!doc.Sertifi2_0__Name__c}" style="margin-right:15px;"/>
+            <apex:outputLink value="{!doc.Sertifi2_0__EditLocationLink__c}" target="_blank" style="margin-right:15px;">Edit Signing Locations / Prefill Document</apex:outputLink>
+            <!-- <td style="width: 140px;"><apex:outputLink value="{!doc.Sertifi2_0__EditLocationLink__c}" target="_blank">Edit Signing Locations / Prefill Document</apex:outputLink></td> -->
+            <!-- <td style="width: 140px;"><apex:outputLink value="{!doc.PreFillLink__c}" target="_blank" rendered="{!doc.Fillable__c}">Pre-Fill Document</apex:outputLink></td> -->
+        </div>   
+    </apex:repeat>             
+</div>
+<div>
+    <b><apex:outputLabel rendered="{!ReferenceDocAdded}" value="Reference Documents" /></b>
+</div>
+<div>
+    <apex:repeat value="{!RefDocumentList}" var="doc" id="refdocList" rendered="{!ReferenceDocAdded}">
+        <apex:outputText value="{!doc.Sertifi2_0__Name__c}"/>
+    </apex:repeat>
+</div>
+<div>
+    <b><apex:outputLabel rendered="{!PaymentAdded}" value="Payment Requests" /></b>
+</div>
+<div>
+        <!-- <td><i>Payment Name</i></td><td><i>Payment Amount</i></td><td><i>Payment Recurrence</i></td> -->
+</div>
+<div>
+    <apex:repeat value="{!PaymentList}" var="payment" id="paymentList" rendered="{!PaymentAdded}">
+        <div>
+            <apex:outputText value="{!payment.Sertifi2_0__Description__c}" style="margin-right:15px;"/>
+            <apex:outputText value="{0,number,$0.00}" style="margin-right:15px;">
+                <apex:param value="{!payment.Sertifi2_0__Amount__c}" />
+            </apex:outputText>
+            <apex:outputText value="{0,date}" style="margin-right:15px;">
+                <apex:param value="{!payment.Sertifi2_0__DueDate__c}" />
+            </apex:outputText>
+        </div>
+    </apex:repeat>
+</div>
+</apex:pageBlock>
+<div>
+    <apex:commandButton value="Done" action="{!RedirectToEContract}"/>
+</div>
+</apex:form>
+</apex:page>

@@ -1,0 +1,616 @@
+<apex:page standardController="zqu__ProductRatePlanCharge__c"
+           extensions="zqu.ChargeTierListController">
+  <!--
+  READ BEFORE MAINTAINING THIS PAGE
+
+  Because SalesForce will strip-out all the html commments, so we have to use apex:outputText as a workaround to make knockout virtual element work.
+
+  For more detail see this link : https://success.salesforce.com/ideaView?id=08730000000iEyFAAU
+  -->
+  <apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}" />
+  <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/knockout-3.4.0-compressed.js')}" />
+  <apex:remoteObjects >
+      <apex:remoteObjectModel name="zqu__ProductRatePlanChargeTier__c" jsShortHand="Tier" fields="Name,Id">
+        <apex:remoteObjectField name="zqu__Currency2__c" jsShortHand="Currency" />
+        <apex:remoteObjectField name="zqu__ProductRatePlanCharge__c" jsShortHand="ChargeId" />
+        <apex:remoteObjectField name="zqu__EndingUnit__c" jsShortHand="EndingUnit" />
+        <apex:remoteObjectField name="zqu__DiscountAmount__c" jsShortHand="DiscountAmount" />
+        <apex:remoteObjectField name="zqu__DiscountPercentage__c" jsShortHand="DiscountPercentage" />
+        <apex:remoteObjectField name="zqu__IsOveragePrice__c" jsShortHand="IsOveragePrice" />
+        <apex:remoteObjectField name="zqu__Price__c" jsShortHand="Price" />
+        <apex:remoteObjectField name="zqu__StartingUnit__c" jsShortHand="StartingUnit" />
+        <apex:remoteObjectField name="zqu__Tier__c" jsShortHand="Tier" />
+        <apex:remoteObjectField name="zqu__ZuoraId__c" jsShortHand="ZuoraId" />
+        <apex:remoteObjectField name="zqu__PriceFormat2__c" jsShortHand="PriceFormat" />
+      </apex:remoteObjectModel>
+  </apex:remoteObjects>
+
+  <apex:pageBlock >
+
+    <div id="message" data-bind="html:message, visible:message">
+    </div>
+
+
+    <div data-bind="if: showPriceTable()">
+      <table class="list" border="0" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr class="headerRow">
+            <th rowspan="2" class="zen-deemphasize" scope="col" data-bind="visible: showColumn('Tier')">{!$ObjectType.ProductRatePlanChargeTier__c.Fields.Tier__c.Label}</th>
+            <th rowspan="2" class="zen-deemphasize" scope="col"
+                data-bind="visible: showColumn('StartingUnit')">{!$ObjectType.ProductRatePlanChargeTier__c.Fields.StartingUnit__c.Label}</th>
+            <th rowspan="2" class="zen-deemphasize" scope="col"
+                data-bind="visible: showColumn('EndingUnit')">{!$ObjectType.ProductRatePlanChargeTier__c.Fields.EndingUnit__c.Label}</th>
+            <th class="zen-deemphasize" scope="col" style="text-align:center"
+                data-bind="text: priceCaption(), attr:{colspan: currencyOptions.length }"></th>
+            <th rowspan="2" class="zen-deemphasize" scope="col"
+                data-bind="visible: showColumn('PriceFormat')">{!$ObjectType.ProductRatePlanChargeTier__c.Fields.PriceFormat2__c.Label}</th>
+            <th rowspan="2" class="zen-deemphasize" scope="col"
+                data-bind="visible: showColumn('IsOveragePrice')">{!$ObjectType.ProductRatePlanChargeTier__c.Fields.IsOveragePrice__c.Label}</th>
+            <th rowspan="2" class="actionColumn">{!$Label.COLUMN_ACTION}</th>
+          </tr>
+
+          <tr class="headerRow">
+            <apex:outputText value="<" escape="false"/>!-- ko foreach: currencyOptions --<apex:outputText value=">" escape="false"/>
+            <th class="zen-deemphasize" scope="col" data-bind="text: $data" style="text-align:center">
+            </th>
+            <apex:outputText value="<" escape="false"/>!-- /ko --<apex:outputText value=">" escape="false"/>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach:tiersOfSelectedCurrency">
+          <tr class="dataRow" data-bind="style:{ 'background-color': needSave() ? 'yellow' : 'white'}">
+            <td class="dataCell" data-bind="visible: $parent.showColumn('Tier')">
+              <input type="hidden" data-bind="value:Id" />
+              <a target="_blank" data-bind="text: Tier, attr: {href: URI}" ></a>
+            </td>
+            <td class="dataCell" data-bind="visible: $parent.showColumn('StartingUnit')">
+              <input type="text" data-bind="value: StartingUnit, attr: {readonly: $parent.isStartingUnitReadOnly($data)}"  />
+            </td>
+            <td class="dataCell" data-bind="visible: $parent.showColumn('EndingUnit')">
+              <input type="text" data-bind="value: EndingUnit, attr: {readonly: $parent.isEndingUnitReadOnly($data)}" />
+            </td>
+
+            <apex:outputText value="<" escape="false"/>!-- ko foreach: $parent.currencyOptions --<apex:outputText value=">" escape="false"/>
+            <td class="zen-deemphasize" scope="col"
+                data-bind="with:$parents[1].getTierOfCurrency($parent.Tier, $data)">
+              <input type="text" data-bind="value: Price,
+                                            style:{ 'background-color': needSave() ? 'yellow' : 'white'}" />
+              <span data-bind="if: $root.chargeModel == 'Discount-Percentage'"> % </span>
+            </td>
+            <apex:outputText value="<" escape="false"/>!-- /ko --<apex:outputText value=">" escape="false"/>
+
+            <td class="dataCell" data-bind="visible: $parent.showColumn('PriceFormat')">
+              <select data-bind="options: $parent.priceFormatOptions,
+                                 value: PriceFormat,
+                                 valueAllowUnset: true"></select>
+            </td>
+            <td class="dataCell" data-bind="visible: $parent.showColumn('IsOveragePrice')">
+              <input type="checkbox"
+                     data-bind="attr: {disabled: $parent.enableIsOverageCheckbox($data) ? null : 'disabled'},
+                                checked: IsOveragePrice" />
+            </td>
+            <td class="actionColumn">
+              <a class="actionLink" href="#"
+                 data-bind="visible: $parent.showAddBtn($data),
+                            click  : $parent.addNewTier">{!$Label.BUTTON_ADD}</a>
+              <a class="actionLink" href="#"
+                 data-bind="click  : $parent.removeTier,
+                            visible: $parent.showDelBtn($data)">{!$Label.BUTTON_DEL}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div>
+        <button data-bind="click: saveAll">{!$Label.BUTTON_SAVE_ALL}</button>
+        <button data-bind="click: addNewTier, visible: tiers().length == 0 ">{!$Label.BUTTON_ADD}</button>
+      </div>
+    </div>
+
+    <apex:repeat value="{!tierCurrencyOptions}" var="label">
+      <input type="hidden" data-label="{!label}" value="{!tierCurrencyOptions[label]}" class="currency_options" />
+    </apex:repeat>
+
+    <apex:repeat value="{!priceFormatOptions}" var="label">
+      <input type="hidden" data-label="{!label}" value="{!priceFormatOptions[label]}" class="priceformat_options" />
+    </apex:repeat>
+
+    <input type="hidden" value="{!UOM.Uom_precision__c}" class="uom_precision" />
+    <input type="hidden" value="{!prp.ActiveCurrencies__c}" class="active_currencies" />
+  </apex:pageBlock>
+
+
+
+
+  <script type="text/javascript">
+    var vm = new TierListViewModel(),
+        CHARGE_ID = '{!prpc.Id}' || 'a0Hj000000718gE', //'a0Hj000000718gE' here is only for debugging.
+        CHARGE_MODEL = '{!JSENCODE(prpc.Model__c)}',
+        CHARGE_LIST_PRICE= '{!prpc.ListPrice__c}',
+        CHARGE_NAME = '{prpc.Name__c}',
+        CHARGE_TYPE = '{!JSENCODE(prpc.Type__c)}',
+        CHARGE_INCLUDED_UNITS = parseFloat('{!prpc.IncludedUnits__c}'),
+        CHARGE_MODEL_COLUMN_CONFIG = {
+          'Flat Fee Pricing'              : [],
+          'Per Unit Pricing'              : [],
+          'Volume Pricing'                : ['StartingUnit', 'EndingUnit','PriceFormat','Tier'],
+          'Tiered Pricing'                : ['StartingUnit', 'EndingUnit','PriceFormat','Tier'],
+          'Overage Pricing'               : ['StartingUnit', 'EndingUnit','IsOveragePrice','Tier'],
+          'Tiered with Overage Pricing'   : ['StartingUnit', 'EndingUnit','IsOveragePrice','Tier','PriceFormat'] ,
+          'Discount-Fixed Amount'         : [],
+          'Discount-Percentage'           : []
+        },
+        PRICE_CAPTION_CONFIG = {
+          'Flat Fee Pricing'              : 'Price',
+          'Per Unit Pricing'              : 'Price',
+          'Volume Pricing'                : 'Price',
+          'Tiered Pricing'                : 'Price',
+          'Overage Pricing'               : 'Price',
+          'Tiered with Overage Pricing'   : 'Price' ,
+          'Discount-Fixed Amount'         : 'Discount Amount',
+          'Discount-Percentage'           : 'Discount Percentage'
+        },
+        TIER_CHANGE_EVENT = 'TierValueChangeEvent',
+        UOM_PRECISION = $(".uom_precision").val(),
+        TIER_INCREASE_STEP = Math.pow(10, - parseInt($(".uom_precision").val() || 1 /* 1 As Default*/));
+
+
+    function Tier(tier) {
+        var tier = tier || {},
+            self = this,
+            observableProperties = ['StartingUnit','EndingUnit',
+                                    'Currency','Price','PriceFormat',
+                                    /*'DiscountAmount','DiscountPercentage', */
+                                    'IsOveragePrice'];
+        this.Id                 = ko.observable(tier.Id);
+        this.Tier               = tier.Tier;
+        this.Name               = tier.Name;
+        this.StartingUnit       = ko.observable(tier.StartingUnit);
+        this.EndingUnit         = ko.observable(tier.EndingUnit);
+        this.Currency           = ko.observable(tier.Currency);
+        this.Price              = ko.observable(tier.Price);
+        this.ChargeId           = tier.ChargeId;
+        this.PriceFormat        = ko.observable(tier.PriceFormat);
+        this.DiscountAmount     = ko.observable(tier.DiscountAmount);
+        this.DiscountPercentage = ko.observable(tier.DiscountPercentage);
+        this.IsOveragePrice     = ko.observable(tier.IsOveragePrice);
+
+        this.URI = ko.computed(function (argument) {
+          return self.Id() ? '/' + self.Id() : '#';
+        });
+        this.needSave = ko.observable(tier.needSave || false);
+
+        observableProperties.forEach(function(property) {
+          self[property].subscribe(function(newValue){
+            triggerTierChangeEvent(self, property); //TODO consider passing the changed property's name
+            self.needSave(true);
+          });
+        });
+
+    }
+
+    function triggerTierChangeEvent (tier, property) {
+      $(document).trigger(TIER_CHANGE_EVENT,{ 'tier': tier, changed_property: property});
+    }
+
+    Tier.fromRemoteObject = function(record) {
+      return new Tier({
+        Id:                 record.get('Id'),
+        Tier:               record.get('Tier'),
+        Name:               record.get('Name'),
+        StartingUnit:       record.get('StartingUnit'),
+        EndingUnit:         record.get('EndingUnit'),
+        Currency:           record.get('Currency'),
+        Price:              record.get('Price'),
+        ChargeId:           record.get('ChargeId'),
+        PriceFormat:        record.get('PriceFormat'),
+
+        IsOveragePrice:     record.get('IsOveragePrice')
+      });
+    };
+
+    Tier.multi_tier_applicable_models = ['Volume Pricing','Tiered Pricing','Tiered with Overage Pricing','Overage Pricing'];
+
+    Tier.prototype.validate = function() {
+
+      var requiredFields = ['Currency','Price'];
+      var tier = this;
+
+      if(Tier.multi_tier_applicable_models.indexOf(CHARGE_MODEL) > 0 ) {
+        if(CHARGE_MODEL === 'Tiered with Overage Pricing') {
+          if(!tier.IsOveragePrice()){
+            requiredFields = requiredFields.concat(['StartingUnit','EndingUnit']);
+          }
+        } else {
+          requiredFields = requiredFields.concat(['StartingUnit']);
+        }
+
+        if(tier.Tier == 1) { //Special Check for the first tier's starting unit
+          if(tier.StartingUnit() != 0 && tier.StartingUnit() != TIER_INCREASE_STEP) {
+            return new ValidationResult(false, 'The starting unit of 1st tier has to be 0 or ' + TIER_INCREASE_STEP);
+          }
+        }
+      }
+
+      for(var i = 0 ;i < requiredFields.length; i++) {
+        if('' === this[requiredFields[i]]() 
+          || undefined === this[requiredFields[i]]()) {
+          return new ValidationResult(false, 'Tier #' +tier.Tier + ' ' + requiredFields[i] + ' is required. ');
+        }
+      }
+
+      if(parseFloat(tier.StartingUnit()) > 0
+      	&& parseFloat(tier.EndingUnit()) >=0
+      	&& parseFloat(tier.EndingUnit()) < parseFloat(tier.StartingUnit()) ) {
+        return new ValidationResult(false, 'Tier #' + tier.Tier + ' ending unit should be bigger than starting unit');
+      }
+
+      return new ValidationResult(true);
+    };
+
+    function ValidationResult (pass, message) {
+      this.pass = pass;
+      this.message = message;
+    }
+
+    function TierListViewModel () {
+      var self = this;
+      self.tiers = ko.observableArray([]);
+
+      self.currencyOptions = $("input.active_currencies").val() ?  $("input.active_currencies").val().split(',').map(function(x) {return x.trim()}) : [];
+
+      self.selectedCurrency = ko.observable(self.currencyOptions[0]); //Use the first one as default.
+
+      self.otherCurrencies = ko.computed(function () {
+        self.currencyOptions.filter(function(_currency) { return _currency != self.selectedCurrency()});
+      });
+
+      self.priceFormatOptions = $("input.priceformat_options").map(function () {
+        return $(this).val();
+      });
+
+      self.chargeModel = '{!JSENCODE(prpc.Model__c)}';
+
+      self.message = ko.observable();
+      self.priceCaption = function() {
+        return PRICE_CAPTION_CONFIG[CHARGE_MODEL] || 'Price' ;
+      };
+
+      self.tiersOfSelectedCurrency = ko.computed(function() {
+        return self.tiers().filter(function(_tier) {return _tier.Currency() == self.selectedCurrency()});
+      });
+
+      self.lastTier = ko.computed(function () {
+        var tiers = self.tiersOfSelectedCurrency();
+        return tiers.length == 0 ? new Tier({Tier:0, EndingUnit:0}) : tiers[tiers.length-1];
+      });
+
+      self.getTierOfCurrency = function(_tierNumber, currency) {
+        tmpArray = self.tiers().filter(function (_tier) {
+          return _tier.Tier == _tierNumber && _tier.Currency() == currency;
+        });
+        return tmpArray[0];
+      };
+
+      self.removeTier = function(tier) {
+        var tiersToDel = self.tiers().filter(function(_tier) { return _tier.Tier == tier.Tier});
+        if(tier.Id()) {
+          var ids = tiersToDel.map(function(_tier) { return _tier.Id()});
+          new SObjectModel.Tier().del(ids,
+            function(err){
+              if(err){
+                self.message(err.message);
+              } else {
+                tiersToDel.forEach(function(toDelte) {
+                  self.tiers.remove(toDelte);
+                });
+                self.message('Remove succeeded.');
+              }
+            });
+        } else {
+          tiersToDel.forEach(function(toDelte) {
+            self.tiers.remove(toDelte);
+          });
+        }
+      };
+
+      self.increaseByUOM = function(quantity) {
+        return (parseFloat(quantity) + TIER_INCREASE_STEP).toFixed(UOM_PRECISION);
+      };
+
+      self.initTiers = function(){
+        //special case for Overage Pricing
+        if(self.chargeModel === 'Overage Pricing') {
+          self.currencyOptions.forEach(function(currency) {
+            self.tiers.push(new Tier({
+              Tier:         1,
+              Name:         1,
+              StartingUnit: 0,
+              EndingUnit:   CHARGE_INCLUDED_UNITS,
+              ChargeId:     CHARGE_ID,
+              needSave:     true,
+              Currency:     currency,
+              Price:        0
+            }));
+            self.tiers.push(new Tier({
+              Tier:         2,
+              Name:         2,
+              StartingUnit: (CHARGE_INCLUDED_UNITS + TIER_INCREASE_STEP).toFixed(UOM_PRECISION),
+              ChargeId:     CHARGE_ID,
+              needSave:     true,
+              Currency:     currency,
+              Price:        0,
+              IsOveragePrice: true
+            }));
+          });
+        } else {
+          self.addNewTier();
+        }
+      };
+
+      self.addNewTier = function() {
+        var lastTier = self.lastTier();
+
+        if(self.chargeModel !== 'Tiered with Overage Pricing' && lastTier.IsOveragePrice()) {
+          lastTier.IsOveragePrice(false);
+        }
+
+        self.currencyOptions.forEach(function(currency) {
+          self.tiers.push(new Tier({
+            Tier:         parseInt(lastTier.Tier) + 1,
+            Name:         parseInt(lastTier.Tier) + 1,
+            StartingUnit: lastTier.EndingUnit() ? self.increaseByUOM(lastTier.EndingUnit()) : null,
+            PriceFormat:  lastTier.PriceFormat(), //PriceFormat will follow previouse one by default.
+            ChargeId:     CHARGE_ID,
+            needSave:     true,
+            Currency:     currency
+          }));
+        });
+      };
+
+      self.showAddBtn = function(tier) {
+        //Overage Pricing can have 2 and only 2 tiers for each currency
+        if(self.chargeModel === 'Overage Pricing' && self.lastTier().Tier == 2) {
+          return false;
+        }
+
+        return Tier.multi_tier_applicable_models.indexOf(CHARGE_MODEL) < 0 ?
+                            false : tier.EndingUnit() > 0 && tier === self.lastTier() && !tier.IsOveragePrice();
+      };
+
+      self.showDelBtn = function(tier) {
+        return tier === self.lastTier();
+      };
+
+      self.showColumn = function(field) {
+        return CHARGE_MODEL_COLUMN_CONFIG[CHARGE_MODEL] && CHARGE_MODEL_COLUMN_CONFIG[CHARGE_MODEL].indexOf(field) !== -1;
+      };
+
+      self.enableIsOverageCheckbox = function(tier) {
+        if(self.chargeModel !== 'Tiered with Overage Pricing' && self.chargeModel !== 'Overage Pricing') {
+          return false;
+        }
+        if( tier.Tier == 1 || tier !== self.lastTier()) {
+          return false;
+        }
+        return true;
+      };
+
+      self.isLastTier = function(tier) {
+        if(self.chargeModel !== 'Tiered with Overage Pricing') {
+          return false;
+        }
+        if(!tier.IsOveragePrice()) {
+          return false;
+        }
+
+        return true;
+      };
+
+      self.isStartingUnitReadOnly = function(tier){
+        if(self.chargeModel == 'Overage Pricing') {
+          return 'readonly';
+        }
+        return tier.Tier == 1 ? null : 'readonly';
+      };
+
+      self.isEndingUnitReadOnly = function(tier){
+        if(self.chargeModel == 'Overage Pricing') {
+          return 'readonly';
+        }
+        return self.isLastTier(tier) ? 'readonly' : null;
+      };
+
+      self.saveTier = function(tier) {
+
+        var _tier = new SObjectModel.Tier({
+          Id :          tier.Id(),
+          Tier:         tier.Tier.toString(),
+          Name:         tier.Tier.toString(),
+          StartingUnit: tier.StartingUnit(),
+          EndingUnit:   tier.EndingUnit(),
+          Currency:     tier.Currency(),
+          Price:        tier.Price(),
+          PriceFormat:  tier.PriceFormat(),
+          /* These two fields are actually useless, value for discounts are always stored in Price field.
+          DiscountAmount:     tier.DiscountAmount(),
+          DiscountPercentage: tier.DiscountPercentage(), */
+          IsOveragePrice: tier.IsOveragePrice()
+        });
+
+        if( !_tier.get('Id') ){
+          _tier.set('ChargeId',CHARGE_ID);
+        };
+
+        _tier.upsert(callback);
+
+        function callback(err) {
+          if(err) {
+            self.message(err.message);
+          } else {
+            self.message('Save succeeded.');
+            tier.needSave(false);
+            tier.Id(_tier.get('Id'));
+          }
+        };
+      };
+
+      self.saveAll = function() {
+        var tiersToSave = self.tiers().filter(function(_) {return _.needSave()});
+
+        var validateError = $.unique(tiersToSave
+                                      .map(function(_){return _.validate()})
+                                      .filter(function(_) {return !_.pass})
+                                      .map(function(_) {return _.message})
+                                    ).join('<br />');
+
+        if(validateError) {
+          self.message(validateError);
+          return ;
+        }
+
+        if(self.chargeModel == 'Tiered with Overage Pricing') {
+          if(self.tiersOfSelectedCurrency().length < 2) {
+            self.message('{!$Label.TIERS_WARNING_PROVIDE_TIER_AND_OVERAGE_PRICE}');
+            return;
+          }
+
+          var overageTiersCount = self.tiersOfSelectedCurrency().filter(function(_){return _.IsOveragePrice()}).length;
+          if(overageTiersCount > 1 ) {
+            self.message('{!$Label.TIERS_WARNING_PROVIDE_ONLY_ONE_OVERAGE_PRICE}');
+            return;
+          }
+
+          if(overageTiersCount < 1 ) {
+            self.message('{!$Label.TIERS_WARNING_OVERAGE_PRICE_NOT_DEFINED}');
+            return;
+          }
+
+          if(!self.lastTier().IsOveragePrice()) {
+            self.message('{!$Label.TIERS_WARNING_OVERAGE_PRICE_NOT_ON_LAST_LINE}');
+            return;
+          }
+        }
+
+        tiersToSave.forEach(function(tier) {
+          self.saveTier(tier);
+        });
+      };
+
+      self.onTierChange = function (event, eventData) {
+        var tier = eventData.tier,
+            changed_property = eventData.changed_property,
+            nextTier = self.nextTier(tier);
+
+        if( self.showColumn('StartingUnit') && nextTier ){
+          nextTier.StartingUnit(parseFloat(tier.EndingUnit()) + TIER_INCREASE_STEP);
+        }
+
+        self.tiers().filter(with_same_tier_but_diff_currency).forEach(copy_value_from_changed_tier);
+
+        function with_same_tier_but_diff_currency (_tier) {
+          return _tier.Tier == tier.Tier && _tier.Currency() != tier.Currency();
+        }
+
+        function copy_value_from_changed_tier(_tier) {
+          if(changed_property === 'IsOveragePrice' && tier.IsOveragePrice()) {
+            _tier.StartingUnit(null);
+            _tier.EndingUnit(null);
+          } else {
+            _tier.StartingUnit(tier.StartingUnit());
+            _tier.EndingUnit(tier.EndingUnit());
+          }
+          _tier.PriceFormat(tier.PriceFormat());
+          _tier.IsOveragePrice(tier.IsOveragePrice());
+        }
+      };
+
+      self.nextTier = function(tier) {
+        var _tiers = self.tiers()
+        for(var i = 0 ; i < _tiers.length ; i ++ ) {
+          if(_tiers[i].Tier == tier.Tier + 1 && _tiers[i].Currency() == tier.Currency()) {
+            return _tiers[i];
+          }
+        }
+        return null;
+      };
+
+      self.showPriceTable = function() {
+        if(self.currencyOptions.length ==0) {
+          self.message('{!$Label.TIERS_WARNING_NO_ACTIVE_CURRENCY}');
+          return false;
+        }
+        return true;
+      };
+
+      /**
+      * This is to check if the rate plan's active currencies has been changed.
+      */
+      self.addTiersForNewActiveCurrency = function() {
+        var currenciesWithTiers = jQuery.unique(self.tiers().map(function (_t) {
+          return _t.Currency();
+        }));
+        var newCurrencies = self.currencyOptions.filter(function (option) {
+          return currenciesWithTiers.indexOf(option) === -1;
+        });
+        newCurrencies.forEach(function (newCurrency, index, newCurrencies) {
+          self.tiersOfSelectedCurrency().forEach( function(tier, index, selectedTiers) {
+            var newTier = new Tier(ko.toJS(tier));
+            newTier.Id(null);
+            newTier.Currency(newCurrency);
+            newTier.Price(null);
+            self.tiers.push(newTier);
+          });
+        });
+      };
+    }
+
+    function loadTiers() {
+      var retrieveTierSettings = {
+        where: { ChargeId: {eq: CHARGE_ID}},
+        orderby: [{ Tier : 'ASC'}],
+        limit: 100
+      };
+
+      var tierCount = vm.tiers().length;
+      if(tierCount > 0) retrieveTierSettings.offset = tierCount;
+
+      new SObjectModel.Tier().retrieve(
+        retrieveTierSettings,
+        fetchCallback
+      );
+    }
+
+    function fetchCallback (err, records, event) {
+      if(err) {
+        alert(err.message);
+        return;
+      }
+
+      if(records.length > 0) {
+        renderTiers(records);
+        loadTiers();
+      }
+      else {
+        onTiersLoadingComplete();
+      }
+    }
+
+    function renderTiers(tierRecords) {
+      tierRecords.forEach(function (record) {
+        vm.tiers.push(Tier.fromRemoteObject(record));
+      });
+      vm.addTiersForNewActiveCurrency();
+    }
+
+    function onTiersLoadingComplete() {
+      if(vm.tiers().length == 0) vm.initTiers();
+    }
+
+    $(document).ready(function(argument) {
+      ko.applyBindings(vm);
+      loadTiers();
+      $(document).on(TIER_CHANGE_EVENT, vm.onTierChange);
+    });
+  </script>
+</apex:page>

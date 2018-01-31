@@ -1,0 +1,12 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController"  >
+<apex:form >
+<table>
+    <tr>
+        <td><p style="font-size:150%">Signer(s) have been re-invited</p></td>
+    </tr>
+    <tr>
+        <td><apex:commandButton value="Return" action="{!RedirectToObject}"/></td>
+    </tr>
+</table>
+</apex:form>
+</apex:page>

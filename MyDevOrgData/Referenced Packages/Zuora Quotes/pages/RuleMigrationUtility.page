@@ -1,0 +1,83 @@
+<apex:page standardController="zqu__ZRule__c" recordSetVar="rules" extensions="zqu.RuleMigrationUtilityController" >
+  <style>
+    .hidden {
+      display:none;
+    }
+  </style>
+
+  <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, 'js/jquery-1.9.1-compressed.js')}"/>
+  <script>
+    $( document ).ready(function(){
+      clearExportSrc();
+    });
+    var handleImportClick = function() {
+      clearExportSrc();
+    }
+    var clearExportSrc = function() {
+      $('#exportFilePanel').attr('src', '');
+    }
+  </script>
+  <apex:sectionHeader title="Rules Migration" subtitle="Example"/>
+  <apex:form enctype="multipart/form-data">
+
+    <apex:pageMessages />
+
+    <apex:pageBlock title="Import Rules" id="import" rendered="{!!importing}">
+      <apex:pageBlockSection showHeader="false" columns="1" id="block1">
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="File" for="file"/>
+          <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockButtons location="bottom">
+        <apex:commandButton action="{!upload}" value="Upload" onClick="handleImportClick"/>
+      </apex:pageBlockButtons>
+    </apex:pageBlock>
+  </apex:form>
+  
+  <apex:form >
+    <apex:outputPanel rendered="{!importing}">
+      <c:RuleImportHandler docId="{!docId}"/>
+    </apex:outputPanel>
+  </apex:form>
+
+  <apex:form >
+    <apex:pageBlock title="Export Rules" id="export">
+
+      <table class="list">
+        <thead class="rich-table-thead">
+          <tr class="headerRow">
+            <th class="headerRow" scope="col" colspan="1">
+              <div>Object</div>
+            </th>
+            <th class="headerRow" scope="col" colspan="1">
+              <div>Records</div>
+            </th>
+          </tr>
+        </thead>
+        <tr class="dataRow odd">
+          <td class="dataCell" colspan="1"><span>Rules</span></td>
+          <td class="dataCell" colspan="1"><span>{!numRules}</span></td>
+        </tr>
+        <tr class="dataRow even">
+          <td class="dataCell" colspan="1"><span>Filter Conditions</span></td>
+          <td class="dataCell" colspan="1"><span>{!numFilters}</span></td>
+        </tr>
+        <tr class="dataRow odd">
+          <td class="dataCell" colspan="1"><span>Calculated Values</span></td>
+          <td class="dataCell" colspan="1"><span>{!numCalcVals}</span></td>
+        </tr>
+      </table>
+
+      <apex:outputPanel rendered="{!exportUrl!=null}">
+        <iframe id="exportFilePanel" class="hidden" src="{!exportUrl}" />
+      </apex:outputPanel>
+
+      <apex:pageBlockButtons location="bottom">
+        <apex:commandButton action="{!export}" value="Export" reRender="export"/>
+      </apex:pageBlockButtons>
+   </apex:pageBlock>
+  </apex:form>
+
+</apex:page>

@@ -1,0 +1,2 @@
+<apex:page controller="zqu.ZQGenerateDocumentController" action="{!onload}" showHeader="false" sidebar="false">
+</apex:page>

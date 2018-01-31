@@ -1,0 +1,64 @@
+<apex:page standardStylesheets="true" showHeader="true" sidebar="false" standardController="zqu__ZRule__c" extensions="zqu.RuleConfigController" docType="html-5.0" >
+  <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <!--<apex:includeScript value="{!URLFOR($Resource.ImagesAndJavascriptZip, 'js/zquoteProductActions-compressed.js')}"/>-->
+    <script>
+      var RuleActionConfig = null;
+      var productCache = [];
+      var productCaching = false;
+      var planCaches = {};
+
+      function initializeRuleActionConfig(){
+        RuleActionConfig = {};
+
+        RuleActionConfig.cacheProducts = function(cb){
+          Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.RuleConfigController.getProducts}',
+            function(result, event) { RuleActionConfig.handleCacheProducts(result, event, cb); }
+          );
+        }
+        RuleActionConfig.handleCacheProducts = function(result, event, cb){
+          productCache = result;
+          cb();
+        }
+
+        RuleActionConfig.cachePlans = function(productId, cb){
+          Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.RuleConfigController.getPlans}',
+            productId,
+            function(result, event) { RuleActionConfig.handleCachePlans(result, event, productId, cb); }
+          );
+        }
+
+        RuleActionConfig.handleCachePlans = function(result, event, productId, cb) {
+          planCache = result;
+          planCaches[productId] = planCache;
+          cb(planCache);
+        }
+      }
+      initializeRuleActionConfig();
+
+    </script>
+
+    <apex:variable var="quotesPrefix" value="{!quotesNamespace}"/>
+    <apex:remoteObjects jsNamespace="SObjectModel">
+       <apex:remoteObjectModel name="{!quotesPrefix}ZRule__c" jsShorthand="rul" fields="Id">
+          <apex:remoteObjectField name="Name" jsShorthand="name"/>
+          <apex:remoteObjectField name="{!quotesPrefix}Description__c" jsShorthand="description"/>
+          <apex:remoteObjectField name="{!quotesPrefix}Json__c" jsShorthand="conditionJson"/>
+          <apex:remoteObjectField name="{!quotesPrefix}ActionJson__c" jsShorthand="actionJson"/>
+          <apex:remoteObjectField name="{!quotesPrefix}Active__c" jsShorthand="active"/>
+          <apex:remoteObjectField name="{!quotesPrefix}ObjectType__c" jsShorthand="objectType"/>
+          <apex:remoteObjectField name="{!quotesPrefix}Priority__c" jsShorthand="priority"/>
+       </apex:remoteObjectModel>
+    </apex:remoteObjects>
+
+    <apex:pageBlock title="{!$Label.zqu__title_rules_engine_not_enabled}" rendered="{!!isZuoraRulesEngineEnabled}">
+      <apex:outputText value="{!$Label.zqu__rules_engine_not_enabled}"/>
+    </apex:pageBlock>
+    <apex:outputPanel rendered="{!isZuoraRulesEngineEnabled}">
+      <c:RuleBuilderComponent myOptions="{!options}"/>
+    </apex:outputPanel>
+
+  </html>
+</apex:page>

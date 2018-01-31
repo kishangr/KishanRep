@@ -1,0 +1,167 @@
+<apex:page controller="Zuora.zLoginSetupController" id="loginSetupPage" action="{!setPackageStatus}">
+    <apex:form id="loginSetupForm">
+        <script>
+            var isInt = function(n){
+                return Number(n) === n && n % 1 === 0;
+            };
+            var checkAgainstMax = function(parameter){
+                var numConverted = parseInt(parameter);
+                if (isInt(numConverted)) {
+                    if (numConverted > 120) {
+                        alert('input timeout must be NOT be greater than 120 seconds');
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+                else {
+                    alert('input timeout must be a integer: ' + parameter);
+                    return false;
+                }
+            };
+            var validateTimeoutParameter = function()
+            {
+                var defaultTimeout = document.getElementById('{!$Component.loginSetupForm.loginSetupBlock.editableLoginSection.defaultTimeoutBlock.inputDefaultTimeout}').value;
+                var subscribeTimeout = document.getElementById('{!$Component.loginSetupForm.loginSetupBlock.editableLoginSection.subscribeTimeoutBlock.inputSubscribeTimeout}').value;
+                var amendTimeout = document.getElementById('{!$Component.loginSetupForm.loginSetupBlock.editableLoginSection.amendTimeoutBlock.inputAmendTimeout}').value;
+                var queryTimeout = document.getElementById('{!$Component.loginSetupForm.loginSetupBlock.editableLoginSection.queryTimeoutBlock.inputQueryTimeout}').value;
+
+                if (checkAgainstMax(defaultTimeout) && checkAgainstMax(subscribeTimeout) && checkAgainstMax(amendTimeout) &&
+                    checkAgainstMax(queryTimeout))
+                {
+                    doSave();
+                }
+
+            };
+
+        </script>
+        <apex:pageBlock id="loginSetupBlock" title="{!$Label.zuora__title_zuora_api_login_setup}">            
+            <apex:pageBlockSection id="locationSection" columns="1" title="{!$Label.zuora__title_location_selection}" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:selectList disabled="{!editMode}" value="{!selectedLocation}" size="1" >
+                        <apex:selectOptions value="{!locations}" />
+                        <apex:actionSupport event="onchange" action="{!invalidateSelectedLocation}" reRender="locationSection, readOnlyLoginSection, editableLoginSection, additionalControls, testSection" />
+                    </apex:selectList>
+                    <apex:outputPanel id="additionalControls" >
+                        <apex:selectList disabled="{!editMode}" value="{!selectedProfileId}" size="1" rendered="{!('Profile' == selectedLocation)}" >
+                            <apex:selectOptions value="{!profiles}" />
+                            <apex:actionSupport event="onchange" action="{!reloadLoginSetting}" reRender="readOnlyLoginSection, editableLoginSection, testSection" />
+                        </apex:selectList>
+                        <apex:inputField value="{!stub.Zuora__User__c}" rendered="{!('User' == selectedLocation)}">
+                            <apex:actionSupport event="onchange" action="{!reloadLoginSetting}" reRender="readOnlyLoginSection, editableLoginSection, testSection"/>
+                        </apex:inputField>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="readOnlyLoginSection" title="{!$Label.zuora__title_connection_settings}" columns="1" collapsible="false" rendered="{!NOT(editMode)}" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <apex:commandButton value="{!$Label.zuora__button_edit}" rendered="{!NOT(editMode)}" action="{!doEdit}" style="margin-left:20%" reRender="loginSetupBlock" />
+                        <apex:commandButton value="{!$Label.zuora__button_delete}" rendered="{!NOT(editMode)}" action="{!doDelete}" reRender="loginSetupBlock"  disabled="{!loginSetting.Zuora__Username__c == null}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!loginSetting.Zuora__Endpoint__c}"  rendered="{!selectedLocation=='Organization'}" />
+                <apex:outputField value="{!orgLoginSetting.Zuora__Endpoint__c}" rendered="{!selectedLocation!='Organization' && loginSetting.Zuora__Username__c != null && orgLoginSetting.Zuora__Endpoint__c != null}" />
+
+
+                <apex:pageBlockSectionItem helpText="{!$Label.zuora__help_default_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__DefaultTimeoutInSeconds__c.Label}"/>
+                    <apex:outputField value="{!loginSetting.Zuora__DefaultTimeoutInSeconds__c}"  rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$Label.zuora__help_subscribe_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__SubscribeTimeoutInSeconds__c.Label}"/>
+                    <apex:outputField value="{!loginSetting.Zuora__SubscribeTimeoutInSeconds__c}"  rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$Label.zuora__help_amend_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__AmendTimeoutInSeconds__c.Label}"/>
+                    <apex:outputField value="{!loginSetting.Zuora__AmendTimeoutInSeconds__c}"  rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$Label.zuora__help_query_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__QueryTimeoutInSeconds__c.Label}"/>
+                    <apex:outputField value="{!loginSetting.Zuora__QueryTimeoutInSeconds__c}"  rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!selectedLocation!='Organization' && loginSetting.Zuora__Username__c != null && orgLoginSetting.Zuora__Endpoint__c == null}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__Endpoint__c.Label}"/>
+                    <apex:outputPanel >                
+                        <apex:outputText value="{!EndpointErrorMsg }" style="color:red;"/>                               
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>                
+                <apex:outputField value="{!loginSetting.Zuora__Username__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="testSection" rendered="{!NOT(editMode)}" columns="1" collapsible="false">
+                <apex:commandButton value="{!$Label.zuora__button_test_connection}" action="{!doConnect}" style="margin-left:20%" reRender="loginSetupBlock,testSection" disabled="{!loginSetting.Zuora__Username__c == null}"/>
+                <apex:outputText value="{!testConnectionResult}" rendered="{! null != testConnectionResult}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="editableLoginSection" title="Connection Settings" columns="1" collapsible="false" rendered="{!editMode}" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <apex:actionFunction name="doSave" rendered="{!editMode}" action="{!doSave}" reRender="loginSetupBlock" />
+                        <input type="button" value="{!$Label.BUTTON_SAVE}" style="margin-left:20%" class="btn" onclick="validateTimeoutParameter();" />
+                        <apex:commandButton value="{!$Label.zuora__button_cancel}" rendered="{!editMode}" immediate="true" action="{!doCancel}" reRender="loginSetupBlock" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loginSetting.Zuora__Endpoint__c}" required="true" style="width:70%" rendered="{!selectedLocation=='Organization'}"/>
+                <apex:outputField value="{!orgLoginSetting.Zuora__Endpoint__c}" rendered="{!selectedLocation!='Organization' && loginSetting.Zuora__Username__c != null && orgLoginSetting.Zuora__Endpoint__c != null}" /> 
+                <apex:pageBlockSectionItem rendered="{!selectedLocation!='Organization' && loginSetting.Zuora__Username__c != null && orgLoginSetting.Zuora__Endpoint__c == null}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__Endpoint__c.Label}"/>
+                    <apex:outputPanel >                
+                        <apex:outputText value="{!EndpointErrorMsg }" style="color:red;"/>                               
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                                
+                <apex:inputField value="{!loginSetting.Zuora__Username__c}" required="true" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__Password__c.Label}"/>
+                    <apex:outputPanel >
+                        <apex:inputSecret value="{!loginSetting.Zuora__Password__c}" required="true" redisplay="true" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem id="defaultTimeoutBlock" helpText="{!$Label.zuora__help_default_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__DefaultTimeoutInSeconds__c.Label}"/>
+                    <apex:inputField id="inputDefaultTimeout" value="{!loginSetting.Zuora__DefaultTimeoutInSeconds__c}" required="true" rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="subscribeTimeoutBlock" helpText="{!$Label.zuora__help_subscribe_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__SubscribeTimeoutInSeconds__c.Label}"/>
+                    <apex:inputField id="inputSubscribeTimeout" value="{!loginSetting.Zuora__SubscribeTimeoutInSeconds__c}"  required="true" rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="amendTimeoutBlock" helpText="{!$Label.zuora__help_amend_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__AmendTimeoutInSeconds__c.Label}"/>
+                    <apex:inputField id="inputAmendTimeout" value="{!loginSetting.Zuora__AmendTimeoutInSeconds__c}"  required="true" rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="queryTimeoutBlock" helpText="{!$Label.zuora__help_query_time_out_in_seconds}">
+                    <apex:outputLabel value="{!$ObjectType.Zuora__zLogins__c.Fields.Zuora__QueryTimeoutInSeconds__c.Label}"/>
+                    <apex:inputField id="inputQueryTimeout" value="{!loginSetting.Zuora__QueryTimeoutInSeconds__c}"  required="true" rendered="{!selectedLocation=='Organization'}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+			      <apex:pageBlockSection title="{!$Label.zuora__title_zuora_package_installation_status}" columns="1" collapsible="false" rendered="{!NOT(editMode)}">
+			        <apex:pageBlockSectionItem >
+			          <apex:outputLabel value="{!$ObjectType.Zuora__ZuoraConfig__c.Fields.Zuora__Z360Installed__c.Label}" />
+			          <apex:outputText >
+			            <apex:outputField value="{!config.Zuora__Z360Installed__c}" />
+			            <apex:outputText rendered="{!hasZ360Version}">
+			              (Version {!config.Zuora__Z360MajorVersion__c}.{!config.Zuora__Z360MinorVersion__c},
+			              Namespace: {!z360Namespace})
+			            </apex:outputText>
+			          </apex:outputText>
+			        </apex:pageBlockSectionItem>
+			
+			        <apex:pageBlockSectionItem >
+			          <apex:outputLabel value="{!$ObjectType.Zuora__ZuoraConfig__c.Fields.Zuora__ZQuotesInstalled__c.Label}" />
+			          <apex:outputText >
+			            <apex:outputField value="{!config.Zuora__ZQuotesInstalled__c}" />
+			            <apex:outputText rendered="{!hasZQuotesVersion}">
+			              (Version {!config.Zuora__ZQuotesMajorVersion__c}.{!config.Zuora__ZQuotesMinorVersion__c},
+			              Namespace: {!zQuotesNamespace})
+			            </apex:outputText>
+			          </apex:outputText>
+			        </apex:pageBlockSectionItem>
+			      </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

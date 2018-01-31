@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <content>EditProductRatePlanOption</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <content>NewProductRatePlanOption</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <fullName>EditProductRatePlanOption</fullName>
+        <description>EditProductRatePlanOption</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Product__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ProductOption__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ProductRatePlan__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>EffectiveStartDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>EffectiveEndDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Edit Product Rate Plan Option</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>NewProductRatePlanOption</fullName>
+        <description>NewProductRatePlanOption</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ProductOption__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Product__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ProductRatePlan__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>EffectiveStartDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>EffectiveEndDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>New Product Rate Plan Option</label>
+    </fieldSets>
+    <fields>
+        <fullName>EffectiveEndDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date when the product rate plan expires and can&apos;t be subscribed to.</description>
+        <externalId>false</externalId>
+        <label>Effective End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>EffectiveStartDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date when the product rate plan becomes available and can be subscribed to.</description>
+        <externalId>false</externalId>
+        <label>Effective Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Origin__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>This field is only for Snapshot record type to lookup the original instance.</description>
+        <externalId>false</externalId>
+        <label>Original Option</label>
+        <referenceTo>ProductRatePlanOption__c</referenceTo>
+        <relationshipLabel>Product Rate Plan Options</relationshipLabel>
+        <relationshipName>Product_Rate_Plan_Options</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>OriginalPrpoId__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Original Product Rate Plan Option ID</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ProductOption__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product Option</label>
+        <referenceTo>ProductOption__c</referenceTo>
+        <relationshipLabel>Product Rate Plan Options</relationshipLabel>
+        <relationshipName>Product_Rate_Plan_Options</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>ProductRatePlan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The product rate plan being overrided.</description>
+        <externalId>false</externalId>
+        <label>Product Rate Plan</label>
+        <lookupFilter>
+            <active>true</active>
+            <filterItems>
+                <field>ProductRatePlan__c.Product__c</field>
+                <operation>equals</operation>
+                <valueField>$Source.Product__c</valueField>
+            </filterItems>
+            <filterItems>
+                <field>ProductRatePlan__c.Deleted__c</field>
+                <operation>equals</operation>
+                <value>False</value>
+            </filterItems>
+            <isOptional>false</isOptional>
+        </lookupFilter>
+        <referenceTo>ProductRatePlan__c</referenceTo>
+        <relationshipLabel>Product Rate Plan Options</relationshipLabel>
+        <relationshipName>Product_Rate_Plan_Options</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The product contains the overrided product rate plan. Should be the same object as parent product option&apos;s product</description>
+        <externalId>false</externalId>
+        <label>Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Product Rate Plan Options</relationshipLabel>
+        <relationshipName>Product_Rate_Plan_Options</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>QuoteRatePlan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Quote Rate Plan</label>
+        <referenceTo>QuoteRatePlan__c</referenceTo>
+        <relationshipLabel>Snapshot Product Rate Plan Options</relationshipLabel>
+        <relationshipName>SnapshotProductRatePlanOptions</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <label>Product Rate Plan Option</label>
+    <nameField>
+        <label>Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Product Rate Plan Options</pluralLabel>
+    <recordTypes>
+        <fullName>Default</fullName>
+        <active>true</active>
+        <label>Default</label>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Snapshot</fullName>
+        <active>true</active>
+        <label>Snapshot</label>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Effective_Date_Rule</fullName>
+        <active>true</active>
+        <description>Effective End Date should be after Effective Start Date</description>
+        <errorConditionFormula>AND(  
+NOT( ISNULL( EffectiveStartDate__c) ),
+NOT( ISNULL(  EffectiveEndDate__c ) ),
+EffectiveEndDate__c &lt; EffectiveStartDate__c
+ )</errorConditionFormula>
+        <errorDisplayField>EffectiveEndDate__c</errorDisplayField>
+        <errorMessage>Effective End Date cannot be before Effective Start Date</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Override_Rule</fullName>
+        <active>true</active>
+        <description>Override ProductRatePlan should belong to the Product Option&apos;s child product</description>
+        <errorConditionFormula>ProductRatePlan__r.Product__c  &lt;&gt;  ProductOption__r.ChildProduct__c</errorConditionFormula>
+        <errorDisplayField>ProductRatePlan__c</errorDisplayField>
+        <errorMessage>Override ProductRatePlan should belong to the Product Option&apos;s child product</errorMessage>
+    </validationRules>
+</CustomObject>

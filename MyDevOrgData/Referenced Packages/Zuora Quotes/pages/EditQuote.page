@@ -1,0 +1,2 @@
+<!-- this page just redirects to the beginning of the Edit Quote Flow for the various types of Quotes-->
+<apex:page id="EditQuote" showHeader="true" sidebar="true" standardController="zqu__Quote__c" extensions="zqu.EditQuoteController" action="{!startFlow}"/>

@@ -1,0 +1,76 @@
+<apex:page showHeader="true" tabStyle="Z_Quote_Config__tab" sidebar="false" controller="zqu.ScaleConfigController" title="{!$Label.zqu__config_scale_title}" >
+
+	<style>
+		.tertiaryPalette {
+	    	background-color: #DADFEB !important;
+	    }
+	</style>
+
+	<apex:form >
+
+		<!-- Help component -->
+		<c:HelpComponent cid="COM-0026" rightAlign="true" />
+		
+		<!-- page title -->
+		<c:PageTitle title="{!$Label.zqu__config_scale_title}" subtitle="{!$Label.zqu__config_scale_subtitle}" />
+
+		<apex:outputPanel id="theNotification" >
+			<c:Notification />
+		</apex:outputPanel>
+
+		<apex:pageBlock id="pageBlock" >
+
+			<!-- buttons -->
+			<apex:pageBlockButtons >
+				<!-- Read only mode -->
+				<apex:commandButton value="{!$Label.zqu__button_edit}" action="{!onClickEdit}" rendered="{!NOT(isEditMode)}" reRender="pageBlock" />
+				<apex:commandButton value="{!$Label.zqu__button_back_settings}" rendered="{!NOT(isEditMode)}" action="{!onBackToConfig}" />
+
+				<!-- Edit mode -->
+				<apex:commandButton value="{!$Label.zqu__button_save}" action="{!onClickSave}" rendered="{!isEditMode}" reRender="pageBlock,theNotification" />
+				<apex:commandButton value="{!$Label.zqu__button_cancel}" action="{!onClickCancel}" immediate="true" rendered="{!isEditMode}" reRender="pageBlock"/>
+			</apex:pageBlockButtons>
+
+			<!-- Iterate through the CHARGE field names -->
+			<apex:pageBlockSection columns="1" title="{!$Label.zqu__scale_setting_object_level_charge}" rendered="{!NOT(isEditMode)}" collapsible="false" >
+				<apex:repeat value="{!chargeFieldNames}" var="fieldName" >
+					<apex:pageBlockSectionItem >
+						<apex:outputLabel value="{!fieldName}" html-data-fieldName="{!fieldName}" />
+						<apex:outputField value="{!settingsByName['CHARGE'][fieldName].Scale__c}" />
+					</apex:pageBlockSectionItem>
+				</apex:repeat>
+			</apex:pageBlockSection>
+
+			<!-- Iterate through the TIER field names -->
+			<apex:pageBlockSection columns="1" title="{!$Label.zqu__scale_setting_object_level_tier}" rendered="{!NOT(isEditMode)}" collapsible="false" >
+				<apex:repeat value="{!tierFieldNames}" var="fieldName" >
+					<apex:pageBlockSectionItem >
+						<apex:outputLabel value="{!fieldName}" />
+						<apex:outputField value="{!settingsByName['TIER'][fieldName].Scale__c}" />
+					</apex:pageBlockSectionItem>
+				</apex:repeat>
+			</apex:pageBlockSection>
+
+			<!-- Edit mode CHARGE level -->
+			<apex:pageBlockSection columns="1" title="{!$Label.zqu__scale_setting_object_level_charge}" rendered="{!isEditMode}" collapsible="false" >
+				<apex:repeat value="{!chargeFieldNames}" var="fieldName" rendered="{!isEditMode}" >
+					<apex:pageBlockSectionItem >
+						<apex:outputLabel value="{!fieldName}" html-data-fieldName="{!fieldName}" />
+						<apex:inputField value="{!settingsByName['CHARGE'][fieldName].Scale__c}" />
+					</apex:pageBlockSectionItem>
+				</apex:repeat>
+			</apex:pageBlockSection>
+
+			<!-- Edit mode TIER level -->
+			<apex:pageBlockSection columns="1" title="{!$Label.zqu__scale_setting_object_level_tier}" rendered="{!isEditMode}" collapsible="false" >
+				<apex:repeat value="{!tierFieldNames}" var="fieldName" >
+					<apex:pageBlockSectionItem >
+						<apex:outputLabel value="{!fieldName}" />
+						<apex:inputField value="{!settingsByName['TIER'][fieldName].Scale__c}" />
+					</apex:pageBlockSectionItem>
+				</apex:repeat>
+			</apex:pageBlockSection>
+
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

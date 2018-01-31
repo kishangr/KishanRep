@@ -1,0 +1,52 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController" action="{!RedirectToConsolidatedPage}">
+<apex:messages style="color: red; font-weight: bold; text-align: center;"/>
+<apex:form >
+<apex:pageBlock title="Delete Documents">
+<apex:outputPanel id="resultPanel" layout="block">
+<div>
+    <b>Signature Documents</b>
+</div>
+<div>        
+    <apex:dataList styleclass="repeater" value="{!SignDocumentList}" var="doc" id="signdocList">
+        <div>
+            <apex:outputText value="{!doc.Sertifi2_0__Name__c}" style="margin-right:15px;"/>
+            <apex:outputLink value="{!doc.Sertifi2_0__EditLocationLink__c}" target="_blank" style="margin-right:15px;">Edit Signing Locations</apex:outputLink>
+            <apex:outputLink value="{!doc.Sertifi2_0__PreFillLink__c}" target="_blank" rendered="!doc.Fillable__c" style="margin-right:15px;">Pre-Fill Document</apex:outputLink>
+            <apex:commandButton action="{!DeleteDocument}" value="Delete" rerender="resultPanel" id="theButton" rendered="{!doc.Sertifi2_0__Status__c == 'Open'}">
+                <apex:param id="param1" name="sertifiid" value="{!doc.Sertifi2_0__Sertifi_ID__c}" AssignTo="{!DeleteDocumentID}"/>
+                <apex:param id="param2" name="sfid" value="{!doc.ID}" AssignTo="{!DeleteDocumentID}"/>
+            </apex:commandButton>
+        </div>
+    </apex:dataList>             
+</div>
+<div>
+    <b>Reference Documents</b>
+</div>
+<div>
+    <apex:dataList styleclass="repeater" value="{!RefDocumentList}" var="doc" id="refdocList">
+        <apex:outputText value="{!doc.Sertifi2_0__Name__c}"/>
+    </apex:dataList>
+</div>
+<div>
+    <b>Payments</b>
+</div>
+<div>        
+    <apex:dataList styleclass="repeater" value="{!PaymentList}" var="payment" id="paymentList">
+        <div>
+            <apex:outputText value="{!payment.Name}" style="margin-right:15px;"/>
+            <apex:outputText value="{!payment.Sertifi2_0__Amount__c}" style="margin-right:15px;"/>
+            <apex:outputText value="{!payment.Sertifi2_0__Recurrence__c}" style="margin-right:15px;"/>
+            <apex:commandButton action="{!DeletePayment}" value="Delete" rerender="resultPanel" id="theDeleteButton">
+                <apex:param id="param1" name="sertifiid" value="{!payment.Sertifi2_0__SertifiID__c}" AssignTo="{!DeleteDocumentID}"/>
+                <apex:param id="param2" name="sfid" value="{!payment.ID}" AssignTo="{!DeleteDocumentID}"/>
+            </apex:commandButton>
+        </div>
+    </apex:dataList>             
+</div>
+</apex:outputPanel>
+</apex:pageBlock>
+<div>
+    <apex:commandButton value="Done" action="{!RedirectToEContract}"/>
+</div>
+</apex:form>
+</apex:page>

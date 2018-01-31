@@ -1,0 +1,349 @@
+<apex:page controller="zqu.ConfigSettingsController" action="{!loadQuoteConfigSettings}" title="{!$Label.zqu__config_quote_title}"
+  sidebar="false" tabStyle="Z_Quote_Config__tab"
+  id="thepage">
+  <apex:includeScript value="{!$Resource.zqu__JQuery142}" />
+  <script>
+    var j$ = jQuery.noConflict();
+
+    function checkProcessPaymentsState(chkGenerateInvoice) {
+      if (j$("input[id*='isToProcessPayments']").attr("checked")) {
+        if (!chkGenerateInvoice.checked) {
+          j$("input[id*='isToProcessPayments']").attr("checked", false);
+        }
+      }
+    }
+
+    function checkGenerateInvoiceState(chkProcessPayments) {
+      if (!j$("input[id*='isToGenerateInvoice']").attr("checked")) {
+        if (chkProcessPayments.checked) {
+          j$("input[id*='isToGenerateInvoice']").attr("checked", true);
+        }
+      }
+    }
+  </script>
+  <style>
+body .bPageBlock .pbBody .labelCol {
+  color: #4A4A56;
+  padding-top: 10px !important;
+}
+
+body .bPageBlock .pbBody .dataCol {
+  padding-top: 10px !important;
+}
+
+.tertiaryPalette {
+  background-color: #DADFEB !important;
+}
+</style>
+  <c:HelpComponent cid="COM-0008" rightAlign="true" />
+
+  <c:PageTitle title="{!$Label.zqu__config_quote_title}"
+    subTitle="{!$Label.zqu__config_quote_subtitle}" />
+
+  <apex:outputPanel id="msg">
+    <c:Notification />
+  </apex:outputPanel>
+
+  <apex:form id="theform">
+    <apex:pageBlock id="zclp">
+      <apex:pageBlockButtons >
+        <apex:commandButton value="{!$Label.zqu__button_edit_settings}"
+          rendered="{!NOT(isEditMode)}" action="{!edit}"
+          style="margin-left:10%" reRender="zclp, msg" />
+        <apex:commandButton value="{!$Label.zqu__button_back_settings}"
+          rendered="{!NOT(isEditMode)}" action="{!back}"
+          reRender="zclp, msg" />
+        <apex:commandButton value="{!$Label.zqu__button_save}"
+          rendered="{!isEditMode}" action="{!saveQuoteConfig}" style="margin-left:10%"
+          reRender="zclp, msg" />
+        <apex:commandButton value="{!$Label.zqu__button_cancel}"
+          rendered="{!isEditMode}" immediate="true" action="{!loadQuoteConfigSettings}"
+          reRender="zclp, msg" />
+      </apex:pageBlockButtons>
+
+      <!--Detail Section-->
+      <apex:pageBlockSection title="{!$Label.zqu__config_quotes_package_status}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.Fields.zqu__Z360Installed__c.Label}" />
+          <apex:outputText >
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.isZ360Installed}"/>
+              <apex:outputText rendered="{!hasZ360Version}">
+                  (Version {!currentQuoteConfiguration.z360MajorVersion}.{!currentQuoteConfiguration.z360MinorVersion},
+                  Namespace: {!z360Namespace})
+              </apex:outputText>
+          </apex:outputText>
+        </apex:pageBlockSectionItem>
+
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.Fields.zqu__ZQuotesInstalled__c.Label}" />
+          <apex:outputText >
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.isZQuotesInstalled}"/>
+              <apex:outputText rendered="{!hasZQuotesVersion}">
+                  (Version {!currentQuoteConfiguration.zQuotesMajorVersion}.{!currentQuoteConfiguration.zQuotesMinorVersion},
+                  Namespace: {!zQuotesNamespace})
+              </apex:outputText>
+          </apex:outputText>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_quote_configurations}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Disable_Discounting__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Disable_Discounting__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldDisableDiscounting}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Tiers_From_Zuora__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Tiers_From_Zuora__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldGetTiersFromZuora}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Billing_Account_From_360__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Billing_Account_From_360__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldGetBillingAccountFrom360}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Copy_QuoteRatePlanCharge_To_QuoteCharge__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Copy_QuoteRatePlanCharge_To_QuoteCharge__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldCopyQuoteRatePlanChargeToQuoteCharge}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Approved_Quote_Status__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Approved_Quote_Status__c.Label}"/>
+              <apex:outputText value="{!currentQuoteConfiguration.approvedQuoteStatus}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Discount_Distribution__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Discount_Distribution__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldEnableDiscountDistribution}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Subscriptions_From_360__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Subscriptions_From_360__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldGetSubscriptionsFrom360}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Unique_Subscription_Quote_Number__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Unique_Subscription_Quote_Number__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldEnforceUniqueSubscriptionQuoteNumber}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_quote_pdf}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Use_SFDC_Locale_For_ZQDocs__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Use_SFDC_Locale_For_ZQDocs__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldUseSFDCLocaleForQuoteDoc}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__AttachToOpportunity__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__AttachToOpportunity__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldAttachQuotePDFToOpportunity}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_quote_processing_options}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Update_Opportunity_Amount_with_Quote_TCV__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Update_Opportunity_Amount_with_Quote_TCV__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldUpdateOpportunityAmountWithQuoteTCV}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Auto_replace_Expired_Rate_Plans__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Auto_replace_Expired_Rate_Plans__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldAutoReplaceExpiredRatePlans}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_hpm_processing_options}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__ElectronicPaymentMethodSetting__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__ElectronicPaymentMethodSetting__c.Label}"/>
+              <apex:outputText value="{!currentQuoteConfiguration.electronicPaymentMethodSetting}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_sendtozbilling}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Updating_Zuora_Account_Info__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Updating_Zuora_Account_Info__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldAllowUpdateOfZuoraAccountInfo}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Generate_Invoice__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Generate_Invoice__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldGenerateInvoice}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Process_Payments__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Process_Payments__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldProcessPayments}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Apply_Credit_Balance__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Apply_Credit_Balance__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldApplyCreditBalance}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Always_Active_Amendment__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Always_Active_Amendment__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldAlwaysSetAmendmentsToActive}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Quote_Read_Only__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Quote_Read_Only__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldMakeQuoteReadOnlyAfterSendToZBilling}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Autofill_Dates_For_Preview__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Autofill_Dates_For_Preview__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldAutofillDatesForMetricsPreview}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Invoice_Separately__c.inlineHelpText}" rendered="{!zuoraConfig.zqu__EnableOrders__c}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Invoice_Separately__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldAllowInvoiceSeparately}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_field_configurations}"
+        columns="2" collapsible="false" rendered="{!NOT(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Invoice_Owner__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Invoice_Owner__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldEnableInvoiceOwner}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Parent_Customer_Account__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Parent_Customer_Account__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldEnableParentCustomerAccount}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Single_Primary_Quote__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Single_Primary_Quote__c.Label}"/>
+              <c:CheckBox isChecked="{!currentQuoteConfiguration.shouldEnforceSinglePrimaryQuote}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Whitelist_FieldSet_Name__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Whitelist_FieldSet_Name__c.Label}"/>
+              <apex:outputText value="{!currentQuoteConfiguration.whitelistFieldSetName}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+      <!--End Detail Section-->
+
+      <!--Edit Mode-->
+      <apex:pageBlockSection title="{!$Label.zqu__section_quote_configurations}"
+        columns="2" collapsible="false" rendered="{!(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Disable_Discounting__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Disable_Discounting__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldDisableDiscounting}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Tiers_From_Zuora__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Tiers_From_Zuora__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldGetTiersFromZuora}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Billing_Account_From_360__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Billing_Account_From_360__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldGetBillingAccountFrom360}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Copy_QuoteRatePlanCharge_To_QuoteCharge__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Copy_QuoteRatePlanCharge_To_QuoteCharge__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldCopyQuoteRatePlanChargeToQuoteCharge}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Approved_Quote_Status__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Approved_Quote_Status__c.Label}"/>
+              <apex:selectList value="{!currentQuoteConfiguration.approvedQuoteStatus}" size="1" multiSelect="false">
+                  <apex:selectOptions value="{!defaultApprovalStatusOptions}"/>
+              </apex:selectList>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Discount_Distribution__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Discount_Distribution__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldEnableDiscountDistribution}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Subscriptions_From_360__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Get_Subscriptions_From_360__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldGetSubscriptionsFrom360}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Unique_Subscription_Quote_Number__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Unique_Subscription_Quote_Number__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldEnforceUniqueSubscriptionQuoteNumber}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_quote_pdf}"
+        columns="2" collapsible="false" rendered="{!(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Use_SFDC_Locale_For_ZQDocs__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Use_SFDC_Locale_For_ZQDocs__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldUseSFDCLocaleForQuoteDoc}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__AttachToOpportunity__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__AttachToOpportunity__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldAttachQuotePDFToOpportunity}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_quote_processing_options}"
+        columns="2" collapsible="false" rendered="{!(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Update_Opportunity_Amount_with_Quote_TCV__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Update_Opportunity_Amount_with_Quote_TCV__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldUpdateOpportunityAmountWithQuoteTCV}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Auto_replace_Expired_Rate_Plans__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Auto_replace_Expired_Rate_Plans__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldAutoReplaceExpiredRatePlans}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_hpm_processing_options}"
+        columns="2" collapsible="false" rendered="{!(isEditMode)}">
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$Label.zqu__config_payment_method_setting}"></apex:outputLabel>
+          <apex:outputPanel id="fieldPaymentMethodSettingOption">
+            <apex:selectList value="{!currentQuoteConfiguration.electronicPaymentMethodSetting}"
+              size="1" multiselect="false">
+              <apex:selectOptions value="{!defaultPaymentMethodSettingOptions}"></apex:selectOptions>
+            </apex:selectList>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_sendtozbilling}"
+        columns="2" collapsible="false" rendered="{!(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Updating_Zuora_Account_Info__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Updating_Zuora_Account_Info__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldAllowUpdateOfZuoraAccountInfo}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Generate_Invoice__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Generate_Invoice__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldGenerateInvoice}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Process_Payments__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Process_Payments__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldProcessPayments}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Apply_Credit_Balance__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Apply_Credit_Balance__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldApplyCreditBalance}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Always_Active_Amendment__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Always_Active_Amendment__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldAlwaysSetAmendmentsToActive}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Quote_Read_Only__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Quote_Read_Only__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldMakeQuoteReadOnlyAfterSendToZBilling}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Autofill_Dates_For_Preview__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Autofill_Dates_For_Preview__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldAutofillDatesForMetricsPreview}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Invoice_Separately__c.inlineHelpText}" rendered="{!zuoraConfig.zqu__EnableOrders__c}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Allow_Invoice_Separately__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldAllowInvoiceSeparately}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+
+      <apex:pageBlockSection title="{!$Label.zqu__section_field_configurations}"
+        columns="2" collapsible="false" rendered="{!(isEditMode)}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Invoice_Owner__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Invoice_Owner__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldEnableInvoiceOwner}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Parent_Customer_Account__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enable_Parent_Customer_Account__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldEnableParentCustomerAccount}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Single_Primary_Quote__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Enforce_Single_Primary_Quote__c.Label}"/>
+              <apex:inputCheckbox value="{!currentQuoteConfiguration.shouldEnforceSinglePrimaryQuote}"/>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Whitelist_FieldSet_Name__c.inlineHelpText}">
+              <apex:outputLabel value="{!$ObjectType.zqu__Zuora_Config__c.fields.zqu__Whitelist_FieldSet_Name__c.Label}"/>
+              <apex:inputText value="{!currentQuoteConfiguration.whitelistFieldSetName}"/>
+          </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+        <!--End Edit Mode-->
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

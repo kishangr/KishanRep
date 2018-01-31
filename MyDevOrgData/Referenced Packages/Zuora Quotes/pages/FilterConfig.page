@@ -1,0 +1,21 @@
+<apex:page standardStylesheets="true" showHeader="true" sidebar="false" standardController="zqu__FilterCondition__c" extensions="zqu.FilterConfigController" docType="html-5.0" >
+  <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <apex:variable var="quotesPrefix" value="{!quotesNamespace}"/>
+    <apex:remoteObjects jsNamespace="SObjectModel">
+       <apex:remoteObjectModel name="{!quotesPrefix}FilterCondition__c" jsShorthand="filter" fields="Id">
+          <apex:remoteObjectField name="Name" jsShorthand="name"/>
+          <apex:remoteObjectField name="{!quotesPrefix}ObjectType__c" jsShorthand="objectType"/>
+          <apex:remoteObjectField name="{!quotesPrefix}Json__c" jsShorthand="conditionJson"/>
+       </apex:remoteObjectModel>
+    </apex:remoteObjects>
+  
+    <apex:pageBlock title="{!$Label.zqu__title_rules_engine_not_enabled}" rendered="{!!isZuoraRulesEngineEnabled}">
+      <apex:outputText value="{!$Label.zqu__rules_engine_not_enabled}"/>
+    </apex:pageBlock>
+    <apex:outputPanel rendered="{!isZuoraRulesEngineEnabled}">
+      <c:FilterBuilderComponent myOptions="{!options}"/>
+    </apex:outputPanel>
+
+  </html>
+</apex:page>

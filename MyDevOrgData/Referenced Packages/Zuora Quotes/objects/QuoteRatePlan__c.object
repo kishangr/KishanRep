@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>A QuoteRatePlan is part of a Quote.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <fullName>CustomClonedFields</fullName>
+        <description>Fields in this field set will be cloned by the custom Zuora Quotes Clone functionality.</description>
+        <label>Custom Cloned Fields</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>CustomRatePlanFields</fullName>
+        <description>Fields in this field set will be included in the subscription rate plan data when quotes are sent to Zuora.</description>
+        <label>Custom Rate Plan Fields</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>DisplayRatePlanFields</fullName>
+        <availableFields>
+            <field>SpecificUpdateDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>Fields in this field set will be displayed in the Product Selector.</description>
+        <label>Display Rate Plan Fields</label>
+    </fieldSets>
+    <fields>
+        <fullName>AmendmentType__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The type of amendment being made.</description>
+        <externalId>false</externalId>
+        <label>Amendment Type</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>NewProduct</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>RemoveProduct</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>TermsAndConditions</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>UpdateProduct</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>EntityID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Quote__r.BillingEntity__r.EntityID__c</formula>
+        <label>EntityID</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>OriginalPrpoId__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Original Product Rate Plan Option ID</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Parent__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The quote rate plan of the parent product.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The quote rate plan of the parent product.</inlineHelpText>
+        <label>Parent</label>
+        <referenceTo>QuoteRatePlan__c</referenceTo>
+        <relationshipLabel>Child Quote Rate Plans</relationshipLabel>
+        <relationshipName>ChildQuoteRatePlans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ProductRatePlanZuoraId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>corresponding Id with Product Catalog on remote zuora server</description>
+        <externalId>false</externalId>
+        <label>Product Rate Plan Zuora Id</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ProductRatePlan__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The Quote Rate Plan associated with a Product Rate Plan.</description>
+        <externalId>false</externalId>
+        <label>Product Rate Plan</label>
+        <referenceTo>ProductRatePlan__c</referenceTo>
+        <relationshipLabel>Quote Rate Plans</relationshipLabel>
+        <relationshipName>Quote_Rate_Plans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipLabel>Quote Rate Plans</relationshipLabel>
+        <relationshipName>Quote_Rate_Plans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>QuoteAmendment__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The identification of the amendment that this quote rate plan applies to.</description>
+        <externalId>false</externalId>
+        <label>Quote Amendment</label>
+        <referenceTo>QuoteAmendment__c</referenceTo>
+        <relationshipLabel>Quote Rate Plans</relationshipLabel>
+        <relationshipName>Quote_Rate_Plans</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>true</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>QuoteProductName__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Quote Product Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>QuoteRatePlanFullName__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Full Name</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>QuoteRatePlanZuoraId__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <deprecated>false</deprecated>
+        <description>corresponding Id on remote zuora server</description>
+        <externalId>true</externalId>
+        <label>Quote Rate Plan Zuora Id</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Quote__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The Quote Rate Plan associated with a Quote.</description>
+        <externalId>false</externalId>
+        <label>Quote</label>
+        <referenceTo>Quote__c</referenceTo>
+        <relationshipLabel>Quote Rate Plans</relationshipLabel>
+        <relationshipName>Quote_Rate_Plans</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>RatePlanOverrideReferenceId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Id of another Quote Rate Plan in the order that this charge is acting on.</description>
+        <externalId>false</externalId>
+        <label>Rate Plan Override Reference Id</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RootQrpId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The unique ID corresponding to the root bundle that a Quote Rate Plan belongs to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The unique ID corresponding to the root bundle that a Quote Rate Plan belongs to.</inlineHelpText>
+        <label>Root Quote Rate Plan ID</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SpecificUpdateDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Specifies when to activate a future dated Update Order Action.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies when to activate a future dated Update Order Action.</inlineHelpText>
+        <label>Specific Update Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>SubscriptionRatePlanZuoraId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The identification number of the subscription rate plan that the amendment is modifying. Required if AmendmentType is set to RemoveProduct or UpdateProduct.</description>
+        <externalId>false</externalId>
+        <label>Subscription Rate Plan Zuora Id</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Time_Product_Added__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Time Product Added</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Quote Rate Plan</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>All1</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Quote Rate Plan Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Quote Rate Plans</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

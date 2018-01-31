@@ -1,0 +1,47 @@
+<apex:page standardController="zqu__ProductRatePlanChargeOption__c"
+           extensions="zqu.EditChargeOptionController" 
+           title="{!$Label.zqu__config_product_rate_plan_charge_option_edit}"
+           tabStyle="Product2"
+           sidebar="true">
+  <c:PageTitle title="{!$Label.zqu__config_product_rate_plan_charge_option_edit}" subTitle="{!$Label.zqu__config_product_rate_plan_charge_option_subtitle}" />
+  <apex:form >
+     <c:PropertyComponent options="{!pcOptions}" ></c:PropertyComponent>
+  </apex:form>
+  
+  <script>
+    
+    ChargeOptionPropertyComponent.renderCurrencyOptions = function(){
+      var availableCurrencies = '{!activeCurrencies}'.split(',');
+      var currencyfield;
+      
+      for(var fieldSetIndex = 0; fieldSetIndex < ChargeOptionPropertyComponent.fieldSets.length; fieldSetIndex++){
+        // Get field set information
+        var fieldSet = ChargeOptionPropertyComponent.fieldSets[fieldSetIndex];
+        for(var fieldIndex = 0; fieldIndex < fieldSet.fields.length; fieldIndex++){
+          // Get field
+          if(fieldSet.fields[fieldIndex].name == '{!namespace}Currency__c'){
+            currencyfield = fieldSet.fields[fieldIndex];
+          }
+        }
+      }
+      
+      if(currencyfield != undefined){
+        var fieldSpan = $jq("span[data-field-name='" + currencyfield.name + "']");
+        // Store field related dom elements
+        currencyfield.fieldTD = fieldSpan.closest('td');
+        
+        for(var picklistValueIndex = 0; picklistValueIndex < currencyfield.picklistValues.length; picklistValueIndex++){
+          var picklistValue = currencyfield.picklistValues[picklistValueIndex];
+          if(availableCurrencies.indexOf(picklistValue.name) < 0){
+            $jq("option[value='" + picklistValue.name +  "']", currencyfield.fieldTD).css('display', 'none');
+          }
+        }
+      }
+      
+    }
+    
+    $jq(function(){
+      ChargeOptionPropertyComponent.renderCurrencyOptions();
+    })
+  </script>
+</apex:page>

@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ACTION_STATUS_DONE</fullName>
+        <categories>actionStatus</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACTION_STATUS_DONE</shortDescription>
+        <value>Done</value>
+    </labels>
+    <labels>
+        <fullName>ACTION_STATUS_SENDING_REQUEST</fullName>
+        <categories>actionStatus</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACTION_STATUS_SENDING_REQUEST</shortDescription>
+        <value>Sending request...</value>
+    </labels>
+    <labels>
+        <fullName>AMENDMENT</fullName>
+        <categories>chatter</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AMENDMENT</shortDescription>
+        <value>amended</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_ADD</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_ADD</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_ADDING</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_ADDING</shortDescription>
+        <value>Adding</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_ADDING_NEW_FIELD</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_ADDING_NEW_FIELD</shortDescription>
+        <value>Adding New Field</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_ADD_NEW_FIELD</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_ADD_NEW_FIELD</shortDescription>
+        <value>Add New Field</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_BACK</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_BACK</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_CANCEL</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_CANCEL</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_CANCELLING</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_CANCELLING</shortDescription>
+        <value>Cancelling</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_CLEARING</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_CLEARING</shortDescription>
+        <value>Clearing</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_CLEAR_SCHEMA_CACHE</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_CLEAR_SCHEMA_CACHE</shortDescription>
+        <value>Clear Schema Cache</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_DELETE</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_DELETE</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_DELETING</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_DELETING</shortDescription>
+        <value>Deleting</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_EDIT</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_EDIT</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_EDITING</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_EDITING</shortDescription>
+        <value>Editing</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_NEXT</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_NEXT</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_PREVIOUS</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_PREVIOUS</shortDescription>
+        <value>Previous</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_SAVE</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_SAVE</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_SAVING</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_SAVING</shortDescription>
+        <value>Saving</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_TEST_CONNECTION</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_TEST_CONNECTION</shortDescription>
+        <value>Test Connection</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_UPDATE</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_UPDATE</shortDescription>
+        <value>Update</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_UPLOAD</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_UPLOAD</shortDescription>
+        <value>Upload</value>
+    </labels>
+    <labels>
+        <fullName>BUTTON_VIEW_RESULT</fullName>
+        <categories>button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BUTTON_VIEW_RESULT</shortDescription>
+        <value>View Result</value>
+    </labels>
+    <labels>
+        <fullName>COLUMN_ACTIONS</fullName>
+        <categories>column</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>COLUMN_ACTIONS</shortDescription>
+        <value>Actions</value>
+    </labels>
+    <labels>
+        <fullName>CONNECTION_ERROR</fullName>
+        <categories>info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CONNECTION_ERROR</shortDescription>
+        <value>Please configure the Endpoint at the Organization Level in the Location Selection section above.</value>
+    </labels>
+    <labels>
+        <fullName>CONNECTION_SUCCESSFUL</fullName>
+        <categories>info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CONNECTION_SUCCESSFUL</shortDescription>
+        <value>Connected to Zuora successfully!</value>
+    </labels>
+    <labels>
+        <fullName>CREATED</fullName>
+        <categories>chatter</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CREATED</shortDescription>
+        <value>created</value>
+    </labels>
+    <labels>
+        <fullName>HELP_AMEND_TIME_OUT_IN_SECONDS</fullName>
+        <categories>help</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HELP_AMEND_TIME_OUT_IN_SECONDS</shortDescription>
+        <value>&quot;Timeout value for amend call outs in seconds. Max value is 120 seconds&quot;</value>
+    </labels>
+    <labels>
+        <fullName>HELP_DEFAULT_TIME_OUT_IN_SECONDS</fullName>
+        <categories>help</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HELP_DEFAULT_TIME_OUT_IN_SECONDS</shortDescription>
+        <value>&quot;Default timeout value for call outs in seconds. Max value is 120 seconds&quot;</value>
+    </labels>
+    <labels>
+        <fullName>HELP_QUERY_TIME_OUT_IN_SECONDS</fullName>
+        <categories>help</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HELP_QUERY_TIME_OUT_IN_SECONDS</shortDescription>
+        <value>&quot;Timeout value for query call outs in seconds. Max value is 120 seconds&quot;</value>
+    </labels>
+    <labels>
+        <fullName>HELP_REMOVE_ZUORA_OBJECT_FIELD</fullName>
+        <categories>help</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HELP_REMOVE_ZUORA_OBJECT_FIELD</shortDescription>
+        <value>Remove Zuora Objects and Fields from Custom Setting</value>
+    </labels>
+    <labels>
+        <fullName>HELP_SUBSCRIBE_TIME_OUT_IN_SECONDS</fullName>
+        <categories>help</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HELP_SUBSCRIBE_TIME_OUT_IN_SECONDS</shortDescription>
+        <value>&quot;Timeout value for subscribe call outs in seconds. Max value is 120 seconds&quot;</value>
+    </labels>
+    <labels>
+        <fullName>INVALID_LOGIN_ERROR</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>INVALID_LOGIN_ERROR</shortDescription>
+        <value>Incorrect Login Credentials. Please check the configuration settings</value>
+    </labels>
+    <labels>
+        <fullName>LOCATION_SELECTION_OPTION_ORGANIZATION</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LOCATION_SELECTION_OPTION_ORGANIZATION</shortDescription>
+        <value>Organization</value>
+    </labels>
+    <labels>
+        <fullName>LOCATION_SELECTION_OPTION_PROFILE</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LOCATION_SELECTION_OPTION_PROFILE</shortDescription>
+        <value>Profile</value>
+    </labels>
+    <labels>
+        <fullName>LOCATION_SELECTION_OPTION_USER</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LOCATION_SELECTION_OPTION_USER</shortDescription>
+        <value>User</value>
+    </labels>
+    <labels>
+        <fullName>NO_INVOICES_AVAILABLE</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NO_INVOICES_AVAILABLE</shortDescription>
+        <value>NO INVOICES ARE AVAILABLE FOR THE CORRESPONDING INVOICE ID</value>
+    </labels>
+    <labels>
+        <fullName>None</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>None</shortDescription>
+        <value>None</value>
+    </labels>
+    <labels>
+        <fullName>OB_AMEND_AMENDMENTS_NULL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OB_AMEND_AMENDMENTS_NULL</shortDescription>
+        <value>Order Builder: An error occurred while calling zamend() - AmendRequest.amendments cannot be null or an empty array.</value>
+    </labels>
+    <labels>
+        <fullName>OB_AMEND_AMENDREQUESTS_NULL</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OB_AMEND_AMENDREQUESTS_NULL</shortDescription>
+        <value>Order Builder: An error occurred while calling zamend() - amendRequests cannot be null or an empty array.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_AUTH_FAILURE</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_AUTH_FAILURE</shortDescription>
+        <value>An error occurred while initializing a Zuora user session.  Please check your Zuora connection setup.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_EMAIL_BODY</fullName>
+        <categories>email</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_EMAIL_BODY</shortDescription>
+        <value>Your Zuora sync request has been sent.  The request status is: &lt;br&gt;
+&lt;p&gt;
+{syncstatus}</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_EMAIL_SUBJECT</fullName>
+        <categories>email</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_EMAIL_SUBJECT</shortDescription>
+        <value>Your Zuora sync request status</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_EXTERNAL_ID_NULL</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_EXTERNAL_ID_NULL</shortDescription>
+        <value>The Zuora External ID of the records to sync is not available.  Please do a regular snc first so that Zuora External ID will be set.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_MAX_CALLOUT</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_MAX_CALLOUT</shortDescription>
+        <value>You have reached the maximum number of {calloutCount} objects supported in a on-demand sync request.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_NO_BILLING_ACCOUNTS</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_NO_BILLING_ACCOUNTS</shortDescription>
+        <value>There are no Zuora customer accounts currently associated with this account.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_OBJECT_ID_NULL</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The sync object ID is not available.</shortDescription>
+        <value>The sync object ID is not available.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_OBJECT_NONEXIST</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_OBJECT_NONEXIST</shortDescription>
+        <value>Cannot find objects with ID(s): {objectId}</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_REQUEST_ERROR</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_REQUEST_ERROR</shortDescription>
+        <value>An error occurred while sending on-demand sync request to Zuora.  The error details are :</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_REQUEST_SUCCESS</fullName>
+        <categories>info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_REQUEST_SUCCESS</shortDescription>
+        <value>The on-demand sync request has been successfully sent to Zuora.  It may take a few minutes for the request to be processed.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_REQUEST_UNEXPECTED_ERROR</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_REQUEST_UNEXPECTED_ERROR</shortDescription>
+        <value>An unexpected error occurred while sending on-demand sync to Zuora.  The error details are:</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_RESULT_FAILURE</fullName>
+        <categories>email</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_RESULT_FAILURE</shortDescription>
+        <value>&lt;b&gt;Object Name&lt;/b&gt;: {sfdcName}&lt;br&gt;
+&lt;b&gt;Zuora Object Id&lt;/b&gt;: {zuoraObjectId}&lt;br&gt;
+&lt;b&gt;Status&lt;/b&gt;: Failed&lt;br&gt;
+&lt;b&gt;Error Description&lt;/b&gt;: {errorDescription}&lt;br&gt;
+&lt;p&gt;</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_RESULT_FAILURE_STRING</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_RESULT_FAILURE_STRING</shortDescription>
+        <value>The sync request on the following object has failed: Object Name: {sfdcName}; Zuora Object ID: {zuoraObjectId}; Error Description: {errorDescription}.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_RESULT_SUCCESS</fullName>
+        <categories>email</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_RESULT_SUCCESS</shortDescription>
+        <value>&lt;b&gt;Object Name&lt;/b&gt;: {sfdcName}&lt;br&gt;
+&lt;b&gt;Zuora Object Id&lt;/b&gt;: {zuoraObjectId}&lt;br&gt;
+&lt;b&gt;Status&lt;/b&gt;: Success (It may take a few minutes for the request to be processed) &lt;br&gt;
+&lt;b&gt;Job ID&lt;/b&gt;: {jobId}&lt;br&gt;
+&lt;p&gt;</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_RESULT_SUCCESS_STRING</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_RESULT_SUCCESS_STRING</shortDescription>
+        <value>The sync request on the following object has been submitted successfully: Object Name: {sfdcName}; Zuora Object ID: {zuoraObjectId}; Job ID: {jobId}.  Please allow a few minutes for the request to be processed.</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_UNKNOWN</fullName>
+        <categories>info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_UNKNOWN</shortDescription>
+        <value>N/A</value>
+    </labels>
+    <labels>
+        <fullName>ONDEMAND_SYNC_ZQUOTES_NOT_INSTALLED</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ONDEMAND_SYNC_ZQUOTES_NOT_INSTALLED</shortDescription>
+        <value>On-demand sync on product catalog failed because Zuora Quotes is not installed on this org.</value>
+    </labels>
+    <labels>
+        <fullName>Sync_Crm_Id_Change_Result</fullName>
+        <categories>Sync History</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync Crm Id Change Result</shortDescription>
+        <value>CRM Id Change Result</value>
+    </labels>
+    <labels>
+        <fullName>Sync_Finish_Time</fullName>
+        <categories>Sync History</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync Finish Time</shortDescription>
+        <value>Finished By</value>
+    </labels>
+    <labels>
+        <fullName>Sync_Start_Time</fullName>
+        <categories>Sync History</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync Start Time</shortDescription>
+        <value>Started From</value>
+    </labels>
+    <labels>
+        <fullName>Sync_Success</fullName>
+        <categories>Sync History</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync Success</shortDescription>
+        <value>Is Success</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_CONNECTION_SETTINGS</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_CONNECTION_SETTINGS</shortDescription>
+        <value>Connection Settings</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_FIELDS_OF_OBJECT</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_FIELDS_OF_OBJECT</shortDescription>
+        <value>Fields of {0}</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_LOCATION_SELECTION</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_LOCATION_SELECTION</shortDescription>
+        <value>Location Selection</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_UPDATE_CRM_ID</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_UPDATE_CRM_ID</shortDescription>
+        <value>Update Crm Id for Billing Account:</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_UPLOAD_ZUORA_WSDL_FILE</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_UPLOAD_ZUORA_WSDL_FILE</shortDescription>
+        <value>Upload Zuora WSDL File</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_ZSCHEMA_SETUP</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_ZSCHEMA_SETUP</shortDescription>
+        <value>zSchema Setup</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_ZUORA_API_LOGIN_SETUP</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_ZUORA_API_LOGIN_SETUP</shortDescription>
+        <value>Zuora API Login Setup</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_ZUORA_OBJECTS</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_ZUORA_OBJECTS</shortDescription>
+        <value>Zuora Objects</value>
+    </labels>
+    <labels>
+        <fullName>TITLE_ZUORA_PACKAGE_INSTALLATION_STATUS</fullName>
+        <categories>title</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>TITLE_ZUORA_PACKAGE_INSTALLATION_STATUS</shortDescription>
+        <value>Zuora Package Installation Status</value>
+    </labels>
+    <labels>
+        <fullName>UNABLE_RETRIEVE_INVOICE</fullName>
+        <categories>info</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UNABLE_RETRIEVE_INVOICE</shortDescription>
+        <value>Unable to retrieve pdf content</value>
+    </labels>
+    <labels>
+        <fullName>UPDATED</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UPDATED</shortDescription>
+        <value>updated</value>
+    </labels>
+    <labels>
+        <fullName>WARNING_DELETE_OBJECT_FIELD_FROM_CACHE</fullName>
+        <categories>warning</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>WARNING_DELETE_OBJECT_FIELD_FROM_CACHE</shortDescription>
+        <value>This action will delete all Zuora Objects and Fields from the cache, and cannot be undone. Are you sure you want to continue?</value>
+    </labels>
+    <labels>
+        <fullName>ZBilling_LOGIN_ERROR</fullName>
+        <categories>error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ZBilling_LOGIN_ERROR</shortDescription>
+        <value>Zuora login information has not been configured properly. Please check your configuration.</value>
+    </labels>
+</CustomLabels>

@@ -1,0 +1,1 @@
+<apex:page id="NewQuote" showHeader="true" sideBar="true" standardController="zqu__Quote__c" extensions="zqu.NewQuoteController" action="{!startFlow}" />

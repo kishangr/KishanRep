@@ -1,0 +1,418 @@
+<apex:page standardController="zqu__ProductRatePlanCharge__c" extensions="zqu.ProductRatePlanChargeController" showHeader="true" sidebar="true">
+  
+  <apex:form >
+    <c:PropertyComponent options="{!pcOptions}"/>
+  </apex:form>
+  
+  <script>
+    // 'ChargePropertyComponent' is the instance name of product rate plan charge property component
+    // The js object 'ChargePropertyComponent' will be defined within property component if enabling the 'PropertyComponentOptions.includeClientVariables'
+    ChargePropertyComponent.initialize = function(){
+      for(var fieldSetIndex = 0; fieldSetIndex < ChargePropertyComponent.fieldSets.length; fieldSetIndex++){
+        // Get field set information
+        var fieldSet = ChargePropertyComponent.fieldSets[fieldSetIndex];
+        // Set field set isDisplayed to true by default;
+        fieldSet.isDisplayed = true;
+        
+        for(var fieldIndex = 0; fieldIndex < fieldSet.fields.length; fieldIndex++){
+          // Get field
+          var field = fieldSet.fields[fieldIndex];
+          // Set field isDisplayed to true by default;
+          field.isDisplayed = true;
+          // Set field td element and label th element
+          var fieldSpan = $jq("span[data-field-name='" + field.name + "']");
+          // Store field related dom elements
+          field.fieldTD = fieldSpan.closest('td');
+          field.labelTH = field.fieldTD.prev('th');
+          if(field.type == 'REFERENCE'){
+            field.fieldElement = $jq('input', $jq('span[class *= "lookupInput"]', field.fieldTD))[0];
+          }
+          else{
+            field.fieldElement = $jq('input, select, textarea', field.fieldTD)[0];
+          }
+          
+          // Add clear method to field
+          field.clear = function(){
+            if(this.type == 'PICKLIST'){
+              this.fieldElement.selectedIndex = 0;
+            }
+            else if(this.type == 'BOOLEAN'){
+              $jq(this.fieldElement).attr('checked',false);
+            }
+            else{
+              $jq(this.fieldElement).val('');
+            }
+          }
+          
+          // Add show method to field
+          field.show = function(){
+            
+            this.fieldTD.children().css('visibility', '');
+            this.labelTH.children().css('visibility', '');
+            
+            if($jq('div[class="requiredInput"]', this.fieldTD).length == 0 && this.isRequiredWhenVisible != undefined && this.isRequiredWhenVisible == true){
+              this.fieldTD.prepend('<div class="requiredBlock"></div>');
+              this.fieldTD.children().wrapAll('<div class="requiredInput"></div>');
+            }
+          }
+          
+          // Add hide method to field
+          field.hide = function(){
+            this.fieldTD.children().css('visibility', 'hidden');
+            this.labelTH.children().css('visibility', 'hidden');
+            // Clear the field value if it is hidden
+            this.clear();
+          }
+          
+          
+          
+          // Add onChange event to the element
+          
+          $jq(field.fieldElement).change(function(){
+            ChargePropertyComponent.onChange(this);
+          });
+          
+          if(field.picklistValues != null){
+            for(var picklistValueIndex = 0; picklistValueIndex < field.picklistValues.length; picklistValueIndex++){
+              // Get picklist value
+              var picklistValue = field.picklistValues[picklistValueIndex];
+              // Set picklist value isDisplayed to true by default;
+              picklistValue.isDisplayed = true;
+            }
+          }
+        }
+      }
+    }
+    
+    ChargePropertyComponent.refresh = function(){
+      
+      for(var fieldSetIndex = 0; fieldSetIndex < ChargePropertyComponent.fieldSets.length; fieldSetIndex++){
+        var fieldSet = ChargePropertyComponent.fieldSets[fieldSetIndex];
+        var allFieldsHiddenInSection = true;
+        var hiddenFieldNumberInRow = 0;
+        
+        for(var fieldIndex = 0; fieldIndex < fieldSet.fields.length; fieldIndex++){
+          var field = fieldSet.fields[fieldIndex];
+          if(field.isDisplayed == false){
+            field.hide();
+          }
+          else{
+            field.show();
+            allFieldsHiddenInSection = false;
+          }
+          
+          if(field.picklistValues != null){
+            for(var picklistValueIndex = 0; picklistValueIndex < field.picklistValues.length; picklistValueIndex++){
+              var picklistValue = field.picklistValues[picklistValueIndex];
+              if(picklistValue.isDisplayed == false){
+                $jq("option[value='" + picklistValue.name +  "']", field.fieldTD).css('display', 'none');
+              }
+              else{
+                $jq("option[value='" + picklistValue.name +  "']", field.fieldTD).css('display', 'block');
+              }
+            }
+          }
+          
+          // Hide entire row if all fields in the row are hidden
+          var fieldRow = field.fieldElement.closest('tr');
+          if(fieldSet.isSingleColumn){
+            if(field.isDisplayed == false){
+              fieldRow.style.display = 'none';
+            }
+            else{
+              fieldRow.style.display = 'table-row';
+            }
+          }
+          else{
+            if(fieldIndex%2 == 0){
+              hiddenFieldNumberInRow = 0;
+            }
+            if(field.isDisplayed == false){
+              hiddenFieldNumberInRow++;
+            }
+            if(hiddenFieldNumberInRow == 2 || ((fieldIndex == fieldSet.fields.length-1) && (fieldSet.fields.length%2 == 1) && hiddenFieldNumberInRow == 1)){
+              fieldRow.style.display = 'none';
+            }
+            else{
+              fieldRow.style.display = 'table-row';
+            }
+          }
+        }
+        
+        // If all fields in this section are hidden, hide the entire section
+        if(fieldSet.isDisplayed == false || allFieldsHiddenInSection){
+          $jq("div[data-section-name='" + fieldSet.name + "']").css('display', 'none');
+        }
+        else{
+          $jq("div[data-section-name='" + fieldSet.name + "']").css('display', 'block');
+        }
+        
+      }
+    }
+    
+    ChargePropertyComponent.onChange = function(element){
+      ChargePropertyComponent.renderFields();
+    }
+    
+    ChargePropertyComponent.renderFields = function(){
+      var namespace = '{!namespace}';
+      
+      ChargePropertyComponent.renderCascadingPicklistValues(namespace);
+      
+      ChargePropertyComponent.renderCascadingFields(namespace);
+      
+      ChargePropertyComponent.refresh();
+    }
+    
+    ChargePropertyComponent.renderCascadingPicklistValues = function(namespace){
+      // Get charge type
+      var chargeType = ChargePropertyComponent.getFieldValue(namespace + 'Type__c');
+      // Get list price base
+      var listPriceBase = ChargePropertyComponent.getFieldValue(namespace + 'ListPriceBase__c');
+      // Get billing period
+      var recurringPeriod = ChargePropertyComponent.getFieldValue(namespace + 'RecurringPeriod__c');
+      // Show Weekly billing related bill cycle types
+      var showWeeklyBillingRelatedBillCycleTypes = recurringPeriod == 'Week' || recurringPeriod == 'Specific Weeks' || (listPriceBase == 'Per Week' && recurringPeriod == 'Subscription Term');
+
+      // Initialize picklist value cascading rules
+      var picklistValueCascadingRules = [
+        {
+          conditions : chargeType == '',
+          field : namespace + 'Model__c',
+          displayedPicklistValues : ['']
+        },
+        {
+          conditions : chargeType == 'One-Time',
+          field : namespace + 'Model__c',
+          displayedPicklistValues : ['Flat Fee Pricing','Per Unit Pricing','Volume Pricing','Tiered Pricing']
+        },
+        {
+          conditions : chargeType == 'Recurring',
+          field : namespace + 'Model__c',
+          displayedPicklistValues : ['Flat Fee Pricing','Per Unit Pricing','Volume Pricing','Tiered Pricing','Discount-Fixed Amount','Discount-Percentage']
+        },
+        {
+          conditions : chargeType == 'Usage',
+          field : namespace + 'Model__c',
+          displayedPicklistValues : ['Flat Fee Pricing','Per Unit Pricing','Volume Pricing','Tiered Pricing','Overage Pricing','Tiered with Overage Pricing']
+        },
+        {
+            conditions : listPriceBase == 'Per Billing Period',
+            field : namespace + 'RecurringPeriod__c',
+            displayedPicklistValues : ['Week', 'Month', 'Quarter', 'Annual', 'Semi-Annual', 'Specific Weeks', 'Specific Months', 'Eighteen Months', 'Two Years', 'Three Years', 'Five Years', 'Subscription Term']
+        },
+        {
+            conditions : listPriceBase == 'Per Month',
+            field : namespace + 'RecurringPeriod__c',
+            displayedPicklistValues : ['Month', 'Quarter', 'Annual', 'Semi-Annual', 'Specific Months', 'Eighteen Months', 'Two Years', 'Three Years', 'Five Years', 'Subscription Term']
+        },
+        {
+            conditions : listPriceBase == 'Per Week',
+            field : namespace + 'RecurringPeriod__c',
+            displayedPicklistValues : ['Week', 'Specific Weeks', 'Subscription Term']
+        },
+        {
+            conditions : showWeeklyBillingRelatedBillCycleTypes,
+            field : namespace + 'BillCycleType__c',
+            displayedPicklistValues : ['Subscription Start Day', 'Charge Trigger Day', 'Specific Day of Week']
+        },
+        {
+            conditions : !showWeeklyBillingRelatedBillCycleTypes,
+            field : namespace + 'BillCycleType__c',
+            displayedPicklistValues : ['Default From Customer Account', 'Specific Day of Month', 'Subscription Start Day', 'Charge Trigger Day']
+        }
+      ];
+      
+      // Execute picklist value cascading rules
+      $jq.each(picklistValueCascadingRules, function(index, rule){
+         if(rule.conditions){
+           var affectedField = ChargePropertyComponent.getField(rule.field);
+           if(affectedField != undefined){
+
+             var displayedPicklistValues = [];
+
+             for(var picklistValueIndex = 0; picklistValueIndex < affectedField.picklistValues.length; picklistValueIndex++){
+               var picklistValue = affectedField.picklistValues[picklistValueIndex];
+               if(rule.displayedPicklistValues.indexOf(picklistValue.name) >= 0){
+                 picklistValue.isDisplayed = true;
+                 displayedPicklistValues.push(picklistValue.name);
+               }
+               else{
+                 picklistValue.isDisplayed = false;
+               }
+             }
+
+             // Clear the selection if the value is hidden
+             if(displayedPicklistValues.indexOf(affectedField.fieldElement.value) < 0){
+               affectedField.clear();
+             }
+           }
+         }
+      });
+    }
+    
+    ChargePropertyComponent.renderCascadingFields = function(namespace){
+      // Get charge type
+      var chargeType = ChargePropertyComponent.getFieldValue(namespace + 'Type__c');
+      // Get charge model
+      var chargeModel = ChargePropertyComponent.getFieldValue(namespace + 'Model__c');
+      // Get charge taxable
+      var chargeTaxable = ChargePropertyComponent.getFieldValue(namespace + 'Taxable__c');
+      // Get charge end date condition
+      var endDateCondition = ChargePropertyComponent.getFieldValue(namespace + 'EndDateCondition__c');
+      // Get billing cycle type
+      var billCycleType = ChargePropertyComponent.getFieldValue(namespace + 'BillCycleType__c');
+      // Get use discount specific accounting code
+      var useDiscountSpecificAccountingCode = ChargePropertyComponent.getFieldValue(namespace + 'UseDiscountSpecificAccountingCode__c');
+      // Get Billing Period
+      var billingPeriod = ChargePropertyComponent.getFieldValue(namespace + 'RecurringPeriod__c');
+      // Get Billing Timing
+      var billingTiming = ChargePropertyComponent.getFieldValue(namespace + 'BillingTiming__c');
+
+      
+      // Initialize field cascading rules
+      var fieldCascadingRules = [
+        {
+          conditions : (chargeModel == 'Per Unit Pricing' || chargeModel == 'Volume Pricing' || chargeModel == 'Tiered Pricing' || chargeModel == 'Overage Pricing' || chargeModel == 'Tiered with Overage Pricing'),
+          displayedFields : [namespace + 'ZUnitOfMeasure__c'],
+          requiredFields : [namespace + 'ZUnitOfMeasure__c']
+        },
+        {
+          conditions : (chargeType != 'Usage' && chargeModel == 'Per Unit Pricing'),
+          displayedFields : [namespace + 'DefaultQuantity__c', namespace + 'MinQuantity__c', namespace + 'MaxQuantity__c'],
+          requiredFields : [namespace + 'DefaultQuantity__c']
+        },
+        {
+          conditions : (chargeType == 'Recurring' && (chargeModel == 'Flat Fee Pricing' || chargeModel == 'Per Unit Pricing' || chargeModel == 'Tiered Pricing' || chargeModel == 'Volume Pricing')),
+          displayedFields : [namespace + 'ListPriceBase__c', namespace + 'PrepaymentPeriods__c'],
+          requiredFields : [namespace + 'ListPriceBase__c']
+        },
+        {
+          conditions : (chargeModel == 'Overage Pricing'),
+          displayedFields : [namespace + 'IncludedUnits__c']
+        },
+        {
+          conditions : (chargeModel == 'Discount-Fixed Amount' || chargeModel == 'Discount-Percentage'),
+          displayedFields : [namespace + 'Apply_Discount_To_One_Time_Charges__c', namespace + 'Apply_Discount_To_Recurring_Charges__c', namespace + 'Apply_Discount_To_Usage_Charges__c',
+                             namespace + 'Discount_Level__c', namespace + 'UseDiscountSpecificAccountingCode__c']
+        },
+        {
+          conditions : chargeTaxable,
+          displayedFields : [namespace + 'TaxCode2__c', namespace + 'TaxMode__c']
+        },
+        {
+          conditions : (chargeType != 'One-Time'),
+          displayedFields : [namespace + 'EndDateCondition__c', namespace + 'RecurringPeriod__c', namespace + 'BillCycleType__c', namespace + 'BillingPeriodAlignment__c', namespace + 'UseTenantDefaultForPriceChange__c', namespace + 'PriceChangeOption__c'],
+          requiredFields : [namespace + 'EndDateCondition__c', namespace + 'RecurringPeriod__c', namespace + 'BillCycleType__c', namespace + 'BillingPeriodAlignment__c']
+        },
+        {
+          conditions : (chargeType == 'Recurring'),
+          displayedFields : [namespace + 'BillingTiming__c'],
+          requiredFields : [namespace + 'BillingTiming__c']
+        },
+        {
+          conditions : (chargeType != 'One-Time' && endDateCondition == 'Fixed Period'),
+          displayedFields : [namespace + 'UpToPeriodsType__c', namespace + 'Upto_How_Many_Periods__c']
+        },
+        {
+          conditions : (chargeType != 'One-Time' && billCycleType == 'Specific Day of Month'),
+          displayedFields : [namespace + 'BillCycleDay__c'],
+          requiredFields : [namespace + 'BillCycleDay__c']
+        },
+        {
+          conditions : (chargeType != 'One-Time' && billCycleType == 'Specific Day of Week'),
+          displayedFields : [namespace + 'WeeklyBillCycleDay__c'],
+          requiredFields : [namespace + 'WeeklyBillCycleDay__c']
+        },
+        {
+          conditions : (chargeModel != 'Discount-Fixed Amount'),
+          displayedFields : [namespace + 'UseTenantDefaultForPriceChange__c', namespace + 'PriceChangeOption__c']
+        },
+        {
+          conditions : (chargeModel != 'Discount-Fixed Amount' && chargeModel != 'Discount-Percentage') || ((chargeModel == 'Discount-Fixed Amount' || chargeModel == 'Discount-Percentage') && useDiscountSpecificAccountingCode),
+          displayedFields : [namespace + 'RevenueRecognitionRuleName__c', namespace + 'RecognizedRevenueAccount__c', namespace + 'RevRecTriggerCondition__c', namespace + 'RevRecCode2__c']
+        },
+        {
+          conditions : (chargeType == 'Usage' && (chargeModel == 'Overage Pricing' || chargeModel == 'Tiered with Overage Pricing')),
+          displayedFields : [namespace + 'SmoothingModel__c', namespace + 'NumberOfPeriod__c', namespace + 'OverageCalculationOption__c', namespace + 'UsageRecordRatingOption__c', namespace + 'OverageUnusedUnitsCreditOption__c']
+        },
+        {
+          conditions : (billingPeriod == 'Specific Months' || billingPeriod == 'Specific Weeks'),
+          displayedFields : [namespace + 'SpecificBillingPeriod__c'],
+          requiredFields : [namespace + 'SpecificBillingPeriod__c']
+        }
+      ];
+      
+      // Execute field cascading rules
+      $jq.each(fieldCascadingRules, function(index, rule){
+         if(rule.displayedFields != undefined){
+           for(var displayedFieldIndex=0; displayedFieldIndex<rule.displayedFields.length; displayedFieldIndex++){
+             var displayedFieldName = rule.displayedFields[displayedFieldIndex];
+             var displayedField = ChargePropertyComponent.getField(displayedFieldName);
+             if(rule.conditions){
+               displayedField.isDisplayed = true;
+             }
+             else{
+               displayedField.isDisplayed = false;
+             }
+           }
+         }
+         
+         if(rule.requiredFields != undefined){
+           for(var requiredFieldIndex=0; requiredFieldIndex<rule.requiredFields.length; requiredFieldIndex++){
+             var requiredFieldName = rule.requiredFields[requiredFieldIndex];
+             var requiredField = ChargePropertyComponent.getField(requiredFieldName);
+             if(rule.conditions){
+               requiredField.isRequiredWhenVisible = true;
+             }
+             else{
+               requiredField.isRequiredWhenVisible = false;
+             }
+           }
+         }
+      });
+    }
+    
+    ChargePropertyComponent.getField = function(fieldName){
+      for(var fieldSetIndex = 0; fieldSetIndex < ChargePropertyComponent.fieldSets.length; fieldSetIndex++){
+        var fieldSet = ChargePropertyComponent.fieldSets[fieldSetIndex];
+        for(var fieldIndex = 0; fieldIndex < fieldSet.fields.length; fieldIndex++){
+          var field = fieldSet.fields[fieldIndex];
+          if(field.name == fieldName){
+            return field;
+          }
+        }
+      }
+    }
+    
+    ChargePropertyComponent.getFieldName = function(element){
+      return $jq('span[data-field-name]', $jq(element).closest('td')).data('field-name');
+    }
+    
+    ChargePropertyComponent.getFieldValue = function(fieldName){
+      var field = ChargePropertyComponent.getField(fieldName);
+      if(field != undefined && field.fieldElement != undefined){
+        if(field.type == 'BOOLEAN'){
+          return field.fieldElement.checked;
+        }
+        else{
+          return field.fieldElement.value;
+        }
+      }
+      else{
+        if(field.type == 'BOOLEAN'){
+          return false;
+        }
+        else{
+          return '';
+        }
+      }
+    }
+    
+    $jq(function(){
+      ChargePropertyComponent.initialize();
+      ChargePropertyComponent.renderFields();
+    })
+  </script>
+  
+</apex:page>

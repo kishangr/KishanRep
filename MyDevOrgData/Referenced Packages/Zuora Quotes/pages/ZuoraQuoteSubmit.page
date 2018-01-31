@@ -1,0 +1,43 @@
+<apex:page id="page" standardController="zqu__Quote__c"
+	extensions="zqu.ZuoraQuoteSubmitController" title="{!$Label.zqu__title_quote}" sidebar="false"
+	tabStyle="zqu__Quote__c" action="{!onload}">
+
+  <script>
+	function init() {
+		var headerElements = document.getElementsByClassName('pbHeader');
+		if ( headerElements != null && headerElements.length >= 1 ) {
+		  headerElements[1].style.display = 'none'; 
+		}
+
+		// Initialize radio button field options for Renewal Setting
+		var radioButtonOptions = {};
+		radioButtonOptions.fieldName = ZConfig.zqns + 'RenewalSetting__c';
+		radioButtonOptions.editMode = false; // For quote preview, we will always be in read only mode
+		radioButtonOptions.defaultValue = '{!JSENCODE(quote.RenewalSetting__c)}';
+		radioButtonOptions.values = [
+		  {'label' : '{!$Label.RENEWAL_SETTING_RENEW_WITH_SPECIFIC_TERM}', 'value' : 'RENEW_WITH_SPECIFIC_TERM'}, 
+		  {'label' : '{!$Label.RENEWAL_SETTING_RENEW_TO_EVERGREEN}', 'value' : 'RENEW_TO_EVERGREEN'}
+		];
+		RadioButtonField.initRadioButtonField(radioButtonOptions);
+	} 
+	    
+	var previousOnload = window.onload;
+	window.onload = function () {
+	  if (previousOnload) {
+	    previousOnload();
+	  }
+	  init();
+	}
+  </script>
+
+  <!-- Include JS for radio button field -->
+  <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, 'js/RadioButtonField-compressed.js')}" />
+  <apex:includeScript value="{!$Page.zqu__ResourceJS}" />
+  
+	<apex:sectionHeader title="{!$Label.zqu__title_quote}"
+		subtitle="{!$Label.zqu__title_quote_preview}" id="quoteTitle" />
+	<apex:form id="previewform">
+		<c:QuotePreview options="{!previewOptions}" />
+		<apex:actionFunction name="toQuoteDetail" action="{!toQuoteDetail}" />
+	</apex:form>
+</apex:page>

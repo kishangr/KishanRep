@@ -1,0 +1,10 @@
+<apex:page standardController="zqu__ProductRatePlanOption__c" 
+           extensions="zqu.EditProductRatePlanOptionController" 
+           title="{!$Label.zqu__config_product_rate_plan_option_edit}"
+           tabStyle="Product2" 
+           sidebar="true">
+  <c:PageTitle title="{!$Label.zqu__config_product_rate_plan_option_edit}" subTitle="{!$Label.zqu__config_product_rate_plan_option_subtitle}" />
+  <apex:form >
+     <c:PropertyComponent options="{!pcOptions}" ></c:PropertyComponent>
+  </apex:form>
+</apex:page>

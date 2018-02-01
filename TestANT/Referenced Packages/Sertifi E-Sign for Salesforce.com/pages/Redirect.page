@@ -1,0 +1,5 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController" action="{!RedirectFunction}"  >
+<apex:messages style="color: red; font-weight: bold; text-align: center;"/>
+<apex:form >
+</apex:form>
+</apex:page>

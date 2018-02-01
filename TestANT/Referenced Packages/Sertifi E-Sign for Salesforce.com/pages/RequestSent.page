@@ -1,0 +1,23 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController">
+
+    <link rel="stylesheet" href="{!URLFOR($Resource.SertResources, 'bootstrap/css/bootstrap.min.css')}" media="all" />
+    <apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/js/jquery-1.11.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, 'bootstrap/js/bootstrap.min.js')}" />
+
+    <div class="bootstrapped bs fuelux" style="padding: 20px;">
+        <div class="container-fluid">
+            <apex:form >
+                <div class="text-left">
+                    <div>
+                        <h3>
+                            <img src='https://www.sertifi.com/TestSite/images/accept_big.png' border='0' alt='' class="img-circle" /> Your request has been sent.
+                        </h3>
+                        <div style="padding-top: 20px;">
+                            <apex:commandButton value="Return" action="{!ReturnAfterSend}" styleClass="btn btn-default btn-primary"/>
+                        </div>
+                    </div>
+                </div>
+            </apex:form>
+        </div>
+    </div>
+</apex:page>

@@ -1,0 +1,403 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController"
+		   action="{!AttachPermanentSigners}" 
+		   id="createRequestPage" 
+		   docType="html-5.0">
+
+	<link rel="stylesheet" href="{!URLFOR($Resource.SertResources, '/bootstrap/css/bootstrap.min.css')}" media="all" />
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+	<apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/js/jquery-1.11.1.min.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/jQueryUI/jquery-ui.min.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/bootstrap/js/bootstrap.min.js')}" />
+	<link href="{!URLFOR($Resource.SertResources, '/fuelux/css/fuelux.min.css')}" rel="stylesheet" />
+	<apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/fuelux/js/fuelux.min.js')}" /> 
+	
+	<style type="text/css">
+		.none
+		{
+			display: none;
+		}
+		.dateFormat { /* Salesforce adds a default value for today's date, hide it */
+			display: none !important;
+		}
+		.bs .contact-control-container{
+			padding: 5px 12px;
+		}
+		.bs .contact-control{
+			border: none;
+			/* width: 90%; */
+		}
+		.bs
+		{
+            margin: 20px;
+        }
+        .bs .dropdown-menu, .bs .dropdown-menu li
+        {
+        	margin-left: 0px;
+        }
+        .glyphicon-refresh-animate {
+		    -animation: spin .7s infinite linear;
+		    -ms-animation: spin .7s infinite linear;
+		    -webkit-animation: spinw .7s infinite linear;
+		    -moz-animation: spinm .7s infinite linear;
+		}
+		@keyframes spin {
+		    from { transform: scale(1) rotate(0deg);}
+		    to { transform: scale(1) rotate(360deg);}
+		}
+		@-webkit-keyframes spinw {
+		    from { -webkit-transform: rotate(0deg);}
+		    to { -webkit-transform: rotate(360deg);}
+		}
+		@-moz-keyframes spinm {
+		    from { -moz-transform: rotate(0deg);}
+		    to { -moz-transform: rotate(360deg);}
+		}
+		.glyphicon.glyphicon-trash{
+			cursor: pointer;
+		}
+		.text-center{
+			text-align: center;
+		}
+		.bs legend{ 
+        	font-family: 'Open Sans', sans-serif;
+        	padding-top: 10px;
+        	color: #428bca;
+            font-size: 18px;
+        }
+        .bs th{ 
+        	background-color: #dff0d8;
+        	border-color: #d6e9c6 !important;
+        	color: #3c763d;
+        }        
+	</style>
+	<script type="text/javascript">
+		var j$ = jQuery.noConflict();
+		var autoAdvanceError = {!AutoAdvanceError};
+		var autoAdvance = {!AutoAdvance};
+		var linkId = '{!linkID}';
+		var autoAdvanceRedirectUrl = '{!AutoAdvanceRedirectUrl}';
+	</script>
+	<div class="bootstrapped bs fuelux">
+		<div class="container-fluid">
+			<apex:pageMessages id="showmsg"></apex:pageMessages>
+			<apex:form id="createRequestForm">  
+				<apex:pageBlock title="Sending For Signature" rendered="{!AutoAdvance}" id="autoAdvanceContainer">
+                    <script type="text/javascript">
+                        autoAdvanceError = {!AutoAdvanceError}; //refresh when reloading
+                    </script>
+					<apex:pageMessages id="showmsgAutoAdvance"></apex:pageMessages>
+					<apex:image url="{!URLFOR($Resource.Sertifi2_0__SertResources,'images/loading.gif')}" rendered="{!!AutoAdvanceError}"/> 
+					<div>
+						<br />{!AutoAdvanceStatus}
+					</div>
+					<div>
+						<apex:outputText id="autoAdvancedCancelMessage"></apex:outputText>
+						<apex:commandButton value="Return" action="{!ReturnToOriginalPage}" rendered="{!AutoAdvanceError}" />
+					</div>
+				</apex:pageBlock>
+				
+				<apex:outputPanel id="formContainer" layout="block" rendered="{!!AutoAdvance}" styleClass="row form-horizontal">
+                    <apex:inputHidden value="{!SignType}" id="signType" html-data-id="hdnSignType"/>
+                    <apex:inputHidden value="{!SignTypeEmail}" id="signTypeEmail" html-data-id="hdnSignTypeEmail" />
+				
+					<div class="col-sm-12 col-lg-6">
+						<fieldset>
+							<legend>Create Folder</legend>
+							<div class="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Folder Name" />
+								<div class="col-sm-9">
+									<apex:inputText styleClass="form-control" value="{!FileName}" maxlength="80" />
+								</div>
+							</div>
+                            
+                            <apex:outputPanel styleClass="form-group" rendered="{!settings.Sertifi2_0__Show_Signing_Methods__c}" layout="block">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Signing Method" />
+								<div class="col-sm-9">
+									<apex:selectList label="Signing Method" value="{!SignMethod}" size="1" styleClass="form-control">
+										<apex:selectOptions value="{!SignMethods}"/>                
+									</apex:selectList>
+								</div>
+							</apex:outputPanel>
+                            
+                            <apex:outputPanel styleClass="form-group" rendered="{!settings.Sertifi2_0__Show_Language_Selection__c}" layout="block">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Language" />
+								<div class="col-sm-9">
+									<apex:selectList label="Language" value="{!Language}" size="1" styleClass="form-control">
+										<apex:selectOptions value="{!Languages}"/>                
+									</apex:selectList>
+								</div>
+							</apex:outputPanel>
+                            
+                            <apex:outputPanel styleClass="form-group" rendered="{!ResourceGroups.size > 0}" layout="block">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Email/Logo Groups" />
+								<div class="col-sm-9">
+                                    <apex:selectList label="Email/Logo Groups" value="{!ResourceGroup}" size="1" styleClass="form-control">
+										<apex:selectOptions value="{!ResourceGroups}"/>                
+									</apex:selectList>
+								</div>
+							</apex:outputPanel>
+                            
+							<apex:outputPanel layout="block" rendered="{!ShowEmailMessageField}" styleClass="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Email Invite Message" />
+								<div class="col-sm-9">
+									<apex:inputTextarea styleClass="form-control" value="{!EmailMessage}" style="height: 75px;" />
+								</div>
+							</apex:outputPanel>
+
+							<apex:outputPanel layout="block" rendered="{!ShowInviteSigner}" styleClass="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Invite Signer Now" />
+								<div class="col-sm-9">
+							      <div class="checkbox">
+							        <label class="checkbox-custom" data-initialize="checkbox">
+							          <apex:inputCheckbox id="chkInviteSigner" value="{!InviteSigner}" styleClass="sr-only" />
+							        </label>
+							      </div>
+							    </div>
+							</apex:outputPanel>
+
+							<apex:outputPanel layout="block" rendered="{!ShowPasswordField}" styleClass="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="File Password" />
+								<div class="col-sm-9">
+									<apex:inputText styleClass="form-control" id="PasswordInputBox" value="{!Password}" />
+								</div>
+							</apex:outputPanel>
+
+							<apex:outputPanel layout="block" rendered="{!ShowExpirationDate}" styleClass="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Expiration Date" />
+								<div class="col-sm-9">
+									<apex:inputField styleClass="form-control" id="expirationDate" value="{!tempContract.Sertifi2_0__ExpirationDate__c}" showDatePicker="true"/>
+								</div>
+							</apex:outputPanel>
+						</fieldset>
+
+						<apex:outputPanel layout="block" id="panelSigners">
+						<fieldset>
+							<legend>Add Participants</legend>
+							<apex:outputPanel layout="block" rendered="{!ShowSignerFromContact}" styleClass="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Add from Contact" />
+								<div class="col-sm-9">
+							        <div class="input-group">
+						                <div class="input-group-btn sign-type-group" target-data-id="hdnSignType">
+						                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						                        <span data-bind="label">Select Type..</span>&nbsp;
+						                        <span class="caret"></span>
+						                    </button>
+						                    <ul class="dropdown-menu dropdown-menu-right">
+						                    	<apex:repeat value="{!SignTypes}" var="type">
+						                      		<li value="{!type.Value}"><a href="#">{!type.Label}</a></li>
+						                    	</apex:repeat>
+						                    </ul>
+						              </div>
+						              <div class="form-control contact-control-container">
+											<apex:inputField styleClass="contact-control" value="{!tempSigner.Sertifi2_0__Contact__c}" required="false" id="fieldContact"/>
+										</div>
+							        </div>
+								</div>
+							</apex:outputPanel>
+							<apex:outputPanel styleClass="col-sm-offset-3 col-sm-9" id="panelOR" rendered="{!ShowSignerFromAddress && ShowSignerFromContact}">
+								<p class="text-muted text-center"><strong>OR</strong></p>
+							</apex:outputPanel>
+							<apex:outputPanel layout="block" rendered="{!ShowSignerFromAddress}" styleClass="form-group">
+								<apex:outputLabel styleClass="control-label col-sm-3" value="Add as Email Address" />
+								<div class="col-sm-9">
+							        <div class="input-group">
+										<div class="input-group-btn sign-type-group" target-data-id="hdnSignTypeEmail">
+										    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										        <span data-bind="label">Select Type..</span>&nbsp;
+										        <span class="caret"></span>
+										    </button>
+										    <ul class="dropdown-menu dropdown-menu-right">
+										    	<apex:repeat value="{!SignTypes}" var="type">
+										      		<li value="{!type.Value}"><a href="#">{!type.Label}</a></li>
+										    	</apex:repeat>
+										    </ul>
+										</div>
+										<apex:inputField styleClass="form-control" value="{!tempSigner.Sertifi2_0__Email__c}" required="false" id="fieldEmail"/>
+							        </div>
+								</div>
+							</apex:outputPanel>
+
+							<div class="form-group">
+								<div class="col-sm-offset-3 col-sm-9">
+									<apex:actionStatus id="addParticipantAction">  
+										<apex:facet name="start">  
+											<apex:outputPanel >  
+												<button type="button" class="btn btn-default">
+													<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Adding Participant..
+												</button>  
+											</apex:outputPanel>  
+										</apex:facet>  
+										<apex:facet name="stop">  
+											<apex:outputPanel >  
+												<apex:commandButton value="Add Participant" action="{!AttachSigner}" reRender="participantsContainer, fieldEmail, showmsg" styleClass="btn btn-primary" status="addParticipantAction" oncomplete="resizeSalesforceContactField(true);"/>
+											</apex:outputPanel>  
+										</apex:facet>  
+									</apex:actionStatus>  
+							    </div>
+							</div>
+
+							<apex:outputPanel id="participantsContainer" layout="block" styleClass="form-group" >
+								<apex:outputPanel styleClass="col-sm-12" layout="block" rendered="{!(AllSignerList != null) && (AllSignerList.size > 0)}">
+							        <apex:dataTable value="{!AllSignerList}" var="o" styleClass="table table-condensed table-bordered table-striped">
+										<apex:column headerValue="Name">
+									        <!-- <apex:outputText value="{!o.signer.Contact__r.name}"/> -->
+									        <apex:outputText value="{!IF(BEGINS(o.signer.Contact__r.name, 'Sertifi Contact'), '', o.signer.Contact__r.name)}"/>
+										</apex:column>
+
+										<apex:column headerValue="Email">
+											<apex:outputText value="{!o.displayemail}"/>
+										</apex:column>
+										
+										<apex:column headerValue="Role" width="150 px">
+											<apex:outputText value="{!o.signer.Sertifi2_0__Level_Name__c}"/>
+										</apex:column>
+										
+										<apex:column headerValue="Remove" width="50 px" styleClass="text-center">
+											<apex:actionStatus id="removeParticipantAction">  
+												<apex:facet name="start">  
+													<apex:outputPanel >  
+														<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+													</apex:outputPanel>  
+												</apex:facet>  
+												<apex:facet name="stop">  
+													<apex:outputPanel >
+														<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+														<apex:actionsupport event="onclick" reRender="participantsContainer, showmsg" action="{!removeContactContractJunction}" status="removeParticipantAction">
+														<apex:param value="{!o.signer.id}" name="junctionID" />
+														</apex:actionsupport>
+													</apex:outputPanel>  
+												</apex:facet>  
+											</apex:actionStatus> 
+						                </apex:column>
+									</apex:dataTable>
+								</apex:outputPanel>
+							</apex:outputPanel>
+
+							<div class="form-group">
+								<div class="col-sm-offset-3 col-sm-9">
+							    	<apex:commandButton action="{!cancel}" value="Cancel" styleClass="btn btn-default col-sm-2"/>
+					        		<apex:commandButton action="{!getSignatureRequest}"  value="Next" id="btnNext" styleClass="btn btn-success col-sm-offset-1 col-sm-2" />
+							    </div>
+							</div>
+
+						</fieldset>
+						</apex:outputPanel>
+					</div>
+				</apex:outputPanel>
+
+				<apex:actionFunction name="jsCreateRequest" action="{!AutoAdvanceCreateRequest}" reRender="autoAdvanceContainer" oncomplete="jsAttachFilesInvoke();"></apex:actionFunction>
+				<apex:actionFunction name="jsAttachFiles" action="{!AutoAdvanceAttachFiles}" reRender="autoAdvanceContainer" oncomplete="jsRedirectInvoke();"></apex:actionFunction>
+				<apex:actionFunction name="jsCancel" action="{!RemoveRecordsOnFailure}" reRender="autoAdvancedCancelMessage"></apex:actionFunction>
+				<apex:actionFunction name="jsReturn" action="{!ReturnAfterSend}"></apex:actionFunction>
+			</apex:form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var j$ = jQuery.noConflict();
+		var cancelCalled = false;
+
+		j$(document).ready(function(){
+			//check for auto-advance
+			if (autoAdvance === true)
+			{
+				jsLog('Auto-advance set to true, calling create request');
+				jsCreateRequest(); 
+			}
+
+			//Handle click events for changing signer role
+			j$(document.body).on('click', '.dropdown-menu li', function (event) {
+			   refreshDropdown(event.currentTarget, true);
+			   return false;
+			});
+
+			//Initialize the signer role drop-downs
+			j$.each(j$('.dropdown-menu').find('li:first'), function( i, val ) {
+				refreshDropdown(val);
+			});
+
+			//align salesforce contact icon to the left of textbox
+			j$(window).resize(resizeSalesforceContactField);
+			resizeSalesforceContactField(false);
+		});
+
+		//resize salesforce contact input field to the width of the form
+		function resizeSalesforceContactField(clearField){
+			var containerWidth = j$('.contact-control-container').width();
+			var field = j$('.contact-control');
+			field.css('width', (((containerWidth - 20)/containerWidth) * 100) + '%');
+
+			//clear the input after partial postback
+			if(clearField === true){
+				field.val('');
+			}
+		}
+
+		//refresh dropdown menu with server component
+        function refreshDropdown(element, toggle){
+            var $target = j$(element);
+            
+            var container = $target.closest( '.input-group-btn' );
+            
+            //update button text
+		    container.find( '[data-bind="label"]' ).text( $target.text() ).end();
+            
+            //close the dropdown
+            if(toggle === true){
+                container.children('.dropdown-toggle').dropdown('toggle');
+            }
+		
+			//find a related apex input and update the value
+			var targetDataId = container.attr('target-data-id');
+			var $relatedInput = j$("[data-id='" + targetDataId + "']");
+			$relatedInput.val($target.attr('value'));
+        }
+   
+		function jsRedirectInvoke()
+		{
+			jsLog('jsRedirectInvoke');
+			if (!autoAdvanceError)
+			{
+				jsReturn();
+			}
+			else
+				cleanupRecords();
+		}
+
+		function cleanupRecords()
+		{
+			if (cancelCalled === false)
+			{
+				jsLog('Error encountered with auto-advance, deleting folder');
+				cancelCalled = true;
+	            jsCancel(); //delete existing objects
+	        }
+	    }
+	    
+	    function redirectUnconditional()
+	    {
+	    	window.location = autoAdvanceRedirectUrl;
+	    }
+	    
+	    function jsAttachFilesInvoke()
+	    {
+	    	jsLog('Attaching files');
+	    	if (!autoAdvanceError)
+	    		jsAttachFiles();
+	    	else
+	    		cleanupRecords();
+	    }
+	    
+	    function jsLog(line)
+	    {
+	    	if (window.console) 
+	    		console.log(line);
+	    }
+	    
+	    function popup(url)
+	    {
+	    	newwindow=window.open(url,'name','width=400,height=400,top=0,toolbar=no,personalbar=no,location=no,directories=no,statusbar=no,menubar=no,status=no,re sizable=yes,left=60,screenX=60,top=100,screenY=100');
+	    	if (window.focus){newwindow.focus()}
+	    }
+	</script>
+</apex:page>

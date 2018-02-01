@@ -1,0 +1,376 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController" 
+           action="{!ResetAttachFiles}"
+           docType="html-5.0" id="sertPage">
+
+    <link rel="stylesheet" href="{!URLFOR($Resource.SertResources, 'bootstrap/css/bootstrap.min.css')}" media="all" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/js/jquery-1.11.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, 'bootstrap/js/bootstrap.min.js')}" />
+    <link href="{!URLFOR($Resource.SertResources, '/fuelux/css/fuelux.min.css')}" rel="stylesheet" />
+	<apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/fuelux/js/fuelux.min.js')}" />
+
+	<apex:includeScript value="{!URLFOR($Resource.Sertifi2_0__SertResources, '/js/alertService.js')}" />  
+
+    <style type="text/css">
+        .dateFormat { /* Salesforce adds a default value for today's date, hide it */
+            display: none !important;
+        }
+        .bs
+        {
+            margin: 20px;
+        }
+        .bs .dropdown-menu, .bs .dropdown-menu li
+        {
+            margin-left: 0px;
+        }
+        .glyphicon-refresh-animate {
+            -animation: spin .7s infinite linear;
+            -ms-animation: spin .7s infinite linear;
+            -webkit-animation: spinw .7s infinite linear;
+            -moz-animation: spinm .7s infinite linear;
+        }
+        @keyframes spin {
+            from { transform: scale(1) rotate(0deg);}
+            to { transform: scale(1) rotate(360deg);}
+        }
+        @-webkit-keyframes spinw {
+            from { -webkit-transform: rotate(0deg);}
+            to { -webkit-transform: rotate(360deg);}
+        }
+        @-moz-keyframes spinm {
+            from { -moz-transform: rotate(0deg);}
+            to { -moz-transform: rotate(360deg);}
+        }
+        .glyphicon.glyphicon-trash{
+            cursor: pointer;
+        }
+        .text-center{
+            text-align: center;
+        }
+        .text-right{
+            text-align: right;
+        }
+        .bs .input-group-upload {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            width: 100%;
+            text-align: left;
+        }
+        .bs select[size] {
+            height: 34px;
+        }
+        .colorBlack {
+        	color: black !important;
+        }
+        .bs legend { 
+        	font-family: 'Open Sans', sans-serif;
+        	padding-top: 10px;
+        	color: #428bca;
+            font-size: 18px;
+        }
+        .fuelux .form-horizontal .radio-inline {
+            padding-top: 3px;
+        }
+    </style>
+    
+    <div class="bootstrapped bs fuelux">
+        <div class="container-fluid">
+        	<apex:pageMessages id="showmsg"></apex:pageMessages>
+            <apex:form id="sertForm">
+                
+                <apex:inputHidden value="{!folderDocType}" id="hdnFolderDocType" html-data-id="hdnFolderDocType"/>
+                <apex:inputHidden value="{!DocType}" id="hdnDocType" html-data-id="hdnDocType"/>
+                <apex:inputHidden value="{!attachmentDocType}" id="hdnAttachmentDocType" html-data-id="hdnAttachmentDocType"/>
+                <apex:inputHidden value="{!TempPayment.Sertifi2_0__Operation__c}" id="hdnPaymentOperation" html-data-id="hdnPaymentOperation"/>
+                
+                <apex:outputPanel layout="block" styleClass="row form-horizontal" id="panelAddContent">
+                    <div class="col-sm-12 col-lg-6">
+                    	<div class="alert-container"></div>
+                        <apex:outputPanel id="panelDocuments" layout="block">
+	                        <fieldset>
+	                            <legend>Add Documents</legend>
+	
+	                            <apex:outputPanel layout="block" rendered="{!ShowHardDriveUpload}" styleClass="form-group" id="panelHDUpload">
+	                                <apex:outputLabel styleClass="control-label col-sm-3" value="Hard Drive" />
+	                                <div class="col-sm-9">
+	                                    <div class="input-group">
+	                                        <div class="input-group-btn sign-type-group" target-data-id="hdnDocType">
+	                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                                <span data-bind="label">Select Type..</span>&nbsp;
+	                                                <span class="caret"></span>
+	                                            </button>
+	                                            <ul class="dropdown-menu dropdown-menu-right">
+	                                                <apex:repeat value="{!DocTypes}" var="type">
+	                                                    <li value="{!type.Value}"><a href="#">{!type.Label}</a></li>
+	                                                </apex:repeat>
+	                                            </ul>
+	                                        </div>
+	                                        <apex:inputfile styleClass="btn btn-default btn-file input-group-upload doc-upload" value="{!uploadDocument.body}" filename="{!uploadDocument.name}"/>
+	                                    </div>
+	                                </div>
+	                            </apex:outputPanel>
+	
+	                            <apex:outputPanel layout="block" rendered="{!ShowSFFolderSelect}" styleClass="form-group" id="panelDocuList">
+	                                <apex:outputLabel styleClass="control-label col-sm-3" value="Salesforce Folder" />
+	                                <div class="col-sm-9">
+	                                    <div class="input-group">
+	                                        <div class="input-group-btn sign-type-group" target-data-id="hdnFolderDocType">
+	                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                                <span data-bind="label">Select Type..</span>&nbsp;
+	                                                <span class="caret"></span>
+	                                            </button>
+	                                            <ul class="dropdown-menu dropdown-menu-right">
+	                                                <apex:repeat value="{!DocTypes}" var="type">
+	                                                    <li value="{!type.Value}"><a href="#">{!type.Label}</a></li>
+	                                                </apex:repeat>
+	                                            </ul>
+	                                        </div>
+	                                        <apex:selectList styleClass="form-control doc-sf-folder" size="1" value="{!folderDocumentID}">
+	                                            <apex:selectOptions value="{!DocumentList}"/>
+	                                        </apex:selectList>
+	                                    </div>
+	                                </div>
+	                            </apex:outputPanel>
+	
+	                            <apex:outputPanel layout="block" rendered="{!ShowRelatedObjectSelect}" styleClass="form-group" id="panelRelatedObject">
+	                                <apex:outputLabel styleClass="control-label col-sm-3" value="Related Notes and Attachments" />
+	                                <div class="col-sm-9">
+	                                    <div class="input-group">
+	                                        <div class="input-group-btn sign-type-group" target-data-id="hdnAttachmentDocType">
+	                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                                <span data-bind="label">Select Type..</span>&nbsp;
+	                                                <span class="caret"></span>
+	                                            </button>
+	                                            <ul class="dropdown-menu dropdown-menu-right">
+	                                                <apex:repeat value="{!DocTypes}" var="type">
+	                                                    <li value="{!type.Value}"><a href="#">{!type.Label}</a></li>
+	                                                </apex:repeat>
+	                                            </ul>
+	                                        </div>
+	                                        <apex:selectList styleClass="form-control doc-attachments" size="1" value="{!attachmentID}">
+	                                            <apex:selectOptions value="{!AttachmentList}"/>
+	                                        </apex:selectList>
+	                                    </div>
+	                                </div>
+	                            </apex:outputPanel>
+	
+	                            <div class="form-group">
+	                                <div class="hide">
+	                                    <apex:commandButton id="btnAddDocument" value="Add Document" action="{!UploadFile}" styleClass="btn btn-add-document" />
+	                                </div>
+	                                <div class="help-block col-sm-12 text-right">Documents must be under 4 MB.</div>
+	                            </div>
+	
+	                            <apex:outputPanel layout="block" id="panelDocumentListContainer">
+	                                <apex:outputPanel layout="block" styleClass="panel panel-success" rendered="{!SigningDocAdded}" id="panelSignatureDocuments">
+	                                    <div class="panel-heading">
+	                                        <strong>Signature Documents Added</strong>
+	                                    </div>
+	                                    <apex:dataTable value="{!SignDocumentList}" var="doc" styleClass="table table-condensed table-striped">
+	                                        <apex:column >
+	                                            <apex:outputText value="{!doc.Sertifi2_0__Name__c}"/>
+	                                        </apex:column>
+	
+	                                        <apex:column width="175 px" styleClass="text-right" rendered="{!ShowPrefill}">
+	                                            <a href="{!doc.Sertifi2_0__EditLocationLink__c}" target="_blank">Preview / Prefill Document</a>
+	                                        </apex:column>
+	                                        
+	                                        <apex:column width="50 px" styleClass="text-center">
+												<apex:commandLink action="{!DeleteDocument}" styleClass="colorBlack" rendered="{!doc.Sertifi2_0__Status__c == 'Open'}" >
+													<apex:param name="docName" value="{!doc.Sertifi2_0__Name__c}"/>
+													<apex:param name="sfid" value="{!doc.ID}"/>
+													<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+												</apex:commandLink>
+							                </apex:column>
+	                                    </apex:dataTable>
+	                                </apex:outputPanel>
+	
+	                                <apex:outputPanel layout="block" styleClass="panel panel-success" rendered="{!ReferenceDocAdded}" id="panelReferenceDocuments">
+	                                    <div class="panel-heading">
+	                                        <strong>Reference Documents Added</strong>
+	                                    </div>
+	                                    <apex:dataTable value="{!RefDocumentList}" var="doc" styleClass="table table-condensed table-striped">
+	                                        <apex:column >
+	                                            <apex:outputText value="{!doc.Sertifi2_0__Name__c}"/>
+	                                        </apex:column>
+	                                    </apex:dataTable>
+	                                </apex:outputPanel>
+	                            </apex:outputPanel>
+	                        </fieldset>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel id="panelPayments" layout="block" rendered="{!ShowPaymentOption || ShowPaymentVerificationOption}">
+                            <fieldset>
+                                <legend>Add Payments</legend>
+                                <div class="form-group">
+                                    <apex:outputLabel styleClass="control-label col-sm-3" value="Description" />
+                                    <div class="col-sm-9">
+                                        <apex:inputText styleClass="form-control payment-title" value="{!TempPayment.Name}" maxlength="80" />
+                                    </div>
+                                </div>
+
+                                <apex:outputPanel id="panelPaymentType" styleClass="form-group" rendered="{!ShowPaymentOption && ShowPaymentVerificationOption}" layout="block">
+                                    <apex:outputLabel styleClass="control-label col-sm-3" value="Type" />
+                                    <div class="col-sm-9">
+                                        <label class="radio-custom radio-inline" data-initialize="radio">
+                                            <input class="sr-only" checked="checked" name="paymentType" type="radio" value="Pay" data-toggle=".paymentTypePay" onclick="togglePaymentOperation('Pay');" />Payment
+                                        </label>
+                                        <label class="radio-custom radio-inline" data-initialize="radio">
+                                            <input class="sr-only" name="paymentType" type="radio" value="Authorize" onclick="togglePaymentOperation('Authorize');" />Authorization
+                                        </label>
+                                    </div>
+                            	</apex:outputPanel>
+                                
+                        		<apex:outputPanel id="panelPaymentAmountAndDueDate" styleClass="paymentTypePay" rendered="{!ShowPaymentOption}" layout="block">
+                                    <div class="form-group">
+                                        <apex:outputLabel styleClass="control-label col-sm-3" value="Amount" />
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                              <div class="input-group-addon">
+                                              	<apex:outputText value="{!CurrencySymbol}" />
+                                              </div>
+                                              <apex:inputText styleClass="form-control payment-amount" value="{!TempPayment.Sertifi2_0__Amount__c}" maxlength="10" />
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <apex:outputLabel styleClass="control-label col-sm-3" value="Date Due" />
+                                        <div class="col-sm-9">
+                                            <apex:inputField styleClass="form-control" value="{!TempPayment.Sertifi2_0__DueDate__c}" showDatePicker="true"/>
+                                        </div>
+                                    </div>
+                                </apex:outputPanel>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-9">
+                                       	<apex:commandButton id="btnAddPayment" value="Add Payment" action="{!UploadPayment}" styleClass="btn btn-primary btn-add-payment" />
+                                    </div>
+                                </div>
+
+                                <apex:outputPanel layout="block" styleClass="panel panel-success" rendered="{!PaymentAdded}" id="panelAddedPayments">
+                                    <div class="panel-heading">
+                                        <strong>Payments Added</strong>
+                                    </div>
+                                    <apex:dataTable value="{!PaymentList}" var="payment" styleClass="table table-condensed table-bordered table-striped">
+                                        <apex:column headerValue="Name">
+                                            <apex:outputText value="{!payment.Sertifi2_0__Description__c}"/>
+                                        </apex:column>
+                                        <apex:column headerValue="Amount" width="100 px">
+                                            <apex:outputText value="{0,number,$0.00}">
+                                                <apex:param value="{!payment.Sertifi2_0__Amount__c}" />
+                                            </apex:outputText>
+                                        </apex:column>
+                                         <apex:column headerValue="Due Date" width="100 px">
+                                            <apex:outputText value="{0,date}">
+                                                <apex:param value="{!payment.Sertifi2_0__DueDate__c}" />
+                                            </apex:outputText>
+                                        </apex:column>
+                                        
+                                        <apex:column headerValue="Remove" width="50 px" styleClass="text-center">
+											<apex:commandLink action="{!DeletePayment}" styleClass="colorBlack" rendered="{!(payment.Sertifi2_0__Status__c == 'Outstanding' || payment.Sertifi2_0__Status__c == 'Awaiting payment')}" >
+												<apex:param name="paymentName" value="{!payment.Sertifi2_0__Description__c}"/>
+												<apex:param name="sfid" value="{!payment.ID}"/>
+												<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+											</apex:commandLink>
+						                </apex:column>
+                                    </apex:dataTable>
+                                </apex:outputPanel>
+                            </fieldset>
+                            
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel layout="block" rendered="{!ShowApplySignature && !EditMode}" styleClass="form-group" id="panelApplySignature">
+							<apex:outputLabel styleClass="control-label col-sm-3" value="Apply My Signature" />
+							<div class="col-sm-9">
+						      <div class="checkbox">
+						        <label class="checkbox-custom" data-initialize="checkbox">
+						          <apex:inputCheckbox id="chkInviteSigner" value="{!ApplyOwnersSignature}" styleClass="sr-only" />
+						        </label>
+						      </div>
+						    </div>
+						</apex:outputPanel>
+
+                        <apex:outputPanel styleClass="form-group" style="padding-top: 30px;" rendered="{!!EditMode}" layout="block">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <apex:commandButton styleClass="btn btn-default" action="{!cancel}" value="Cancel"/>
+                                <apex:commandButton styleClass="col-sm-offset-1 btn btn-success" value="Send for Signature" action="{!RedirectToObject}" />
+                            </div>
+                        </apex:outputPanel>
+                             
+						<apex:outputPanel rendered="{!EditMode}" layout="block">
+						    <apex:commandButton styleClass="btn btn-success" value="Done" action="{!RedirectToEContract}"/>
+						</apex:outputPanel>
+                    </div>
+                </apex:outputPanel>
+            </apex:form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var j$ = jQuery.noConflict();
+
+        j$(document).ready(function(){
+            //Handle selection changes for the document type drop-downs
+            j$(document.body).on('click', '.dropdown-menu li', function (event) {
+               refreshDropdown(event.currentTarget, true);
+               return false;
+            });
+
+            //Initialize the value of document type drop downs
+            j$.each(j$('.dropdown-menu').find('li:first'), function( i, val ) {
+                refreshDropdown(val);
+            });
+
+            j$(".btn-add-document, .btn-add-payment, .glyphicon.glyphicon-trash").on("click", function(e){
+            	sertifiJS.alertService.info({ isDismissible: false, message: "Processing.."});
+            });
+
+            j$(".doc-upload, .doc-attachments, .doc-sf-folder").on("change", function() {
+            	j$(".btn-add-document").trigger("click");
+			});
+            
+            //initialize payment operation
+            togglePaymentOperation('Pay');
+        });
+
+		//Saves the payment operation radio button to the bound hidden field
+		function togglePaymentOperation(value) {
+            var $target = j$('#sertPage\\:sertForm\\:hdnPaymentOperation');
+            $target.val(value);
+        }
+
+        //refresh dropdown menu with server component
+        function refreshDropdown(element, toggle){
+            var $target = j$(element);
+            
+            var container = $target.closest( '.input-group-btn' );
+            
+            //update button text
+		    container.find( '[data-bind="label"]' ).text( $target.text() ).end();
+            
+            //close the dropdown
+            if(toggle === true){
+                container.children('.dropdown-toggle').dropdown('toggle');
+            }
+		
+			//find a related apex input and update the value
+			var targetDataId = container.attr('target-data-id');
+			var $relatedInput = j$("[data-id='" + targetDataId + "']");
+			$relatedInput.val($target.attr('value'));
+        }
+        /*
+		function DisableButton() {
+            console.log('disable buttons');
+            j$('.btn').prop('disabled', true);
+        }
+        function EnableButton() {
+            console.log('enable buttons');
+            j$('.btn').prop('disabled', false);
+        }
+        */
+    </script>
+</apex:page>

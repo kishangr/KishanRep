@@ -1,0 +1,80 @@
+<apex:page controller="Sertifi2_0.ApptestServiceController">
+<apex:form >
+
+    <apex:pageMessages id="changeSignerMessages"></apex:pageMessages>
+
+    <apex:pageBlock title="Change signer" id="ChangeSignerBlock">
+        <div>            
+            <apex:selectList size="1" value="{!signerToChangeID}">
+                <apex:selectOptions value="{!SignerSelectOptionList}"/>
+            </apex:selectList>
+        </div>
+        <div>Change to:</div>
+        <div>Salesforce Contact:<apex:inputField value="{!replacementSigner.Sertifi2_0__Contact__c}" required="false"/></div>
+        <div>E-mail Address:<apex:inputField value="{!replacementSigner.Sertifi2_0__Email__c}" required="false"/></div>
+        <div><apex:commandButton value="Change Signer" action="{!changeSigner}"/></div>
+    </apex:pageBlock>
+    <apex:pageBlock title="Add Participants" id="SignerBlock">
+        <div>
+        <apex:outputLabel rendered="{!ShowSignerFromContact}" value="Add from Contact" />
+        </div>
+        <div>
+                <apex:inputField rendered="{!ShowSignerFromContact}" value="{!tempSigner.Sertifi2_0__Contact__c}" required="false"/>
+                <apex:selectList rendered="{!ShowSignerFromContact}" size="1" value="{!SignType}">
+                    <apex:selectOptions value="{!SignTypes}"/>
+                </apex:selectList>
+        </div>
+        <div>
+        <apex:outputLabel rendered="{!ShowSignerFromAddress}" value="Add as Email Address" />
+        </div>
+        <div>
+                <apex:inputField rendered="{!ShowSignerFromAddress}" value="{!tempSigner.Sertifi2_0__Email__c}" required="false"/>
+                <apex:selectList rendered="{!ShowSignerFromAddress}" size="1" value="{!SignTypeEmail}">
+                    <apex:selectOptions value="{!SignTypes}"/>
+                </apex:selectList>
+        </div>
+        <apex:commandButton value="Attach" action="{!AttachSigner}"/>
+    </apex:pageBlock>
+
+    <apex:pageBlock title="Re-invite or Remove Signers" id="EditBlock">
+        <apex:pageMessages id="editBlockMessages"></apex:pageMessages>
+
+        <table>
+            <tr>
+                <td><b><apex:outputText value="Enter Re-invite Message:" /></b></td>
+            </tr>
+            <tr>
+                <td><apex:inputTextarea cols="60" rows="5"  value="{!EmailMessage}" /></td>
+            </tr>
+        </table>
+        <table>
+               <tr>
+                   <td><b>Name</b></td><td><b>Role</b></td><td><b>Email</b></td>
+               </tr>
+               <apex:repeat var="signers" value="{!AllSignerList}">
+               
+               <tr>    
+                    <td align="middle"><p style="padding: 5px 0 0;margin: 0"><apex:outputText value="{!signers.signer.Contact__r.name}" /></p></td>
+                    <td><p style="padding: 5px 0 0;margin: 0"><apex:outputText value="{!signers.signer.Sertifi2_0__Level_Name__c}" /></p></td>
+                    <td><p style="padding: 5px 0 0;margin: 0"><apex:outputText value="{!signers.displayemail}" /></p></td>
+                    <td>
+                    <apex:commandButton action="{!reinviteSigner}" value="Re-Invite" rerender="EditBlock" id="theButton">
+                        <apex:param id="param1" name="junctionID" value="{!signers.signer.id}" AssignTo="{!junctionID}"/>
+                    </apex:commandButton>
+                    </td>
+                    <td>
+                    <apex:commandButton action="{!removeContactContractJunction}" value="Remove Signer" rerender="EditBlock" id="theButton2">
+                        <apex:param id="param2" name="junctionID" value="{!signers.signer.id}" AssignTo="{!junctionID}"/>
+                    </apex:commandButton>
+                    </td>
+               </tr>          
+               </apex:repeat>
+        </table> 
+    </apex:pageBlock>
+    <table>
+        <tr>
+            <td align="center"><apex:commandButton value="Done" action="{!RedirectToEContract}"/></td>
+        </tr>
+    </table> 
+    </apex:form>
+</apex:page>
